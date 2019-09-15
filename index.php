@@ -5,7 +5,6 @@ include 'src/utils/utils.php';
 
 include 'privateConfig.php';
 global $privateConfig;
-var_dump($privateConfig);
 
 $client = new Client($privateConfig['token']);
 //$client->fromCredentials($privateConfig['login'], $privateConfig['password'], true);
