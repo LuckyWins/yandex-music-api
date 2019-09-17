@@ -76,4 +76,14 @@ class RequestYandexAPI {
         return file_get_contents($url, false, $context);
     }
 
+    public function getXml($url) {
+        $msg = $url;
+        if($this->user != "") {
+            $msg .= " User: ".$this->user;
+        }
+        Logger::message($msg, "request.php", "GET_XML");
+
+        return simplexml_load_file($url);
+    }
+
 }

@@ -12,7 +12,7 @@ $client = new Client($privateConfig['token']);
 //Utils::dump($client->getAccount());
 
 //$result = $client->getLikes('track');
-$result = $client->genres();
+$result = $client->tracksDownloadInfo("57925627:8751243", true);
 header('Content-Type: application/json');
 Utils::jsonEncode($result);
 //Utils::dump($result);

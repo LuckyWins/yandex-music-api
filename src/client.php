@@ -252,6 +252,57 @@ class Client {
         return $result;
     }
 
+    public function tracksDownloadInfo($trackId, $getDirectLinks = false) {
+        $result = array();
+        $url = $this->baseUrl."/tracks/".$trackId."/download-info";
+
+        $response = json_decode($this->get($url));
+        if($response->result == null) {
+            $result = $response->error;
+        }else{
+            if ($getDirectLinks) {
+                foreach ($response->result as $item) {
+                    /**
+                     * Кодек AAC убран умышлено, по причине генерации
+                     * инвалидных прямых ссылок на скачивание
+                     */
+                    if ($item->codec == 'mp3') {
+                        $download = $this->getDirectLink($item->downloadInfoUrl);
+                        $item->directLink = $download;
+                        array_push($result, $item);
+                    }
+                }
+            }else{
+                $result = $response->result;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Получение прямой ссылки на загрузку из XML ответа
+     *
+     * Метод доступен только одну минуту с момента
+     * получения информациио загрузке, иначе 410 ошибка!
+     *
+     * @param string $url xml-файл с информацией
+     * @param string $codec Кодек файла
+     *
+     * @return string Прямая ссылка на загрузку трека
+     */
+    public function getDirectLink($url, $codec = 'mp3') {
+        $response = $this->requestYandexAPI->getXml($url);
+
+        $md5 = md5('XGRlBW9FXlekgbPrRHuSiA'.substr($response->path, 1).$response->s);
+        $urlBody = "/get-".$codec."/".$md5."/".$response->ts.$response->path;
+        $link = "https://".$response->host.$urlBody;
+        //$link = "https://".$response->host."/get-".$codec."/randomTrash/".$response->ts.$response->path;
+
+        //return preg_replace("\\", "", $link);
+        return $link;
+    }
+
     /**
      * Получения списка лайков
      *
