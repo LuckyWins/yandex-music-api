@@ -16,8 +16,7 @@ class Client {
 	private $requestYandexAPI;
 
     /**
-     * Временная функция для отладки
-     * УДАЛИТЬ позже
+     * Получение информации о текущем аккаунте
      *
      * @return array
      */
@@ -252,9 +251,17 @@ class Client {
         return $result;
     }
 
+    /**
+     * Получение информации о доступных вариантах загрузки трека
+     *
+     * @param string|int $trackId Уникальный идентификатор трека
+     * @param bool $getDirectLinks Получить ли при вызове метода прямую ссылку на загрузку
+     *
+     * @return mixed parsed json
+     */
     public function tracksDownloadInfo($trackId, $getDirectLinks = false) {
         $result = array();
-        $url = $this->baseUrl."/tracks/".$trackId."/download-info";
+        $url = $this->baseUrl."/tracks/$trackId/download-info";
 
         $response = json_decode($this->get($url));
         if($response->result == null) {
@@ -267,8 +274,8 @@ class Client {
                      * инвалидных прямых ссылок на скачивание
                      */
                     if ($item->codec == 'mp3') {
-                        $download = $this->getDirectLink($item->downloadInfoUrl);
-                        $item->directLink = $download;
+                        $item->directLink = $this->getDirectLink($item->downloadInfoUrl);
+                        unset($item->downloadInfoUrl);
                         array_push($result, $item);
                     }
                 }
@@ -295,12 +302,205 @@ class Client {
         $response = $this->requestYandexAPI->getXml($url);
 
         $md5 = md5('XGRlBW9FXlekgbPrRHuSiA'.substr($response->path, 1).$response->s);
-        $urlBody = "/get-".$codec."/".$md5."/".$response->ts.$response->path;
+        $urlBody = "/get-$codec/$md5/".$response->ts.$response->path;
         $link = "https://".$response->host.$urlBody;
         //$link = "https://".$response->host."/get-".$codec."/randomTrash/".$response->ts.$response->path;
 
-        //return preg_replace("\\", "", $link);
         return $link;
+    }
+
+    /**
+     * Метод для отправки текущего состояния прослушиваемого трека
+     *
+     * ! метод не был протестирован !
+     *
+     * @param string|int $trackId Уникальный идентификатор трека
+     * @param string $from Наименования клиента
+     * @param string|int $albumId Уникальный идентификатор альбома
+     * @param int $playlistId Уникальный идентификатор плейлиста, если таковой прослушивается.
+     * @param bool $fromCache Проигрывается ли трек с кеша
+     * @param string $playId Уникальный идентификатор проигрывания
+     * @param int $trackLengthSeconds Продолжительность трека в секундах
+     * @param int $totalPlayedSeconds Сколько было всего воспроизведено трека в секундах
+     * @param int $endPositionSeconds Окончательное значение воспроизведенных секунд
+     * @param string $client_now Текущая дата и время клиента в ISO
+     *
+     * @return boolean
+     *
+     * @throws Exception
+     */
+    private function playAudio($trackId,
+                               $from,
+                               $albumId,
+                               $playlistId = null,
+                               $fromCache = false,
+                               $playId = null,
+                               $trackLengthSeconds = 0,
+                               $totalPlayedSeconds = 0,
+                               $endPositionSeconds = 0,
+                               $client_now = null
+    ) {
+        $url = $this->baseUrl."/play-audio";
+
+        $data = array(
+            'track-id' => $trackId,
+            'from-cache' => $fromCache,
+            'from' => $from,
+            'play-id' => $playId,
+            'uid' => $this->account->uid,
+            'timestamp' => (new \DateTime())->format(DateTime::ATOM),
+            'track-length-seconds' => $trackLengthSeconds,
+            'total-played-seconds' => $totalPlayedSeconds,
+            'end-position-seconds' => $endPositionSeconds,
+            'album-id' => $albumId,
+            'playlist-id' => $playlistId,
+            'client-now' => (new \DateTime())->format(DateTime::ATOM)
+        );
+
+        $response = $this->post($url, $data);
+
+        return $response;
+    }
+
+    /**
+     * Получение альбома по его уникальному идентификатору вместе с треками
+     *
+     * @param string|int $albumId Уникальный идентификатор альбома
+     *
+     * @return mixed parsed json
+     */
+    public function albumsWithTracks($albumId) {
+        $url = $this->baseUrl."/albums/$albumId/with-tracks";
+
+        $response = json_decode($this->get($url))->result;
+
+        return $response;
+    }
+
+    /**
+     * Осуществление поиска по запросу и типу, получение результатов
+     *
+     * @param string $text Текст запроса
+     * @param bool $noCorrect Без исправлений?
+     * @param string $type Среди какого типа искать (трек, плейлист, альбом, исполнитель)
+     * @param int $page Номер страницы
+     * @param bool $playlistInBest Выдавать ли плейлисты лучшим вариантом поиска
+     *
+     * @return mixed parsed json
+     */
+    public function search($text,
+                           $noCorrect = false,
+                           $type = 'all',
+                           $page = 0,
+                           $playlistInBest = true
+    ) {
+        $url = $this->baseUrl."/search"
+            ."?text=$text"
+            ."&nocorrect=$noCorrect"
+            ."&type=$type"
+            ."&page=$page"
+            ."&playlist-in-best=$playlistInBest";
+
+        $response = json_decode($this->get($url))->result;
+
+        return $response;
+    }
+
+    /**
+     * Получение подсказок по введенной части поискового запроса.
+     *
+     * @param string $part Часть поискового запроса
+     *
+     * @return mixed parsed json
+     */
+    public function searchSuggest($part) {
+        $url = $this->baseUrl."/search/suggest?part=$part";
+
+        $response = json_decode($this->get($url))->result;
+
+        return $response;
+    }
+
+    /**
+     * Получение плейлиста или списка плейлистов по уникальным идентификаторам
+     *
+     * ! метод не был протестирован !
+     *
+     * @param string|int|array $kind Уникальный идентификатор плейлиста
+     * @param int $userId Уникальный идентификатор пользователя владеющего плейлистом
+     *
+     * @return mixed parsed json
+     */
+    public function usersPlaylists($kind, $userId = null) {
+        if ($userId == null) {
+            $userId = $this->account->uid;
+        }
+
+        $url = $this->baseUrl."/users/$userId/playlists";
+
+        $data = array(
+            'kind' => $kind
+        );
+
+        $response = json_decode($this->post($url, $data));
+
+        return $response;
+    }
+
+    /**
+     * Создание плейлиста
+     *
+     * @param string $title Название
+     * @param string $visibility Модификатор доступа
+     *
+     * @return mixed parsed json
+     */
+    public function usersPlaylistsCreate($title, $visibility = 'public') {
+        $url = $this->baseUrl."/users/".$this->account->uid."/playlists/create";
+
+        $data = array(
+            'title' => $title,
+            'visibility' => $visibility
+        );
+
+        $response = json_decode($this->post($url, $data))->result;
+
+        return $response;
+    }
+
+    /**
+     * Удаление плейлиста
+     *
+     * @param string|int $kind Уникальный идентификатор плейлиста
+     *
+     * @return mixed decoded json
+     */
+    public function usersPlaylistsDelete($kind) {
+        $url = $this->baseUrl."/users/".$this->account->uid."/playlists/$kind/delete";
+
+        $result = json_decode($this->post($url))->result;
+
+        return $result;
+    }
+
+    /**
+     * Изменение названия плейлиста
+     *
+     * @param string|int $kind Уникальный идентификатор плейлиста
+     * @param string $name Новое название
+     *
+     * @return mixed decoded json
+     */
+    public function usersPlaylistsNameChange($kind, $name) {
+        $url = $this->baseUrl."/users/".$this->account->uid."/playlists/$kind/name";
+
+        $data = array(
+            'value' => $name
+        );
+
+        $result = json_decode($this->post($url, $data))->result;
+
+        return $result;
     }
 
     /**
@@ -338,7 +538,7 @@ class Client {
         return $this->getLikes('playlist');
     }
 
-    private function post($url, $data) {
+    private function post($url, $data = null) {
         return $this->requestYandexAPI->post($url, $data);
     }
 
