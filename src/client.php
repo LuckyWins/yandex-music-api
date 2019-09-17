@@ -93,16 +93,30 @@ class Client {
     }
 
     /**
+     * Примитивная валидация токена
+     *
+     * @param string $token OAuth-токен
+     * @return bool Валидность токена
+     */
+    public function isTokenValid($token) {
+        $token = trim(preg_replace('/\s+/', ' ', $token));
+        if (strlen($token) != 39) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * Получение статуса аккаунта
      *
-     * @return array
+     * @return mixed decoded json
      */
     public function accountStatus() {
         $url = $this->baseUrl."/account/status";
 
-        $result = json_decode($this->get($url))->result;
+        $response = json_decode($this->get($url))->result;
 
-        return $result;
+        return $response;
     }
 
     /**
@@ -110,24 +124,151 @@ class Client {
      */
     private function updateAccountStatus() {
         $this->account = $this->accountStatus()->account;
+        $this->requestYandexAPI->updateUser($this->account->login);
+    }
+
+    /**
+     * Получение предложений по покупке
+     *
+     * @return mixed decoded json
+     */
+    public function settings() {
+        $url = $this->baseUrl."/settings";
+
+        $response = json_decode($this->get($url))->result;
+
+        return $response;
+    }
+
+    /**
+     * Получение оповещений
+     *
+     * @return mixed decoded json
+     */
+    public function permissionAlert() {
+        $url = $this->baseUrl."/permission-alerts";
+
+        $response = json_decode($this->get($url))->result;
+
+        return $response;
+    }
+
+    /**
+     * Получение значений экспериментальных функций аккаунта
+     *
+     * @return mixed decoded json
+     */
+    public function accountExperiments() {
+        $url = $this->baseUrl."/account/experiments";
+
+        $response = json_decode($this->get($url))->result;
+
+        return $response;
+    }
+
+    /**
+     * Активация промо-кода
+     *
+     * @param string $code Промо-код
+     * @param string $lang Язык ответа API в ISO 639-1
+     *
+     * @return mixed decoded json
+     */
+    public function consumePromoCode($code, $lang = 'en') {
+        $url = $this->baseUrl."/account/consume-promo-code";
+
+        $data = array(
+            'code' => $code,
+            'language' => $lang
+        );
+
+        $response = json_decode($this->post($url, $data))->result;
+
+        return $response;
+    }
+
+    /**
+     * Получение потока информации (фида) подобранного под пользователя.
+     * Содержит умные плейлисты.
+     *
+     * @return mixed decoded json
+     */
+    public function feed() {
+        $url = $this->baseUrl."/feed";
+
+        $response = json_decode($this->get($url))->result;
+
+        return $response;
+    }
+
+    public function feedWizardIsPassed() {
+        $url = $this->baseUrl."/feed/wizard/is-passed";
+
+        $response = json_decode($this->get($url))->result;
+
+        return $response;
+    }
+
+    /**
+     * Получение лендинг-страницы содержащий блоки с новыми релизами,
+     * чартами, плейлистами с новинками и т.д.
+     *
+     * Поддерживаемые типы блоков: personalplaylists, promotions, new-releases, new-playlists,
+     * mixes, chart, artists, albums, playlists, play_contexts.
+     *
+     * @param array|string $blocks
+     *
+     * @return mixed parsed json
+     */
+    public function landing($blocks) {
+        $url = $this->baseUrl."/landing3?blocks=";
+
+        if (is_array($blocks)) {
+            $url .= implode(',', $blocks);
+        }else{
+            $url .= $blocks;
+        }
+
+        $response = json_decode($this->get($url));
+        if($response->result == null) {
+            $response = $response->error;
+        }else{
+            $response = $response->result;
+        }
+
+        return $response;
+    }
+
+    /**
+     * Получение жанров музыки
+     *
+     * @return mixed parsed json
+     */
+    public function genres() {
+        $url = $this->baseUrl."/genres";
+
+        $result = json_decode($this->get($url))->result;
+
+        return $result;
     }
 
     /**
      * Получения списка лайков
      *
      * @param string $objectType track, album, artist, playlist
-     * @return mixed
+     *
+     * @return mixed decoded json
      */
     private function getLikes($objectType) {
         $url = $this->baseUrl."/users/".$this->account->uid."/likes/".$objectType."s";
 
-        $result = json_decode($this->get($url))->result;
+        $response = json_decode($this->get($url))->result;
 
         if ($objectType == "track") {
-            return $result->library;
+            return $response->library;
         }
 
-        return $result;
+        return $response;
     }
 
     public function getLikesTracks() {

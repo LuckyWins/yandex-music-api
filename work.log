@@ -1,6 +1,10 @@
-2019-09-13 05:52:01 /Applications/MAMP/htdocs/index.php [Info]: message
-2019-09-13 08:55:28 /Applications/MAMP/htdocs/index.php [Info]: message
-2019-09-13 08:58:04 /Applications/MAMP/htdocs/src/utils.php [Info]: message
-2019-09-13 08:59:11 /Applications/MAMP/htdocs/index.php [Info]: message
-2019-09-13 09:03:37 /Applications/MAMP/htdocs/index.php [Info]: message
-2019-09-13 09:04:32 /Applications/MAMP/htdocs/index.php [Info]: message
+2019-09-17 11:47:05 request.php [GET]: https://api.music.yandex.net/account/status
+2019-09-17 11:47:06 request.php [GET]: https://api.music.yandex.net/genres User: Night.Jaguar.Saint
+2019-09-17 11:47:26 request.php [GET]: https://api.music.yandex.net/account/status
+2019-09-17 11:47:27 request.php [GET]: https://api.music.yandex.net/genres User: Night.Jaguar.Saint
+2019-09-17 11:47:55 request.php [GET]: https://api.music.yandex.net/account/status
+2019-09-17 11:47:56 request.php [GET]: https://api.music.yandex.net/genres?lang=ru User: Night.Jaguar.Saint
+2019-09-17 11:48:00 request.php [GET]: https://api.music.yandex.net/account/status
+2019-09-17 11:48:00 request.php [GET]: https://api.music.yandex.net/genres?lang=ru User: Night.Jaguar.Saint
+2019-09-17 11:48:04 request.php [GET]: https://api.music.yandex.net/account/status
+2019-09-17 11:48:04 request.php [GET]: https://api.music.yandex.net/genres?lang=ru User: Night.Jaguar.Saint
