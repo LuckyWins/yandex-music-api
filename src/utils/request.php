@@ -86,4 +86,23 @@ class RequestYandexAPI {
         return simplexml_load_file($url);
     }
 
+    /**
+     * Загрузка трека по direct url
+     *
+     * TODO: адекватное название сохраняемого файла
+     *
+     * @param string $url Ссылка на файл
+     * @param string $name Название сохраняемого файла
+     * @return bool|int
+     */
+    public function download($url, $name) {
+        $msg = $url;
+        if($this->user != "") {
+            $msg .= " User: ".$this->user;
+        }
+        Logger::message($msg, "request.php", "DOWNLOAD");
+
+        return file_put_contents(dirname(__FILE__) . '/'.$name.'.mp3', fopen($url, 'r'));
+    }
+
 }

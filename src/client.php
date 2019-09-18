@@ -274,7 +274,7 @@ class Client {
                      * инвалидных прямых ссылок на скачивание
                      */
                     if ($item->codec == 'mp3') {
-                        $item->directLink = $this->getDirectLink($item->downloadInfoUrl);
+                        $item->directLink = $this->getDirectLink($item->downloadInfoUrl, $item->codec, $item->bitrateInKbps);
                         unset($item->downloadInfoUrl);
                         array_push($result, $item);
                     }
@@ -293,18 +293,21 @@ class Client {
      * Метод доступен только одну минуту с момента
      * получения информациио загрузке, иначе 410 ошибка!
      *
+     * TODO: перенести загрузку файла в другую функию
+     *
      * @param string $url xml-файл с информацией
      * @param string $codec Кодек файла
      *
      * @return string Прямая ссылка на загрузку трека
      */
-    public function getDirectLink($url, $codec = 'mp3') {
+    public function getDirectLink($url, $codec = 'mp3', $suffix = "1") {
         $response = $this->requestYandexAPI->getXml($url);
 
         $md5 = md5('XGRlBW9FXlekgbPrRHuSiA'.substr($response->path, 1).$response->s);
         $urlBody = "/get-$codec/$md5/".$response->ts.$response->path;
         $link = "https://".$response->host.$urlBody;
         //$link = "https://".$response->host."/get-".$codec."/randomTrash/".$response->ts.$response->path;
+        //$this->requestYandexAPI->download($link, $codec, $suffix);
 
         return $link;
     }
@@ -312,7 +315,7 @@ class Client {
     /**
      * Метод для отправки текущего состояния прослушиваемого трека
      *
-     * ! метод не был протестирован !
+     * TODO: метод не был протестирован!
      *
      * @param string|int $trackId Уникальный идентификатор трека
      * @param string $from Наименования клиента
@@ -424,7 +427,7 @@ class Client {
     /**
      * Получение плейлиста или списка плейлистов по уникальным идентификаторам
      *
-     * ! метод не был протестирован !
+     * TODO: метод не был протестирован!
      *
      * @param string|int|array $kind Уникальный идентификатор плейлиста
      * @param int $userId Уникальный идентификатор пользователя владеющего плейлистом
@@ -504,6 +507,338 @@ class Client {
     }
 
     /**
+     * Изменение плейлиста.
+     *
+     * TODO: функция не готова, необходим воспомогательный класс для получения отличий
+     *
+     * @param string|int $kind Уникальный идентификатор плейлиста
+     * @param string $diff JSON представления отличий старого и нового плейлиста
+     * @param int $revision TODO
+     *
+     * @return mixed parsed json
+     */
+    private function usersPlaylistsChange($kind, $diff, $revision = 1) {
+        $url = $this->baseUrl."/users/".$this->account->uid."/playlists/$kind/change";
+
+        $data = array(
+            'kind' => $kind,
+            'revision' => $revision,
+            'diff' => $diff
+        );
+
+        $response = json_decode($this->post($url, $data))->result;
+
+        return $response;
+    }
+
+    /**
+     * Добавление трека в плейлист
+     *
+     * TODO: функция не готова, необходим воспомогательный класс для получения отличий
+     *
+     * @param string|int $kind Уникальный идентификатор плейлиста
+     * @param string|int $trackId Уникальный идентификатор трека
+     * @param string|int $albumId Уникальный идентификатор альбома
+     * @param int $at Индекс для вставки
+     * @param int $revision TODO
+     *
+     * @return mixed parsed json
+     */
+    public function usersPlaylistsInsertTrack($kind, $trackId, $albumId, $at = 0, $revision = 1) {
+        return 'disable';
+    }
+
+    /* ROTOR FUNC HERE */
+
+    /**
+     * TODO: Описание функции
+     *
+     * TODO: метод не был протестирован!
+     *
+     * @return mixed parsed json
+     */
+    public function rotorAccountStatus() {
+        $url = $this->baseUrl."/rotor/account/status";
+
+        $response = json_decode($this->get($url))->result;
+
+        return $response;
+    }
+
+    /**
+     * TODO: Описание функции
+     *
+     * TODO: метод не был протестирован!
+     *
+     * @return mixed parsed json
+     */
+    public function rotorStationsDashboard() {
+        $url = $this->baseUrl."/rotor/stations/dashboard";
+
+        $response = json_decode($this->get($url))->result;
+
+        return $response;
+    }
+
+    /**
+     * TODO: Описание функции
+     *
+     * TODO: метод не был протестирован!
+     *
+     * @param string $lang Язык ответа API в ISO 639-1
+     *
+     * @return mixed parsed json
+     */
+    public function rotorStationsList($lang = 'en') {
+        $url = $this->baseUrl."/rotor/stations/list?language=".$lang;
+
+        $response = json_decode($this->get($url))->result;
+
+        return $response;
+    }
+
+    /**
+     * TODO: Описание функции
+     *
+     * TODO: метод не был протестирован!
+     *
+     * @param string $genre Жанр
+     * @param string $type
+     * @param string $from
+     * @param string|int $batchId
+     * @param string $trackId
+     *
+     * @return mixed parsed json
+     *
+     * @throws Exception
+     */
+    public function rotorStationGenreFeedback($genre, $type, $from = null, $batchId = null, $trackId = null) {
+        $url = $this->baseUrl."/rotor/station/genre:$genre/feedback";
+        if ($batchId != null) {
+            $url .= "?batch-id=".$batchId;
+        }
+
+        $data = array(
+            'type' => $type,
+            'timestamp' => (new \DateTime())->format(DateTime::ATOM)
+        );
+        if ($from != null) {
+            $data['from'] = $from;
+        }
+        if ($trackId != null) {
+            $data['trackId'] = $trackId;
+        }
+
+        $response = json_decode($this->post($url, $data))->result;
+
+        return $response;
+    }
+
+    /**
+     * TODO: Описание функции
+     *
+     * TODO: метод не был протестирован!
+     *
+     * @param string $genre
+     * @param string $from
+     *
+     * @return mixed parsed json
+     *
+     * @throws Exception
+     */
+    public function rotorStationGenreFeedbackRadioStarted($genre, $from) {
+        return $this->rotorStationGenreFeedback($genre, 'radioStarted', $from);
+    }
+
+    /**
+     * TODO: Описание функции
+     *
+     * TODO: метод не был протестирован!
+     *
+     * @param string $genre
+     * @param string $from
+     *
+     * @return mixed parsed json
+     *
+     * @throws Exception
+     */
+    public function rotorStationGenreFeedbackTrackStarted($genre, $from) {
+        return $this->rotorStationGenreFeedback($genre, 'trackStarted', $from);
+    }
+
+    /**
+     * TODO: Описание функции
+     *
+     * TODO: метод не был протестирован!
+     *
+     * @param string $genre
+     *
+     * @return mixed parsed json
+     */
+    public function rotorStationGenreInfo($genre) {
+        $url = $this->baseUrl."/rotor/station/genre:$genre/info";
+
+        $response = json_decode($this->get($url))->result;
+
+        return $response;
+    }
+
+    /**
+     * TODO: Описание функции
+     *
+     * TODO: метод не был протестирован!
+     *
+     * @param string $genre
+     *
+     * @return mixed parsed json
+     */
+    public function rotorStationGenreTracks($genre) {
+        $url = $this->baseUrl."/rotor/station/genre:$genre/tracks";
+
+        $response = json_decode($this->get($url))->result;
+
+        return $response;
+    }
+
+    /* ROTOR FUNC END */
+
+    /**
+     * TODO: Описание функции
+     *
+     * TODO: метод не был протестирован!
+     *
+     * @param string|int $artistId
+     *
+     * @return mixed parsed json
+     */
+    public function artistsBriefInfo($artistId) {
+        $url = $this->baseUrl."/artists/$artistId/brief-info";
+
+        $response = json_decode($this->get($url))->result;
+
+        return $response;
+    }
+
+    /**
+     * TODO: Описание функции
+     *
+     * TODO: метод не был протестирован!
+     *
+     * @param string $objectType
+     * @param string|int|array $ids
+     * @param bool $remove
+     *
+     * @return mixed parsed json
+     */
+    private function likeAction($objectType, $ids, $remove = false) {
+        $action = 'add-multiple';
+        if ($remove) {
+            $action = 'remove';
+        }
+        $url = $this->baseUrl."/users/".$this->account->uid."/likes/".$objectType."s/$action";
+
+        $data = array(
+            $objectType.'-ids' => $ids
+        );
+
+        $response = json_decode($this->post($url, $data))->result;
+
+        if ($objectType == 'track') {
+            $response = $response->revision;
+        }
+
+        return $response;
+    }
+
+    public function usersLikesTracksAdd($trackIds) {
+        return $this->likeAction('track', $trackIds);
+    }
+
+    public function usersLikesTracksRemove($trackIds) {
+        return $this->likeAction('track', $trackIds, true);
+    }
+
+    public function usersLikesArtistsAdd($artistIds) {
+        return $this->likeAction('artist', $artistIds);
+    }
+
+    public function usersLikesArtistsRemove($artistIds) {
+        return $this->likeAction('artist', $artistIds, true);
+    }
+
+    public function usersLikesPlaylistsAdd($playlistIds) {
+        return $this->likeAction('playlist', $playlistIds);
+    }
+
+    public function usersLikesPlaylistsRemove($playlistIds) {
+        return $this->likeAction('playlist', $playlistIds, true);
+    }
+
+    public function usersLikesAlbumsAdd($albumIds) {
+        return $this->likeAction('album', $albumIds);
+    }
+
+    public function usersLikesAlbumsRemove($albumIds) {
+        return $this->likeAction('album', $albumIds, true);
+    }
+
+    /**
+     * TODO: Описание функции
+     *
+     * TODO: метод не был протестирован!
+     *
+     * @param string $objectType
+     * @param string|int|array $ids
+     *
+     * @return mixed parsed json
+     */
+    private function getList($objectType, $ids) {
+        $url = $this->baseUrl."/".$objectType."s";
+        if ($objectType == 'playlist') {
+            $url .= "/list";
+        }
+
+        $data = array(
+            $objectType.'-ids' => $ids
+        );
+
+        $response = json_decode($this->post($url, $data))->result;
+
+        return $response;
+    }
+
+    public function artists($artistIds) {
+        return $this->getList('artist', $artistIds);
+    }
+
+    public function albums($albumIds) {
+        return $this->getList('album', $albumIds);
+    }
+
+    public function tracks($trackIds) {
+        return $this->getList('track', $trackIds);
+    }
+
+    public function playlistsList($playlistIds) {
+        return $this->getList('playlist', $playlistIds);
+    }
+
+    /**
+     * TODO: Описание функции
+     *
+     * TODO: метод не был протестирован!
+     *
+     * @return mixed parsed json
+     */
+    public function usersPlaylistsList() {
+        $url = $this->baseUrl."/users/".$this->account->uid."/playlists/list";
+
+        $response = json_decode($this->get($url))->result;
+
+        return $response;
+    }
+
+    /**
      * Получения списка лайков
      *
      * @param string $objectType track, album, artist, playlist
@@ -536,6 +871,56 @@ class Client {
 
     public function getLikesPlaylists() {
         return $this->getLikes('playlist');
+    }
+
+    /**
+     * TODO: Описание функции
+     *
+     * @param int $ifModifiedSinceRevision
+     *
+     * @return mixed parsed json
+     */
+    public function usersDislikesTracks($ifModifiedSinceRevision = 0) {
+        $url = $this->baseUrl."/users/".$this->account->uid."/dislikes/tracks"
+            .'?if_modified_since_revision='.$ifModifiedSinceRevision;
+
+        $response = json_decode($this->get($url))->result->library;
+
+        return $response;
+    }
+
+    /**
+     * TODO: Описание функции
+     *
+     * TODO: метод не был протестирован!
+     *
+     * @param string|int|array $ids
+     * @param bool $remove
+     *
+     * @return mixed parsed json
+     */
+    private function dislikeAction($ids, $remove = false) {
+        $action = 'add-multiple';
+        if ($remove) {
+            $action = 'remove';
+        }
+        $url = $this->baseUrl."/users/".$this->account->uid."/dislikes/tracks/$action";
+
+        $data = array(
+            'track-ids-ids' => $ids
+        );
+
+        $response = json_decode($this->post($url, $data))->result;
+
+        return $response;
+    }
+
+    public function users_dislikes_tracks_add($trackIds) {
+        return $this->dislikeAction($trackIds);
+    }
+
+    public function users_dislikes_tracks_remove($trackIds) {
+        return $this->dislikeAction($trackIds, true);
     }
 
     private function post($url, $data = null) {

@@ -14,8 +14,8 @@ $client = new Client($privateConfig['token']);
 //Utils::dump($client->getAccount());
 
 //$result = $client->getLikes('track');
-//$result = $client->tracksDownloadInfo("57925627:8751243", true);
-$result = $client->usersPlaylistsNameChange(1002, 'new name');
+$result = $client->usersDislikesTracks();
+//$result = $client->usersPlaylistsNameChange(1002, 'new name');
 Utils::jsonEncode($result);
 //Utils::dump($result);
 
