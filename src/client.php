@@ -544,8 +544,18 @@ class Client {
      *
      * @return mixed parsed json
      */
-    public function usersPlaylistsInsertTrack($kind, $trackId, $albumId, $at = 0, $revision = 1) {
-        return 'disable';
+    public function usersPlaylistsInsertTrack($kind, $trackId, $albumId, $at = 0, $revision = null) {
+        if($revision == null)
+            $revision = $this->usersPlaylists($kind)->result[0]->revision;
+
+        $oprs = json_encode(array(
+            [
+            'op' => "insert",
+            'at' => $at,
+            'tracks'  => [['id' => $trackId, 'albumId' => $albumId]]
+        ]));
+        
+        return $this->usersPlaylistsChange($kind, $oprs, $revision);
     }
 
     /* ROTOR FUNC HERE */
