@@ -6,7 +6,7 @@ Php lib for Yandex.Music. Big thx @MarshalX
 ```php
 $token = "";
 
-client = new Client($token);
+$client = new Client($token);
 $account = $client->getAccount();
 if($account == null){
     $client->fromCredentials("username", "paassword" , true);
