@@ -3,7 +3,7 @@ Php lib for Yandex.Music. Big thx @MarshalX
 
 ## login example
 
-```
+```php
 $token = "";
 
 client = new Client($token);
