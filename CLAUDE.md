@@ -49,6 +49,32 @@ with them, and they are kept passing.
 - Tests run without network access and without credentials — responses come
   from fixtures, never from live API calls
 
+## Credentials
+
+An OAuth token grants full access to the account behind it — the profile, the
+phone numbers on the Yandex ID, the subscription — and lasts about a year.
+
+- The token lives in `.env.local`: git-ignored, written owner-only, loaded by
+  `examples/Bootstrap.php`. Nothing prints it, and nothing commits it.
+- `.env.local.example` is its committed twin and documents every variable the
+  project understands — what it is, what breaks without it, how to obtain it.
+  A new variable lands there in the same change that starts reading it, and the
+  placeholder value stays obviously fake.
+- **The assistant does not read `.env.local` and does not need to.** A `deny`
+  rule in `.claude/settings.json` blocks the Read tool from it. The rule cannot
+  cover every shell command, so this is also a standing instruction.
+- **Checks against the live API are run by the user, not by the assistant.**
+  The assistant writes the script; the user runs it and reports what happened.
+- Tests never take credentials and never reach the network. HTTP is mocked at
+  the PSR-18 boundary and time is injected, so nothing in `make check` needs a
+  token or a connection.
+- If a token is ever pasted into a conversation, a log, or a commit, it is
+  compromised: revoke it rather than reasoning about who saw it. Ending the
+  session in Yandex ID does not do it — the token stays valid. Post it to
+  `https://oauth.yandex.ru/revoke_token` with the client id and secret from
+  `Client\DeviceAuth`, then confirm `/account/status` answers 401, because that
+  endpoint replies `{"status": "ok"}` even for a token that never existed.
+
 ## Rules
 
 - Deferred tasks, rejected options and the reasoning behind them live in
