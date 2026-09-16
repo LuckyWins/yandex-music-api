@@ -112,6 +112,14 @@ Git Flow.
 Branch names are lowercase, words separated by hyphens, and describe the work
 rather than the ticket.
 
+Link a finished branch for review with the base already chosen:
+
+    https://github.com/LuckyWins/yandex-music-api/compare/develop...<branch>?expand=1
+
+The `pull/new/<branch>` form git prints on push defaults the base to `main`,
+which has to be changed by hand — and a missed change puts every commit since
+the 2019 code into the diff instead of the one stage under review.
+
 ## Commits
 
 **Never commit without explicit permission from the user.** Staging, amending,
