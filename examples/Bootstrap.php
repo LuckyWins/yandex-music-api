@@ -161,7 +161,7 @@ final class Bootstrap
         ));
 
         file_put_contents($path, [] === $kept ? '' : implode("\n", $kept)."\n");
-        chmod($path, 0600);
+        chmod($path, 0o600);
     }
 
     /**

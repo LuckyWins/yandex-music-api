@@ -251,6 +251,11 @@ make cs-fix      fix code style
 make check       everything CI would run
 ```
 
+CI runs the suite against every supported PHP version on pull requests into
+`develop` and `main`, and runs PHPStan and the style check once on 8.3. That
+matrix is the only thing verifying the `^8.3` constraint in `composer.json`,
+since development happens on a single version.
+
 Tests never touch the network and never need credentials: HTTP is mocked at the
 PSR-18 boundary, and time is injected, so polling loops run instantly. Only the
 scripts in `examples/` talk to the real API, and they read the token from
