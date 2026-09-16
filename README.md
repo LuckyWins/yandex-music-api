@@ -138,6 +138,32 @@ Without a token the API still answers, but only with what an anonymous visitor
 sees — thirty-second previews instead of whole tracks. Opening
 music.yandex.ru in a private window shows you roughly where the line is.
 
+## Downloading a track
+
+```console
+$ php examples/download_track.php 31190260
+Miyagi & Эндшпиль, KREC — Нирвана
+available: mp3 320, mp3 192
+taking:    mp3 320
+
+wrote 31190260.mp3 (10.4 MiB)
+```
+
+In code:
+
+```php
+$variants = $client->tracksDownloadInfo($trackId);
+
+usort($variants, fn ($a, $b) => $b->bitrateInKbps <=> $a->bitrateInKbps);
+
+$variants[0]->download('track.mp3');   // streamed, not buffered
+```
+
+Two things to know. A download manifest is good for about a minute, so resolve
+it and fetch promptly rather than collecting manifests for later. And the audio
+does not come from the API host — a network that reaches `api.music.yandex.net`
+but not Yandex's storage hosts will hang here rather than fail cleanly.
+
 ## Errors
 
 Everything the library raises descends from `YandexMusicException`:
