@@ -35,6 +35,10 @@ final class ArtistTest extends ModelTestCase
             'description' => ['text' => 'Дуэт из Владикавказа'],
             'contentRestrictions' => ['available' => true],
             'likesCount' => 900000,
+            'derivedColors' => ['average' => '#3c3c3c'],
+            'trailer' => ['available' => false],
+            'hasTrailer' => false,
+            'extraActions' => [],
         ];
     }
 
@@ -61,6 +65,10 @@ final class ArtistTest extends ModelTestCase
         self::assertInstanceOf(Track::class, ($model->popularTracks ?? [])[0] ?? null);
         self::assertSame('Дуэт из Владикавказа', $model->description?->text);
         self::assertTrue($model->contentRestrictions?->available);
+        self::assertSame('#3c3c3c', $model->derivedColors?->average);
+        self::assertFalse($model->trailer?->available);
+        self::assertFalse($model->hasTrailer);
+        self::assertSame([], $model->extraActions);
     }
 
     protected function equalityTriple(): array

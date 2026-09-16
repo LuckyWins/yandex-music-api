@@ -6,9 +6,14 @@ namespace LuckyWins\YandexMusic\Model\Album;
 
 use LuckyWins\YandexMusic\Client;
 use LuckyWins\YandexMusic\Model\Artist\Artist;
+use LuckyWins\YandexMusic\Model\Cover;
+use LuckyWins\YandexMusic\Model\CoverDerivedColors;
+use LuckyWins\YandexMusic\Model\CustomWave;
 use LuckyWins\YandexMusic\Model\Label\Label;
 use LuckyWins\YandexMusic\Model\Model;
+use LuckyWins\YandexMusic\Model\Pager;
 use LuckyWins\YandexMusic\Model\Track\Track;
+use LuckyWins\YandexMusic\Model\Trailer;
 
 /**
  * An album.
@@ -27,6 +32,11 @@ final class Album extends Model
         'trackPosition' => [TrackPosition::class, 'one'],
         'deprecation' => [Deprecation::class, 'one'],
         'actionButton' => [AlbumActionButton::class, 'one'],
+        'cover' => [Cover::class, 'one'],
+        'derivedColors' => [CoverDerivedColors::class, 'one'],
+        'trailer' => [Trailer::class, 'one'],
+        'customWave' => [CustomWave::class, 'one'],
+        'pager' => [Pager::class, 'one'],
     ];
 
     public function __construct(
@@ -99,6 +109,16 @@ final class Album extends Model
         /** @var list<string>|null */
         public readonly ?array $disclaimers = null,
         public readonly ?AlbumActionButton $actionButton = null,
+        /** The cover as an object; `coverUri` carries the same art as a template. */
+        public readonly ?Cover $cover = null,
+        public readonly ?CoverDerivedColors $derivedColors = null,
+        public readonly ?Trailer $trailer = null,
+        public readonly ?bool $hasTrailer = null,
+        public readonly ?CustomWave $customWave = null,
+        /** Present when the album arrives as one page of a longer list. */
+        public readonly ?Pager $pager = null,
+        public readonly ?string $metaTagId = null,
+        public readonly ?string $sortOrder = null,
         public readonly ?Client $client = null,
     ) {
     }

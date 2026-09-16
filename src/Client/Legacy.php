@@ -58,14 +58,6 @@ trait Legacy
         return $this->getArray('/genres');
     }
 
-    // -- Albums -------------------------------------------------------------
-
-    /** @return array<string, mixed> */
-    public function albumsWithTracks(string|int $albumId): array
-    {
-        return $this->getArray('/albums/'.$albumId.'/with-tracks');
-    }
-
     // -- Search -------------------------------------------------------------
 
     /**
@@ -237,27 +229,7 @@ trait Legacy
         return $this->request->get($this->getBaseUrl().'/rotor/station/genre:'.$genre.'/tracks');
     }
 
-    // -- Artists ------------------------------------------------------------
-
-    /** @return array<string, mixed> */
-    public function artistsBriefInfo(string|int $artistId): array
-    {
-        return $this->getArray('/artists/'.$artistId.'/brief-info');
-    }
-
     // -- Batch lookups ------------------------------------------------------
-
-    /** @param string|int|list<string|int> $artistIds */
-    public function artists(string|int|array $artistIds): mixed
-    {
-        return $this->getList('artist', $artistIds);
-    }
-
-    /** @param string|int|list<string|int> $albumIds */
-    public function albums(string|int|array $albumIds): mixed
-    {
-        return $this->getList('album', $albumIds);
-    }
 
     /** @param string|int|list<string|int> $playlistIds */
     public function playlistsList(string|int|array $playlistIds): mixed

@@ -315,6 +315,14 @@ An album.
 | `listeningFinished` | `?bool` | no |  |
 | `disclaimers` | `list<string>|null` | no |  |
 | `actionButton` | `?AlbumActionButton` | no | [AlbumActionButton](#albumactionbutton) |
+| `cover` | `?Cover` | no | [Cover](#cover). The cover as an object; `coverUri` carries the same art as a template. |
+| `derivedColors` | `?CoverDerivedColors` | no | [CoverDerivedColors](#coverderivedcolors) |
+| `trailer` | `?Trailer` | no | [Trailer](#trailer) |
+| `hasTrailer` | `?bool` | no |  |
+| `customWave` | `?CustomWave` | no | [CustomWave](#customwave) |
+| `pager` | `?Pager` | no | [Pager](#pager). Present when the album arrives as one page of a longer list. |
+| `metaTagId` | `?string` | no |  |
+| `sortOrder` | `?string` | no |  |
 
 ### AlbumActionButton
 
@@ -386,6 +394,57 @@ An artist.
 | `disclaimers` | `list<string>|null` | no |  |
 | `contentRestrictions` | `?ContentRestrictions` | no | [ContentRestrictions](#contentrestrictions) |
 | `cutoutCover` | `?Cover` | no | [Cover](#cover) |
+| `derivedColors` | `?CoverDerivedColors` | no | [CoverDerivedColors](#coverderivedcolors) |
+| `trailer` | `?Trailer` | no | [Trailer](#trailer) |
+| `hasTrailer` | `?bool` | no |  |
+| `extraActions` | `list<mixed>` | no |  |
+
+### ArtistAlbums
+
+A page of an artist's albums.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `albums` | `list<Album>` | no | list of [Album](#album) |
+| `pager` | `?Pager` | no | [Pager](#pager) |
+
+### ArtistTracks
+
+A page of an artist's tracks.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `tracks` | `list<Track>` | no | list of [Track](#track) |
+| `pager` | `?Pager` | no | [Pager](#pager) |
+
+### BriefInfo
+
+Everything the service will say about an artist in one response.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `artist` | `?Artist` | no | [Artist](#artist) |
+| `albums` | `list<Album>` | no | list of [Album](#album) |
+| `alsoAlbums` | `list<Album>` | no | list of [Album](#album) |
+| `lastReleases` | `list<Album>` | no | list of [Album](#album) |
+| `popularTracks` | `list<Track>` | no | list of [Track](#track) |
+| `similarArtists` | `list<Artist>` | no | list of [Artist](#artist) |
+| `allCovers` | `list<Cover>` | no | list of [Cover](#cover) |
+| `videos` | `list<VideoSupplement>` | no | list of [VideoSupplement](#videosupplement) |
+| `tracksInChart` | `list<Chart>` | no | list of [Chart](#chart) |
+| `stats` | `?Stats` | no | [Stats](#stats) |
+| `customWave` | `?CustomWave` | no | [CustomWave](#customwave) |
+| `hasPromotions` | `?bool` | no |  |
+| `hasTrailer` | `?bool` | no |  |
+| `lastReleaseIds` | `list<int>` | no |  |
+| `playlists` | `list<mixed>` | no | Not modelled: the playlists domain is not ported. |
+| `playlistIds` | `list<mixed>` | no |  |
+| `concerts` | `list<mixed>` | no |  |
+| `clips` | `list<mixed>` | no |  |
+| `vinyls` | `list<mixed>` | no |  |
+| `links` | `list<mixed>` | no | Promotional links — a different shape from the artist's own `links`, despite the name: these carry a subtitle and an image. |
+| `bandlinkScannerLink` | `array<string,` | no |  |
+| `extraActions` | `list<mixed>` | no |  |
 
 ### Counts
 
@@ -427,6 +486,24 @@ An artist's position in the charts.
 | `month` | `int` | **yes** |  |
 | `week` | `?int` | no |  |
 | `day` | `?int` | no |  |
+
+### SimilarArtists
+
+Who else sounds like a given artist.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `artist` | `?Artist` | no | [Artist](#artist) |
+| `similarArtists` | `list<Artist>` | no | list of [Artist](#artist) |
+
+### Stats
+
+How many people listened to an artist lately, and whether that is rising.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `lastMonthListeners` | `int` | **yes** |  |
+| `lastMonthListenersDelta` | `int` | **yes** |  |
 
 ## DeviceAuth
 
@@ -496,6 +573,32 @@ A record label.
 | `image` | `?string` | no |  |
 | `links` | `list<Link>|null` | no | list of [Link](#link) |
 | `type` | `?string` | no |  |
+
+## Landing
+
+### Chart
+
+A track's standing in a chart, and which way it is moving.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `position` | `int` | **yes** |  |
+| `progress` | `string` | **yes** |  |
+| `listeners` | `int` | **yes** |  |
+| `shift` | `int` | **yes** | Places gained or lost since the last reckoning. |
+| `bgColor` | `?string` | no |  |
+| `trackId` | `?TrackId` | no | [TrackId](#trackid) |
+
+### TrackId
+
+A reference to a track rather than the track itself.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `id` | `?int` | no |  |
+| `trackId` | `?int` | no |  |
+| `albumId` | `?int` | no |  |
+| `from` | `?string` | no |  |
 
 ## Playlist
 
@@ -669,6 +772,17 @@ Everyone credited on a recording.
 |---|---|---|---|
 | `credits` | `list<Credit>` | no | list of [Credit](#credit) |
 
+### CustomWave
+
+The personal radio station offered for an artist or album, and how to present it.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `title` | `?string` | no |  |
+| `animationUrl` | `?string` | no |  |
+| `header` | `?string` | no |  |
+| `backgroundImageUrl` | `?string` | no |  |
+
 ### Disclaimer
 
 Notices that must accompany a recording.
@@ -685,6 +799,16 @@ The notice Russian law requires be shown for material by someone designated a fo
 |---|---|---|---|
 | `reason` | `?string` | no |  |
 | `title` | `?string` | no |  |
+
+### Pager
+
+Where a paged response sits in the whole of what there is.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `total` | `int` | **yes** |  |
+| `page` | `int` | **yes** |  |
+| `perPage` | `int` | **yes** |  |
 
 ### PermissionAlerts
 
@@ -716,6 +840,14 @@ What the account can be sold, and where to buy it.
 | `nativeProducts` | `list<Product>` | no | list of [Product](#product) |
 | `webPaymentMonthProductPrice` | `?Price` | no | [Price](#price) |
 | `offersBatchId` | `?string` | no | Identifies the batch of offers this response was generated from. |
+
+### Trailer
+
+Whether a trailer exists for something.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `available` | `?bool` | no |  |
 
 ## Track
 
@@ -897,6 +1029,7 @@ A track.
 | `disclaimers` | `list<string>|null` | no |  |
 | `backgroundVideoId` | `?string` | no |  |
 | `playerId` | `?string` | no |  |
+| `chart` | `?Chart` | no | [Chart](#chart). Where the track currently sits in a chart, when it is in one. |
 
 ### TrackFullInfo
 
