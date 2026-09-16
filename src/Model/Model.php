@@ -24,11 +24,17 @@ use ReflectionClass;
  * Nested models are declared rather than hand-coded:
  *
  *     protected const NESTED = [
- *         'artists' => [Artist::class, 'list'],
- *         'major'   => [Major::class,  'one'],
- *     ];
+ *         'artists'     => [Artist::class, 'list'],
+ *         'major'       => [Major::class,  'one'],
+ *  *     ];
  *
  * A model whose shape depends on the endpoint overrides fromApi() instead.
+ *
+ * Field names are matched case- and separator-insensitively, so a property
+ * named `lastFmScrobblingEnabled` is filled by `lastFMScrobblingEnabled`,
+ * `lastFmScrobblingEnabled` or `last_fm_scrobbling_enabled` alike. The API's
+ * exact spelling is not always knowable in advance, and a near miss would
+ * otherwise drop the field in silence.
  */
 abstract class Model
 {
@@ -39,11 +45,11 @@ abstract class Model
      */
     protected const NESTED = [];
 
-    /** @var array<class-string, array{names: list<string>, required: list<string>}> */
+    /** @var array<class-string, array{names: list<string>, required: list<string>, byKey: array<string, string>}> */
     private static array $fieldCache = [];
 
     /** @var array<string, string> */
-    private static array $keyCache = [];
+    private static array $canonicalCache = [];
 
     /**
      * Build a model from a decoded API response.
@@ -67,12 +73,12 @@ abstract class Model
                 continue;
             }
 
-            $name = self::normalizeKey($key);
+            $name = $meta['byKey'][self::canonical($key)] ?? null;
 
-            if (in_array($name, $known, true)) {
-                $args[$name] = $value;
+            if (null === $name) {
+                $unknown[] = $key;
             } else {
-                $unknown[] = $name;
+                $args[$name] = $value;
             }
         }
 
@@ -134,6 +140,37 @@ abstract class Model
 
             if (null !== $model) {
                 $result[] = $model;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Build a map of models, keyed as the API keyed them.
+     *
+     * For responses that use the object itself as a dictionary — arbitrary keys
+     * pointing at uniform values — rather than a list.
+     *
+     * @return array<string, static>
+     */
+    public static function mapFromApi(mixed $data, ?Client $client = null): array
+    {
+        if (!is_array($data)) {
+            return [];
+        }
+
+        $result = [];
+
+        foreach ($data as $key => $item) {
+            if (!is_string($key)) {
+                continue;
+            }
+
+            $model = static::fromApi($item, $client);
+
+            if (null !== $model) {
+                $result[$key] = $model;
             }
         }
 
@@ -205,12 +242,13 @@ abstract class Model
     }
 
     /**
-     * Constructor parameter names and which of them are required, memoized per
-     * class. This is what stands in for Python's dataclass field introspection.
+     * Constructor parameter names, which of them are required, and the lookup
+     * from canonical key to parameter name. Memoized per class — this is what
+     * stands in for Python's dataclass field introspection.
      *
      * @param class-string $class
      *
-     * @return array{names: list<string>, required: list<string>}
+     * @return array{names: list<string>, required: list<string>, byKey: array<string, string>}
      */
     private static function metaOf(string $class): array
     {
@@ -223,46 +261,48 @@ abstract class Model
 
         $names = [];
         $required = [];
+        $byKey = [];
 
         foreach ($parameters as $parameter) {
-            $names[] = $parameter->getName();
+            $name = $parameter->getName();
+            $names[] = $name;
 
             if (!$parameter->isOptional()) {
-                $required[] = $parameter->getName();
+                $required[] = $name;
             }
+
+            $key = self::canonical($name);
+
+            if (isset($byKey[$key])) {
+                // Two properties that no API key could tell apart. This is a
+                // mistake in the model, and it is worth failing on the first
+                // call rather than losing whichever field loses the race.
+                throw new YandexMusicException(sprintf(
+                    '%s declares both $%s and $%s, which are indistinguishable once case and '
+                    .'separators are ignored. Rename one of them.',
+                    $class,
+                    $byKey[$key],
+                    $name,
+                ));
+            }
+
+            $byKey[$key] = $name;
         }
 
-        return self::$fieldCache[$class] = ['names' => $names, 'required' => $required];
+        return self::$fieldCache[$class] = ['names' => $names, 'required' => $required, 'byKey' => $byKey];
     }
 
     /**
-     * Convert an API field name to a PHP property name.
+     * Reduce a name to the form used for matching: no separators, no case.
      *
-     * The music API sends camelCase, which passes through untouched. The OAuth
-     * endpoints send snake_case (`access_token`) and a few API fields are
-     * hyphenated (`req-id`), so both separators collapse into camelCase.
+     * The API's exact spelling of a compound word cannot be predicted —
+     * `lastFmScrobblingEnabled` and `lastFMScrobblingEnabled` are both
+     * plausible, and the reference library's snake_case names cannot tell us
+     * which one arrives. Matching on this form makes the question moot.
      */
-    private static function normalizeKey(string $key): string
+    private static function canonical(string $key): string
     {
-        if (isset(self::$keyCache[$key])) {
-            return self::$keyCache[$key];
-        }
-
-        $normalized = $key;
-
-        if (str_contains($key, '_') || str_contains($key, '-')) {
-            $parts = array_values(array_filter(
-                preg_split('/[-_]+/', $key) ?: [],
-                static fn (string $part): bool => '' !== $part,
-            ));
-
-            if ([] !== $parts) {
-                $first = array_shift($parts);
-                $normalized = $first.implode('', array_map(ucfirst(...), $parts));
-            }
-        }
-
-        return self::$keyCache[$key] = $normalized;
+        return self::$canonicalCache[$key] ??= strtolower(str_replace(['-', '_'], '', $key));
     }
 
     private static function valuesEqual(mixed $a, mixed $b): bool

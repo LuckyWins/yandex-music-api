@@ -14,17 +14,27 @@ use LuckyWins\YandexMusic\Examples\Bootstrap;
 use LuckyWins\YandexMusic\Exception\YandexMusicException;
 
 try {
-    $client = Bootstrap::authorizedClient()->init();
+    $status = Bootstrap::authorizedClient()->init()->me();
 } catch (YandexMusicException $e) {
     echo "Request failed: {$e->getMessage()}\n";
 
     exit(1);
 }
 
-$account = $client->getAccount();
+if (null === $status?->account) {
+    echo "The API answered, but with no account — is the token anonymous?\n";
 
-// Deliberately narrow: the account payload also carries the real name, birthday
-// and the phone numbers on the Yandex ID, none of which belong on a terminal.
-printf("login   %s\n", Bootstrap::text($account, 'login'));
-printf("uid     %s\n", Bootstrap::text($account, 'uid'));
-printf("region  %s\n", Bootstrap::text($account, 'region'));
+    exit(1);
+}
+
+// Deliberately narrow: the account also carries the real name, the birthday and
+// the phone numbers on the Yandex ID, none of which belong on a terminal.
+printf("login    %s\n", $status->account->login ?? 'unknown');
+printf("uid      %d\n", $status->account->uid ?? 0);
+printf("region   %d\n", $status->account->region ?? 0);
+printf("child    %s\n", true === $status->account->child ? 'yes' : 'no');
+printf("plus     %s\n", $status->plus?->hasPlus ? 'yes' : 'no');
+
+if (null !== $status->permissions) {
+    printf("can      %s\n", implode(', ', $status->permissions->values));
+}

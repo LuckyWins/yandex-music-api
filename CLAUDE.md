@@ -75,6 +75,19 @@ phone numbers on the Yandex ID, the subscription — and lasts about a year.
   `Client\DeviceAuth`, then confirm `/account/status` answers 401, because that
   endpoint replies `{"status": "ok"}` even for a token that never existed.
 
+## Porting a domain
+
+The library is being ported from the Python reference one domain at a time. Each
+such stage ends with a table of what the client's methods were and what they
+became, with a column for the Python equivalent:
+
+| Was | Became | In Python | Difference from the reference |
+
+The third and fourth columns are the point of it. They make every divergence a
+decision on the record rather than a drift nobody noticed, and they make it
+obvious when a method is ours rather than the reference's — which is usually the
+sign that it should be deleted rather than ported.
+
 ## Rules
 
 - Deferred tasks, rejected options and the reasoning behind them live in

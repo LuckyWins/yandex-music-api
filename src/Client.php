@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace LuckyWins\YandexMusic;
 
+use LuckyWins\YandexMusic\Client\Account;
 use LuckyWins\YandexMusic\Client\DeviceAuth;
 use LuckyWins\YandexMusic\Client\Legacy;
 use LuckyWins\YandexMusic\Http\Request;
@@ -22,6 +23,7 @@ use Psr\Log\LoggerInterface;
  */
 final class Client
 {
+    use Account;
     use DeviceAuth;
     use Legacy;
 
@@ -43,7 +45,7 @@ final class Client
     public function __construct(
         ?string $token = null,
         ?Request $request = null,
-        string $language = 'ru',
+        private readonly string $language = 'ru',
         private readonly bool $reportUnknownFields = false,
         private readonly ?LoggerInterface $logger = null,
         ?Clock $clock = null,
@@ -53,7 +55,7 @@ final class Client
         $this->clock = $clock ?? new SystemClock();
         $this->token = $token;
 
-        $this->request->setLanguage($language);
+        $this->request->setLanguage($this->language);
 
         if (null !== $token) {
             $this->request->setAuthorization($token);
@@ -84,6 +86,14 @@ final class Client
     {
         $this->token = null;
         $this->request->clearAuthorization();
+    }
+
+    /**
+     * The language the API is asked to answer in, ISO 639-1.
+     */
+    public function getLanguage(): string
+    {
+        return $this->language;
     }
 
     public function getBaseUrl(): string

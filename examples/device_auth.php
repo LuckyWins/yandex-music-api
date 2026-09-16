@@ -51,8 +51,8 @@ if (null !== $token->expiresIn) {
 
 // The token is already applied to the client, so this call is authorized.
 try {
-    $account = $client->init()->getAccount();
-    echo 'Signed in as: '.Bootstrap::text($account, 'login')."\n";
+    $login = $client->init()->me()?->account?->login;
+    echo 'Signed in as: '.($login ?? 'unknown')."\n";
 } catch (YandexMusicException $e) {
     echo "Token stored, but the account check failed: {$e->getMessage()}\n";
 

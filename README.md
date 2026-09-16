@@ -15,10 +15,11 @@ Python library is right and this one has a bug.
 
 The library is being modernized in stages. Right now:
 
-- **Authorization** is ported: typed models, tested, working against the current API
-- **Everything else** — around fifty endpoints covering search, playlists, likes,
-  radio and account — works, but returns raw decoded arrays rather than typed
-  models. These live in `Client\Legacy` and move out domain by domain.
+- **Authorization** and **account** are ported: typed models, tested, working
+  against the current API
+- **Everything else** — around forty endpoints covering search, playlists, likes
+  and radio — works, but returns raw decoded arrays rather than typed models.
+  These live in `Client\Legacy` and move out domain by domain.
 
 Two things are known broken and not yet fixed: direct download links, whose
 signing scheme Yandex replaced, and anything depending on them.
@@ -119,10 +120,18 @@ user need the account loaded first:
 ```php
 $client = (new Client($token))->init();
 
+// Typed, because the account domain is ported.
+echo $client->me()?->account?->login;
+echo $client->me()?->plus?->hasPlus ? 'Plus' : 'no Plus';
+
+// Raw arrays, because these domains are not.
 $results = $client->search('nirvana');
 $liked = $client->getLikesTracks();
-$client->usersLikesTracksAdd('10994777');
 ```
+
+`init()` is a separate step on purpose: constructing a client performs no
+requests. Call it once before anything that acts on behalf of the user — those
+endpoints need the account id it fetches.
 
 Without a token the API still answers, but only with what an anonymous visitor
 sees — thirty-second previews instead of whole tracks. Opening
