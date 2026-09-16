@@ -7,6 +7,7 @@ namespace LuckyWins\YandexMusic;
 use LuckyWins\YandexMusic\Client\Account;
 use LuckyWins\YandexMusic\Client\DeviceAuth;
 use LuckyWins\YandexMusic\Client\Legacy;
+use LuckyWins\YandexMusic\Client\Tracks;
 use LuckyWins\YandexMusic\Http\Request;
 use Psr\Log\LoggerInterface;
 
@@ -26,6 +27,7 @@ final class Client
     use Account;
     use DeviceAuth;
     use Legacy;
+    use Tracks;
 
     public const BASE_URL = 'https://api.music.yandex.net';
 

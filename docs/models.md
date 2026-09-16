@@ -258,6 +258,176 @@ The account's own preferences, as set in the apps.
 | `userCollectionHue` | `?int` | no | The colour the collection is tinted with, as a hue. |
 | `aiContentReductionEnabled` | `?bool` | no |  |
 
+## Album
+
+### Album
+
+An album.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `id` | `?int` | no |  |
+| `error` | `?string` | no |  |
+| `title` | `?string` | no |  |
+| `trackCount` | `?int` | no |  |
+| `artists` | `list<Artist>` | no | list of [Artist](#artist) |
+| `labels` | `list<Label>|list<string>` | no | Either full label objects or bare names, depending on the endpoint. |
+| `available` | `?bool` | no |  |
+| `availableForPremiumUsers` | `?bool` | no |  |
+| `version` | `?string` | no |  |
+| `coverUri` | `?string` | no |  |
+| `contentWarning` | `?string` | no |  |
+| `originalReleaseYear` | `mixed` | no |  |
+| `genre` | `?string` | no |  |
+| `textColor` | `?string` | no |  |
+| `shortDescription` | `?string` | no |  |
+| `description` | `?string` | no |  |
+| `isPremiere` | `?bool` | no |  |
+| `isBanner` | `?bool` | no |  |
+| `metaType` | `?string` | no |  |
+| `storageDir` | `?string` | no |  |
+| `ogImage` | `?string` | no |  |
+| `buy` | `list<mixed>|null` | no |  |
+| `recent` | `?bool` | no |  |
+| `veryImportant` | `?bool` | no |  |
+| `availableForMobile` | `?bool` | no |  |
+| `availablePartially` | `?bool` | no |  |
+| `bests` | `list<int>|null` | no |  |
+| `duplicates` | `list<Album>` | no | list of [Album](#album) |
+| `prerolls` | `list<mixed>|null` | no |  |
+| `volumes` | `list<list<Track>>|null` | no | Tracks grouped by disc: one inner list per volume. |
+| `year` | `?int` | no |  |
+| `releaseDate` | `?string` | no |  |
+| `type` | `?string` | no |  |
+| `trackPosition` | `?TrackPosition` | no | [TrackPosition](#trackposition) |
+| `regions` | `list<string>|null` | no |  |
+| `availableAsRbt` | `?bool` | no |  |
+| `lyricsAvailable` | `?bool` | no |  |
+| `rememberPosition` | `?bool` | no |  |
+| `albums` | `list<Album>` | no | list of [Album](#album) |
+| `durationMs` | `?int` | no |  |
+| `explicit` | `?bool` | no |  |
+| `startDate` | `?string` | no |  |
+| `likesCount` | `?int` | no |  |
+| `deprecation` | `?Deprecation` | no | [Deprecation](#deprecation) |
+| `availableRegions` | `list<string>|null` | no |  |
+| `availableForOptions` | `list<string>|null` | no |  |
+| `listeningFinished` | `?bool` | no |  |
+| `disclaimers` | `list<string>|null` | no |  |
+| `actionButton` | `?AlbumActionButton` | no | [AlbumActionButton](#albumactionbutton) |
+
+### AlbumActionButton
+
+A call to action shown on an album, such as a pre-save prompt.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `text` | `?string` | no |  |
+| `url` | `?string` | no |  |
+| `color` | `?string` | no |  |
+
+### Deprecation
+
+Where an album has been superseded by another one.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `targetAlbumId` | `?int` | no |  |
+| `status` | `?string` | no |  |
+| `done` | `?bool` | no |  |
+
+### TrackPosition
+
+Where a track sits on an album: which disc, and which slot on it.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `volume` | `int` | **yes** |  |
+| `index` | `int` | **yes** |  |
+
+## Artist
+
+### Artist
+
+An artist.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `id` | `?int` | no |  |
+| `error` | `?string` | no |  |
+| `reason` | `?string` | no |  |
+| `name` | `?string` | no |  |
+| `cover` | `?Cover` | no | [Cover](#cover) |
+| `various` | `?bool` | no | Whether this stands for an assortment of artists rather than one. |
+| `composer` | `?bool` | no |  |
+| `genres` | `list<string>|null` | no |  |
+| `ogImage` | `?string` | no |  |
+| `opImage` | `?string` | no |  |
+| `noPicturesFromSearch` | `mixed` | no | Set only when the artist comes back from a search. |
+| `counts` | `?Counts` | no | [Counts](#counts) |
+| `available` | `?bool` | no |  |
+| `ratings` | `?Ratings` | no | [Ratings](#ratings) |
+| `links` | `list<Link>|null` | no | list of [Link](#link) |
+| `ticketsAvailable` | `?bool` | no |  |
+| `likesCount` | `?int` | no |  |
+| `popularTracks` | `list<Track>|null` | no | list of [Track](#track) |
+| `regions` | `list<string>|null` | no |  |
+| `decomposed` | `list<Artist|string>|null` | no | A credit line broken into pieces: artists interleaved with the words that join them, such as `feat.`. |
+| `fullNames` | `mixed` | no |  |
+| `handMadeDescription` | `?string` | no |  |
+| `description` | `?Description` | no | [Description](#description) |
+| `countries` | `list<string>|null` | no |  |
+| `enWikipediaLink` | `?string` | no |  |
+| `dbAliases` | `list<string>|null` | no |  |
+| `aliases` | `mixed` | no |  |
+| `initDate` | `?string` | no |  |
+| `endDate` | `?string` | no |  |
+| `yaMoneyId` | `?string` | no |  |
+| `disclaimers` | `list<string>|null` | no |  |
+| `contentRestrictions` | `?ContentRestrictions` | no | [ContentRestrictions](#contentrestrictions) |
+| `cutoutCover` | `?Cover` | no | [Cover](#cover) |
+
+### Counts
+
+How much of an artist there is to listen to.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `tracks` | `int` | **yes** |  |
+| `directAlbums` | `int` | **yes** |  |
+| `alsoAlbums` | `int` | **yes** |  |
+| `alsoTracks` | `int` | **yes** |  |
+
+### Description
+
+An artist's biography, usually lifted from Wikipedia.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `text` | `string` | **yes** |  |
+| `uri` | `?string` | no |  |
+
+### Link
+
+A link from an artist's page — their site, or a social account.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `title` | `string` | **yes** |  |
+| `href` | `string` | **yes** |  |
+| `type` | `string` | **yes** |  |
+| `socialNetwork` | `?string` | no |  |
+
+### Ratings
+
+An artist's position in the charts.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `month` | `int` | **yes** |  |
+| `week` | `?int` | no |  |
+| `day` | `?int` | no |  |
+
 ## DeviceAuth
 
 ### DeviceCode
@@ -311,6 +481,22 @@ The A/B experiments an account is in, keyed by experiment name.
 |---|---|---|---|
 | `experiments` | `array<string,` | no |  |
 
+## Label
+
+### Label
+
+A record label.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `id` | `int` | **yes** |  |
+| `name` | `string` | **yes** |  |
+| `description` | `?string` | no |  |
+| `descriptionFormatted` | `?string` | no |  |
+| `image` | `?string` | no |  |
+| `links` | `list<Link>|null` | no | list of [Link](#link) |
+| `type` | `?string` | no |  |
+
 ## Playlist
 
 ### User
@@ -338,7 +524,167 @@ The personal radio station attached to an account.
 |---|---|---|---|
 | `name` | `string` | **yes** |  |
 
+## Shot
+
+### Shot
+
+An interjection scheduled to play after a track.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `order` | `int` | **yes** |  |
+| `played` | `bool` | **yes** |  |
+| `shotId` | `string` | **yes** |  |
+| `status` | `string` | **yes** |  |
+| `shotData` | `?ShotData` | no | [ShotData](#shotdata) |
+
+### ShotData
+
+The content of one of Alice's spoken interjections between tracks.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `coverUri` | `string` | **yes** |  |
+| `mdsUrl` | `string` | **yes** | Where the audio lives. |
+| `shotText` | `string` | **yes** |  |
+| `shotType` | `?ShotType` | no | [ShotType](#shottype) |
+
+### ShotEvent
+
+What the service wants played between two tracks.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `eventId` | `string` | **yes** |  |
+| `shots` | `list<Shot>` | no | list of [Shot](#shot) |
+
+### ShotType
+
+What kind of interjection a shot is.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `id` | `string` | **yes** |  |
+| `title` | `string` | **yes** |  |
+
+## Supplement
+
+### Lyrics
+
+Lyrics as returned alongside a track's supplement.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `id` | `int` | **yes** |  |
+| `lyrics` | `string` | **yes** | The opening lines only. |
+| `fullLyrics` | `string` | **yes** |  |
+| `hasRights` | `bool` | **yes** |  |
+| `showTranslation` | `bool` | **yes** |  |
+| `textLanguage` | `?string` | no |  |
+| `url` | `?string` | no | Where a translation came from, usually genius.com. |
+
+### Supplement
+
+Extra material attached to a track: videos, a podcast description, and — deprecated — its lyrics.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `id` | `int` | **yes** |  |
+| `lyrics` | `?Lyrics` | no | [Lyrics](#lyrics) |
+| `videos` | `list<VideoSupplement>` | no | list of [VideoSupplement](#videosupplement) |
+| `radioIsAvailable` | `?bool` | no |  |
+| `description` | `?string` | no | The full text for a podcast episode. |
+
+### VideoSupplement
+
+A video tied to a track, usually its official clip.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `cover` | `string` | **yes** |  |
+| `provider` | `string` | **yes** |  |
+| `title` | `?string` | no |  |
+| `providerVideoId` | `?string` | no |  |
+| `url` | `?string` | no |  |
+| `embedUrl` | `?string` | no | Hosted by Yandex rather than the provider. |
+| `embed` | `?string` | no | Ready-made HTML for embedding. |
+
 ## Top level
+
+### ContentRestrictions
+
+Why something may not be playable here.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `available` | `?bool` | no |  |
+| `disclaimers` | `list<string>|null` | no |  |
+
+### Cover
+
+Artwork, as a template rather than a finished URL.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `type` | `?string` | no |  |
+| `uri` | `?string` | no |  |
+| `itemsUri` | `list<string>|null` | no |  |
+| `dir` | `?string` | no |  |
+| `version` | `?string` | no |  |
+| `custom` | `?bool` | no |  |
+| `isCustom` | `?bool` | no |  |
+| `copyrightName` | `?string` | no |  |
+| `copyrightCline` | `?string` | no |  |
+| `prefix` | `?string` | no |  |
+| `error` | `?string` | no |  |
+| `color` | `?string` | no |  |
+| `derivedColors` | `?CoverDerivedColors` | no | [CoverDerivedColors](#coverderivedcolors) |
+| `videoUrl` | `?string` | no |  |
+
+### CoverDerivedColors
+
+Colours pulled out of cover art, so an interface can tint itself to match.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `average` | `?string` | no |  |
+| `waveText` | `?string` | no |  |
+| `miniPlayer` | `?string` | no |  |
+| `accent` | `?string` | no |  |
+
+### Credit
+
+One line of a credit list: who did what.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `title` | `?string` | no |  |
+| `value` | `?string` | no |  |
+
+### Credits
+
+Everyone credited on a recording.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `credits` | `list<Credit>` | no | list of [Credit](#credit) |
+
+### Disclaimer
+
+Notices that must accompany a recording.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `foreignAgent` | `?ForeignAgent` | no | [ForeignAgent](#foreignagent) |
+
+### ForeignAgent
+
+The notice Russian law requires be shown for material by someone designated a foreign agent.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `reason` | `?string` | no |  |
+| `title` | `?string` | no |  |
 
 ### PermissionAlerts
 
@@ -373,6 +719,30 @@ What the account can be sold, and where to buy it.
 
 ## Track
 
+### DownloadInfo
+
+One way a track can be fetched: a codec, a bitrate, and a manifest to resolve into an actual URL.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `codec` | `string` | **yes** | `mp3` or `aac`. |
+| `bitrateInKbps` | `int` | **yes** | 64, 128, 192 or 320. |
+| `gain` | `bool` | **yes** |  |
+| `preview` | `bool` | **yes** |  |
+| `downloadInfoUrl` | `string` | **yes** | The XML manifest that resolves to a playable URL. |
+| `direct` | `bool` | **yes** |  |
+
+### Fade
+
+Where a track fades in and out, in seconds from its start.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `inStart` | `?float` | no |  |
+| `inStop` | `?float` | no |  |
+| `outStart` | `?float` | no |  |
+| `outStop` | `?float` | no |  |
+
 ### LicenceTextPart
 
 One run of text in a licence notice, optionally a link.
@@ -381,4 +751,183 @@ One run of text in a licence notice, optionally a link.
 |---|---|---|---|
 | `text` | `string` | **yes** |  |
 | `url` | `?string` | no |  |
+
+### LyricsInfo
+
+Which kinds of lyrics exist for a track.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `hasAvailableSyncLyrics` | `bool` | **yes** |  |
+| `hasAvailableTextLyrics` | `bool` | **yes** |  |
+
+### LyricsMajor
+
+Who supplied a set of lyrics.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `id` | `int` | **yes** |  |
+| `name` | `string` | **yes** |  |
+| `prettyName` | `string` | **yes** |  |
+
+### Major
+
+The label that released a track.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `id` | `int` | **yes** |  |
+| `name` | `string` | **yes** |  |
+
+### MetaData
+
+Tags carried by a track a user uploaded themselves.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `album` | `?string` | no |  |
+| `volume` | `?int` | no |  |
+| `year` | `?int` | no |  |
+| `number` | `?int` | no |  |
+| `genre` | `?string` | no |  |
+| `lyricist` | `?string` | no |  |
+| `version` | `?string` | no |  |
+| `composer` | `?string` | no |  |
+
+### Normalization
+
+Replay-gain figures for a track.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `gain` | `float` | **yes** |  |
+| `peak` | `int` | **yes** |  |
+
+### PoetryLoverMatch
+
+Where a searched-for phrase sits inside the lyrics.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `begin` | `int` | **yes** |  |
+| `end` | `int` | **yes** |  |
+| `line` | `int` | **yes** |  |
+
+### R128
+
+Loudness measured to the EBU R 128 standard, for playing tracks at an even volume: `i` is integrated loudness, `tp` the true peak.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `i` | `float` | **yes** |  |
+| `tp` | `float` | **yes** |  |
+
+### SimilarTracks
+
+What else sounds like a given track.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `track` | `?Track` | no | [Track](#track) |
+| `similarTracks` | `list<Track>` | no | list of [Track](#track) |
+
+### SmartPreviewParams
+
+How to cut a short preview out of a track.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `durationMs` | `?int` | no |  |
+| `fade` | `?Fade` | no | [Fade](#fade) |
+
+### Track
+
+A track.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `id` | `mixed` | **yes** |  |
+| `title` | `?string` | no |  |
+| `available` | `?bool` | no |  |
+| `artists` | `list<Artist>` | no | list of [Artist](#artist) |
+| `albums` | `list<Album>` | no | list of [Album](#album) |
+| `availableForPremiumUsers` | `?bool` | no |  |
+| `lyricsAvailable` | `?bool` | no |  |
+| `poetryLoverMatches` | `list<PoetryLoverMatch>` | no | list of [PoetryLoverMatch](#poetrylovermatch) |
+| `best` | `?bool` | no |  |
+| `realId` | `mixed` | no |  |
+| `ogImage` | `?string` | no |  |
+| `type` | `?string` | no | Known value: `music`. |
+| `coverUri` | `?string` | no |  |
+| `major` | `?Major` | no | [Major](#major) |
+| `durationMs` | `?int` | no |  |
+| `storageDir` | `?string` | no |  |
+| `fileSize` | `?int` | no |  |
+| `substituted` | `?self` | no | [Track](#track). What plays instead, where the original is unavailable here. |
+| `matchedTrack` | `?self` | no | [Track](#track) |
+| `normalization` | `?Normalization` | no | [Normalization](#normalization) |
+| `error` | `?string` | no |  |
+| `canPublish` | `?bool` | no |  |
+| `state` | `?string` | no |  |
+| `desiredVisibility` | `?string` | no |  |
+| `filename` | `?string` | no |  |
+| `userInfo` | `?User` | no | [User](#user) |
+| `metaData` | `?MetaData` | no | [MetaData](#metadata) |
+| `regions` | `list<string>|null` | no |  |
+| `availableAsRbt` | `?bool` | no |  |
+| `contentWarning` | `?string` | no | Known value: `explicit`. |
+| `explicit` | `?bool` | no |  |
+| `previewDurationMs` | `?int` | no |  |
+| `availableFullWithoutPermission` | `?bool` | no |  |
+| `version` | `?string` | no |  |
+| `rememberPosition` | `?bool` | no |  |
+| `backgroundVideoUri` | `?string` | no |  |
+| `shortDescription` | `?string` | no |  |
+| `isSuitableForChildren` | `?bool` | no |  |
+| `trackSource` | `?string` | no | Known values: `OWN`, `OWN_REPLACED_TO_UGC`. |
+| `availableForOptions` | `list<string>|null` | no |  |
+| `r128` | `?R128` | no | [R128](#r128) |
+| `lyricsInfo` | `?LyricsInfo` | no | [LyricsInfo](#lyricsinfo) |
+| `trackSharingFlag` | `?string` | no | Known values: `VIDEO_ALLOWED`, `COVER_ONLY`. |
+| `derivedColors` | `?CoverDerivedColors` | no | [CoverDerivedColors](#coverderivedcolors) |
+| `fade` | `?Fade` | no | [Fade](#fade) |
+| `smartPreviewParams` | `?SmartPreviewParams` | no | [SmartPreviewParams](#smartpreviewparams) |
+| `specialAudioResources` | `list<string>|null` | no |  |
+| `disclaimers` | `list<string>|null` | no |  |
+| `backgroundVideoId` | `?string` | no |  |
+| `playerId` | `?string` | no |  |
+
+### TrackFullInfo
+
+A track with everything the service knows about it gathered in one place.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `track` | `?Track` | no | [Track](#track) |
+| `similarTracks` | `list<Track>` | no | list of [Track](#track) |
+| `alsoInAlbums` | `list<Track>` | no | list of [Track](#track) |
+| `aliases` | `list<string>` | no |  |
+| `artists` | `list<Artist>` | no | list of [Artist](#artist) |
+
+### TrackLyrics
+
+A pointer to a track's lyrics — the text itself is not in the response.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `downloadUrl` | `string` | **yes** |  |
+| `lyricId` | `int` | **yes** |  |
+| `externalLyricId` | `string` | **yes** |  |
+| `writers` | `list<string>` | **yes** |  |
+| `major` | `?LyricsMajor` | no | [LyricsMajor](#lyricsmajor) |
+
+### TrackTrailer
+
+A trailer introducing a track or episode.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `title` | `?string` | no |  |
+| `track` | `?Track` | no | [Track](#track) |
 

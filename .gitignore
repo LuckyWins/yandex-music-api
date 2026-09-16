@@ -4,6 +4,10 @@
 # Credentials. The committed twin is .env.local.example.
 /.env.local
 
+# Audio pulled down by examples/download_track.php
+*.mp3
+*.aac
+
 # Tool caches
 /.phpunit.cache/
 /.php-cs-fixer.cache

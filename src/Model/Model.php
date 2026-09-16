@@ -28,7 +28,8 @@ use ReflectionClass;
  *         'major'       => [Major::class,  'one'],
  *  *     ];
  *
- * A model whose shape depends on the endpoint overrides fromApi() instead.
+ * A field whose shape depends on its content rather than its key is handled
+ * by overriding prepare() instead.
  *
  * Field names are matched case- and separator-insensitively, so a property
  * named `lastFmScrobblingEnabled` is filled by `lastFMScrobblingEnabled`,
@@ -101,6 +102,8 @@ abstract class Model
         if (in_array('client', $known, true)) {
             $args['client'] = $client;
         }
+
+        $args = static::prepare($args, $data, $client);
 
         $missing = array_values(array_diff($meta['required'], array_keys($args)));
 
@@ -228,6 +231,25 @@ abstract class Model
         }
 
         return $result;
+    }
+
+    /**
+     * Adjust the collected arguments just before the model is built.
+     *
+     * The escape hatch for fields whose shape the declaration cannot capture —
+     * a list that is sometimes objects and sometimes plain strings, a list of
+     * lists, anything decided by content rather than by key. Overriding this
+     * is far safer than overriding fromApi(), which would mean rebuilding the
+     * whole model by hand and getting every argument back in the right order.
+     *
+     * @param array<string, mixed>    $args what will be passed to the constructor
+     * @param array<array-key, mixed> $data the raw response, for fields args cannot express
+     *
+     * @return array<string, mixed>
+     */
+    protected static function prepare(array $args, array $data, ?Client $client): array
+    {
+        return $args;
     }
 
     /**

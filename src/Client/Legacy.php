@@ -58,36 +58,7 @@ trait Legacy
         return $this->getArray('/genres');
     }
 
-    // -- Tracks -------------------------------------------------------------
-
-    /**
-     * Download variants for a track.
-     *
-     * @deprecated The direct-link half of this no longer works: getDirectLink()
-     *             builds a URL with a signing scheme Yandex has retired. Use it
-     *             only for the variant list until the new scheme is ported.
-     */
-    public function tracksDownloadInfo(string|int $trackId): mixed
-    {
-        return $this->request->get($this->getBaseUrl().'/tracks/'.$trackId.'/download-info');
-    }
-
-    /**
-     * Turn a download-info URL into a direct link to the audio.
-     *
-     * @deprecated Broken. Yandex replaced the md5-with-salt signature this
-     *             builds with an HMAC-SHA256 one; the resulting URL is rejected.
-     *             Kept only to document what the old scheme was.
-     *
-     * @throws YandexMusicException always
-     */
-    public function getDirectLink(string $url, string $codec = 'mp3'): never
-    {
-        throw new YandexMusicException(
-            'Direct link signing changed on the Yandex side and this method no longer produces '
-            .'a working URL. The replacement scheme is not ported yet.',
-        );
-    }
+    // -- Albums -------------------------------------------------------------
 
     /** @return array<string, mixed> */
     public function albumsWithTracks(string|int $albumId): array
@@ -286,12 +257,6 @@ trait Legacy
     public function albums(string|int|array $albumIds): mixed
     {
         return $this->getList('album', $albumIds);
-    }
-
-    /** @param string|int|list<string|int> $trackIds */
-    public function tracks(string|int|array $trackIds): mixed
-    {
-        return $this->getList('track', $trackIds);
     }
 
     /** @param string|int|list<string|int> $playlistIds */

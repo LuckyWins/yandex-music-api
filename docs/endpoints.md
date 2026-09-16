@@ -46,7 +46,6 @@ supplies.
 | `feed()` | `GET /feed` | `array` |  |
 | `feedWizardIsPassed()` | `GET /feed/wizard/is-passed` | `mixed` |  |
 | `genres()` | `GET /genres` | `array` |  |
-| `getDirectLink()` | — | `never` | Turn a download-info URL into a direct link to the audio. |
 | `getLikesAlbums()` | — | `mixed` |  |
 | `getLikesArtists()` | — | `mixed` |  |
 | `getLikesPlaylists()` | — | `mixed` |  |
@@ -63,8 +62,6 @@ supplies.
 | `rotorStationsList()` | `GET /rotor/stations/list` | `mixed` |  |
 | `search()` | `GET /search` | `array` |  |
 | `searchSuggest()` | `GET /search/suggest` | `array` |  |
-| `tracks()` | — | `mixed` |  |
-| `tracksDownloadInfo()` | `GET /tracks/{trackId}/download-info` | `mixed` | Download variants for a track. |
 | `usersDislikesTracks()` | `GET /users/{accountUid}/dislikes/tracks` | `mixed` |  |
 | `usersDislikesTracksAdd()` | — | `mixed` |  |
 | `usersDislikesTracksRemove()` | — | `mixed` |  |
@@ -82,4 +79,20 @@ supplies.
 | `usersPlaylistsInsertTrack()` | — | `mixed` | Insert a track at a position in a playlist. |
 | `usersPlaylistsList()` | `GET /users/{accountUid}/playlists/list` | `array` |  |
 | `usersPlaylistsNameChange()` | `POST /users/{accountUid}/playlists/{kind}/name` | `mixed` |  |
+
+## Tracks
+
+| Method | Request | Returns | Notes |
+|---|---|---|---|
+| `afterTrack()` | `GET /after-track` | `?ShotEvent` | What the service wants played between two tracks — one of Alice's spoken interjections, typically. |
+| `playAudio()` | `POST /play-audio` | `bool` | Report that a track was played. |
+| `trackSupplement()` | `GET /tracks/{trackId}/supplement` | `?Supplement` | Videos and, for podcasts, the full description. |
+| `tracks()` | `POST /tracks` | `array` | Fetch tracks by id. |
+| `tracksCredits()` | `GET /tracks/{trackId}/credits` | `?Credits` |  |
+| `tracksDisclaimer()` | `GET /tracks/{trackId}/disclaimer` | `?Disclaimer` |  |
+| `tracksDownloadInfo()` | `GET /tracks/{trackId}/download-info` | `array` | The ways a track can be downloaded. |
+| `tracksFullInfo()` | `GET /tracks/{trackId}/full-info` | `?TrackFullInfo` |  |
+| `tracksLyrics()` | `GET /tracks/{trackId}/lyrics` | `?TrackLyrics` | Where to fetch a track's lyrics. |
+| `tracksSimilar()` | `GET /tracks/{trackId}/similar` | `?SimilarTracks` |  |
+| `tracksTrailer()` | `GET /tracks/{trackId}/trailer` | `?TrackTrailer` |  |
 
