@@ -15,15 +15,15 @@ Python library is right and this one has a bug.
 
 The library is being modernized in stages. Right now:
 
-- **Authorization**, **account** and **tracks** are ported: typed models,
-  tested, working against the current API
-- **Everything else** — search, playlists, likes and radio — works, but returns
-  raw decoded arrays rather than typed models. These live in `Client\Legacy` and
-  move out domain by domain. The models for albums and artists already exist,
-  since tracks could not be typed without them.
+- **Authorization**, **account**, **tracks**, **albums** and **artists** are
+  ported: typed models, tested, working against the current API
+- **Everything else** — search, playlists, likes, radio and the landing —
+  works, but returns raw decoded arrays rather than typed models. These live in
+  `Client\Legacy` and move out domain by domain.
 
-Two things are known broken and not yet fixed: direct download links, whose
-signing scheme Yandex replaced, and anything depending on them.
+Downloading works, including direct links: the old signing scheme was never
+replaced, and what looked like its death was our own HTTP layer declining to
+follow a redirect. See [docs/porting/tracks.md](docs/porting/tracks.md).
 
 ## Requirements
 
@@ -124,6 +124,9 @@ $client = (new Client($token))->init();
 // Typed, because the account domain is ported.
 echo $client->me()?->account?->login;
 echo $client->me()?->plus?->hasPlus ? 'Plus' : 'no Plus';
+
+$album = $client->albumsWithTracks(4243617);
+echo $album?->title;
 
 // Raw arrays, because these domains are not.
 $results = $client->search('nirvana');

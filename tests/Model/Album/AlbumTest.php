@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace LuckyWins\YandexMusic\Tests\Model\Album;
 
 use LuckyWins\YandexMusic\Model\Album\Album;
+use LuckyWins\YandexMusic\Model\Cover;
 use LuckyWins\YandexMusic\Model\Label\Label;
 use LuckyWins\YandexMusic\Model\Model;
 use LuckyWins\YandexMusic\Model\Track\Track;
@@ -38,6 +39,14 @@ final class AlbumTest extends ModelTestCase
             'deprecation' => ['targetAlbumId' => 999, 'status' => 'replaced'],
             'actionButton' => ['text' => 'Слушать'],
             'available' => true,
+            'cover' => ['type' => 'pic', 'uri' => 'avatars.invalid/%%'],
+            'derivedColors' => ['average' => '#3c3c3c'],
+            'trailer' => ['available' => true],
+            'hasTrailer' => true,
+            'customWave' => ['title' => 'Моя волна'],
+            'pager' => ['total' => 28, 'page' => 0, 'perPage' => 20],
+            'metaTagId' => 'rap',
+            'sortOrder' => 'desc',
         ];
     }
 
@@ -56,6 +65,16 @@ final class AlbumTest extends ModelTestCase
         self::assertSame(1, $model->trackPosition?->volume);
         self::assertSame(999, $model->deprecation?->targetAlbumId);
         self::assertSame('Слушать', $model->actionButton?->text);
+
+        // cover and coverUri carry the same art in different forms; both fill in.
+        self::assertInstanceOf(Cover::class, $model->cover);
+        self::assertSame('avatars.yandex.net/get-music-content/2/%%', $model->coverUri);
+        self::assertSame('#3c3c3c', $model->derivedColors?->average);
+        self::assertTrue($model->trailer?->available);
+        self::assertTrue($model->hasTrailer);
+        self::assertSame('Моя волна', $model->customWave?->title);
+        self::assertSame(28, $model->pager?->total);
+        self::assertSame('rap', $model->metaTagId);
 
         // Objects here, but see the string case below.
         self::assertCount(1, $model->labels);

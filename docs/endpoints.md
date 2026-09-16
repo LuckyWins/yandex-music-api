@@ -26,6 +26,27 @@ supplies.
 | `permissionAlerts()` | `GET /permission-alerts` | `?PermissionAlerts` |  |
 | `settings()` | `GET /settings` | `?Settings` | What the account can be sold, and where to buy it. |
 
+## Albums
+
+| Method | Request | Returns | Notes |
+|---|---|---|---|
+| `album()` | `GET /albums/{albumId}` | `?Album` | One album, without its tracks. |
+| `albums()` | `POST /albums` | `array` | Fetch albums by id. |
+| `albumsDisclaimer()` | `GET /albums/{albumId}/disclaimer` | `array` | Notices that must accompany an album. |
+| `albumsWithTracks()` | `GET /albums/{albumId}/with-tracks` | `?Album` | One album with everything on it. |
+
+## Artists
+
+| Method | Request | Returns | Notes |
+|---|---|---|---|
+| `artists()` | `POST /artists` | `array` | Fetch artists by id. |
+| `artistsAlsoAlbums()` | — | `?ArtistAlbums` | A page of the albums an artist appears on without being their author — compilations, guest spots. |
+| `artistsBriefInfo()` | `GET /artists/{artistId}/brief-info` | `?BriefInfo` | Everything the service will say about an artist at once — albums, popular tracks, similar artists, covers, chart positions. |
+| `artistsDirectAlbums()` | — | `?ArtistAlbums` | A page of the albums an artist made. |
+| `artistsSimilar()` | `GET /artists/{artistId}/similar` | `?SimilarArtists` | Who else sounds like this artist. |
+| `artistsTrackIdsByRating()` | `GET /artists/{artistId}/track-ids-by-rating` | `array` | The artist's tracks as bare ids, ordered by rating. |
+| `artistsTracks()` | `GET /artists/{artistId}/tracks` | `?ArtistTracks` | A page of an artist's tracks, most popular first. |
+
 ## DeviceAuth
 
 | Method | Request | Returns | Notes |
@@ -39,10 +60,6 @@ supplies.
 
 | Method | Request | Returns | Notes |
 |---|---|---|---|
-| `albums()` | — | `mixed` |  |
-| `albumsWithTracks()` | `GET /albums/{albumId}/with-tracks` | `array` |  |
-| `artists()` | — | `mixed` |  |
-| `artistsBriefInfo()` | `GET /artists/{artistId}/brief-info` | `array` |  |
 | `feed()` | `GET /feed` | `array` |  |
 | `feedWizardIsPassed()` | `GET /feed/wizard/is-passed` | `mixed` |  |
 | `genres()` | `GET /genres` | `array` |  |

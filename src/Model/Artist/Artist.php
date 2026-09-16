@@ -7,8 +7,10 @@ namespace LuckyWins\YandexMusic\Model\Artist;
 use LuckyWins\YandexMusic\Client;
 use LuckyWins\YandexMusic\Model\ContentRestrictions;
 use LuckyWins\YandexMusic\Model\Cover;
+use LuckyWins\YandexMusic\Model\CoverDerivedColors;
 use LuckyWins\YandexMusic\Model\Model;
 use LuckyWins\YandexMusic\Model\Track\Track;
+use LuckyWins\YandexMusic\Model\Trailer;
 
 /**
  * An artist.
@@ -29,6 +31,8 @@ final class Artist extends Model
         'popularTracks' => [Track::class, 'list'],
         'description' => [Description::class, 'one'],
         'contentRestrictions' => [ContentRestrictions::class, 'one'],
+        'derivedColors' => [CoverDerivedColors::class, 'one'],
+        'trailer' => [Trailer::class, 'one'],
     ];
 
     public function __construct(
@@ -80,6 +84,11 @@ final class Artist extends Model
         public readonly ?array $disclaimers = null,
         public readonly ?ContentRestrictions $contentRestrictions = null,
         public readonly ?Cover $cutoutCover = null,
+        public readonly ?CoverDerivedColors $derivedColors = null,
+        public readonly ?Trailer $trailer = null,
+        public readonly ?bool $hasTrailer = null,
+        /** @var list<mixed> Empty on every account seen so far; kept raw. */
+        public readonly array $extraActions = [],
         public readonly ?Client $client = null,
     ) {
     }

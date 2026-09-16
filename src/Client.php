@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace LuckyWins\YandexMusic;
 
 use LuckyWins\YandexMusic\Client\Account;
+use LuckyWins\YandexMusic\Client\Albums;
+use LuckyWins\YandexMusic\Client\Artists;
 use LuckyWins\YandexMusic\Client\DeviceAuth;
 use LuckyWins\YandexMusic\Client\Legacy;
 use LuckyWins\YandexMusic\Client\Tracks;
@@ -25,6 +27,8 @@ use Psr\Log\LoggerInterface;
 final class Client
 {
     use Account;
+    use Albums;
+    use Artists;
     use DeviceAuth;
     use Legacy;
     use Tracks;

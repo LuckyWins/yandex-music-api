@@ -8,6 +8,7 @@ use LuckyWins\YandexMusic\Client;
 use LuckyWins\YandexMusic\Model\Album\Album;
 use LuckyWins\YandexMusic\Model\Artist\Artist;
 use LuckyWins\YandexMusic\Model\CoverDerivedColors;
+use LuckyWins\YandexMusic\Model\Landing\Chart;
 use LuckyWins\YandexMusic\Model\Model;
 use LuckyWins\YandexMusic\Model\Playlist\User;
 
@@ -43,6 +44,7 @@ final class Track extends Model
         'derivedColors' => [CoverDerivedColors::class, 'one'],
         'fade' => [Fade::class, 'one'],
         'smartPreviewParams' => [SmartPreviewParams::class, 'one'],
+        'chart' => [Chart::class, 'one'],
     ];
 
     public function __construct(
@@ -108,6 +110,8 @@ final class Track extends Model
         public readonly ?array $disclaimers = null,
         public readonly ?string $backgroundVideoId = null,
         public readonly ?string $playerId = null,
+        /** Where the track currently sits in a chart, when it is in one. */
+        public readonly ?Chart $chart = null,
         public readonly ?Client $client = null,
     ) {
     }
