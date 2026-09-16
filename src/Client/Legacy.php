@@ -7,6 +7,7 @@ namespace LuckyWins\YandexMusic\Client;
 use DateTimeImmutable;
 use DateTimeInterface;
 use LuckyWins\YandexMusic\Exception\YandexMusicException;
+use LuckyWins\YandexMusic\Model\Account\Status;
 
 /**
  * Endpoints carried over from the 2019 library, not yet converted to models.
@@ -22,94 +23,6 @@ use LuckyWins\YandexMusic\Exception\YandexMusicException;
  */
 trait Legacy
 {
-    /** @var array<array-key, mixed>|null */
-    private ?array $account = null;
-
-    // -- Account ------------------------------------------------------------
-
-    /**
-     * The cached account, as filled in by init().
-     *
-     * @return array<array-key, mixed>|null
-     */
-    public function getAccount(): ?array
-    {
-        return $this->account;
-    }
-
-    /**
-     * Apply a token and load the account behind it.
-     *
-     * Identical to passing the token to the constructor and calling init().
-     */
-    public function fromToken(string $token): void
-    {
-        $this->setToken($token);
-        $this->init();
-    }
-
-    /**
-     * Load the account for the current token, so that methods needing the user
-     * id can find one.
-     *
-     * Not called automatically: constructing a client performs no requests.
-     */
-    public function init(): self
-    {
-        $status = $this->accountStatus();
-
-        $account = $status['account'] ?? null;
-        $this->account = is_array($account) ? $account : null;
-
-        return $this;
-    }
-
-    /**
-     * Whether a string is shaped like an OAuth token. Length only — it says
-     * nothing about whether the token is still valid.
-     */
-    public function isTokenValid(string $token): bool
-    {
-        return 39 === strlen(trim($token));
-    }
-
-    /** @return array<string, mixed> */
-    public function accountStatus(): array
-    {
-        return $this->getArray('/account/status');
-    }
-
-    /** @return array<string, mixed> */
-    public function settings(): array
-    {
-        return $this->getArray('/settings');
-    }
-
-    /** @return array<string, mixed> */
-    public function permissionAlert(): array
-    {
-        return $this->getArray('/permission-alerts');
-    }
-
-    /** @return array<string, mixed> */
-    public function accountExperiments(): array
-    {
-        return $this->getArray('/account/experiments');
-    }
-
-    /**
-     * @param string $language response language, ISO 639-1
-     *
-     * @return array<string, mixed>
-     */
-    public function consumePromoCode(string $code, string $language = 'en'): array
-    {
-        return $this->postArray('/account/consume-promo-code', [
-            'code' => $code,
-            'language' => $language,
-        ]);
-    }
-
     // -- Landing and feed ---------------------------------------------------
 
     /** @return array<string, mixed> */
@@ -281,10 +194,13 @@ trait Legacy
 
     // -- Radio --------------------------------------------------------------
 
-    /** @return array<string, mixed> */
-    public function rotorAccountStatus(): array
+    /**
+     * The account as radio sees it — the same model, with a few extra fields
+     * filled in such as how many skips per hour are left.
+     */
+    public function rotorAccountStatus(): ?Status
     {
-        return $this->getArray('/rotor/account/status');
+        return Status::fromApi($this->request->get($this->getBaseUrl().'/rotor/account/status'), $this);
     }
 
     /** @return array<string, mixed> */
@@ -485,11 +401,11 @@ trait Legacy
      *
      * @throws YandexMusicException when init() has not run or the token is anonymous
      */
-    private function accountUid(): string|int
+    private function accountUid(): int
     {
-        $uid = $this->account['uid'] ?? null;
+        $uid = $this->getAccountUid();
 
-        if (!is_string($uid) && !is_int($uid)) {
+        if (null === $uid) {
             throw new YandexMusicException(
                 'No account is loaded. Call init() on an authorized client before using '
                 .'endpoints that act on behalf of a user.',
