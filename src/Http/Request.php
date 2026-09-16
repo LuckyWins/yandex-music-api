@@ -31,6 +31,9 @@ final class Request
 {
     public const DEFAULT_TIMEOUT = 5.0;
 
+    /** How much of a download to hold in memory at once. */
+    private const CHUNK_SIZE = 65536;
+
     private const DEFAULT_HEADERS = [
         'X-Yandex-Music-Client' => 'YandexMusicAndroid/24023621',
         'User-Agent' => 'Yandex-Music-API',
@@ -146,6 +149,63 @@ final class Request
         }
 
         return $body;
+    }
+
+    /**
+     * Stream a URL into a file.
+     *
+     * Reads in chunks rather than buffering: a library that cannot fetch an
+     * album without holding it all in memory is not much use.
+     *
+     * @return int bytes written
+     */
+    public function download(string $url, string $path): int
+    {
+        $request = $this->requestFactory->createRequest('GET', $url);
+
+        try {
+            $response = $this->client->sendRequest($request);
+        } catch (ClientExceptionInterface $e) {
+            throw new NetworkException($e->getMessage(), null, $e);
+        }
+
+        $status = $response->getStatusCode();
+
+        if ($status < 200 || $status > 299) {
+            $this->handleErrorResponse($status, (string) $response->getBody());
+        }
+
+        $handle = fopen($path, 'wb');
+
+        if (false === $handle) {
+            throw new YandexMusicException(sprintf('Could not open %s for writing', $path));
+        }
+
+        $body = $response->getBody();
+        $written = 0;
+
+        try {
+            while (!$body->eof()) {
+                $chunk = $body->read(self::CHUNK_SIZE);
+
+                if ('' === $chunk) {
+                    break;
+                }
+
+                $result = fwrite($handle, $chunk);
+
+                if (false === $result) {
+                    throw new YandexMusicException(sprintf('Writing to %s failed', $path));
+                }
+
+                $written += $result;
+            }
+        } finally {
+            fclose($handle);
+            $body->close();
+        }
+
+        return $written;
     }
 
     /**

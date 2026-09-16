@@ -15,11 +15,12 @@ Python library is right and this one has a bug.
 
 The library is being modernized in stages. Right now:
 
-- **Authorization** and **account** are ported: typed models, tested, working
-  against the current API
-- **Everything else** — around forty endpoints covering search, playlists, likes
-  and radio — works, but returns raw decoded arrays rather than typed models.
-  These live in `Client\Legacy` and move out domain by domain.
+- **Authorization**, **account** and **tracks** are ported: typed models,
+  tested, working against the current API
+- **Everything else** — search, playlists, likes and radio — works, but returns
+  raw decoded arrays rather than typed models. These live in `Client\Legacy` and
+  move out domain by domain. The models for albums and artists already exist,
+  since tracks could not be typed without them.
 
 Two things are known broken and not yet fixed: direct download links, whose
 signing scheme Yandex replaced, and anything depending on them.
