@@ -22,19 +22,6 @@ here; this is only what to come back to.
 
 ---
 
-## CI
-
-- [ ] **Run the test suite on pull requests.** A GitHub Actions workflow with a
-      matrix over the supported PHP versions — `shivammathur/setup-php`,
-      `composer install`, then `make check`. The reference library runs a
-      21-cell matrix across three operating systems; one OS and the supported
-      PHP versions is enough here.
-
-      Separate from the release workflow above, and worth having sooner: it
-      catches a version-specific break long before anything is tagged.
-
----
-
 ## Port
 
 - [ ] **Convert the remaining domains to typed models.** Everything still in
