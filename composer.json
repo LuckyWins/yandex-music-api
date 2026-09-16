@@ -1,0 +1,73 @@
+{
+    "name": "luckywins/yandex-music-api",
+    "description": "Unofficial PHP client for the Yandex.Music API",
+    "type": "library",
+    "license": "LGPL-3.0-or-later",
+    "keywords": [
+        "yandex",
+        "music",
+        "api",
+        "client",
+        "wrapper"
+    ],
+    "homepage": "https://github.com/LuckyWins/yandex-music-api",
+    "authors": [
+        {
+            "name": "Andreu Puzikov",
+            "email": "andreu.puzikov.21@gmail.com"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/LuckyWins/yandex-music-api/issues",
+        "source": "https://github.com/LuckyWins/yandex-music-api"
+    },
+    "require": {
+        "php": "^8.3",
+        "psr/http-client": "^1.0",
+        "psr/http-factory": "^1.0",
+        "psr/http-message": "^2.0",
+        "psr/log": "^3.0",
+        "php-http/discovery": "^1.19"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^11.5 || ^12.0",
+        "phpstan/phpstan": "^2.1",
+        "friendsofphp/php-cs-fixer": "^3.64",
+        "guzzlehttp/guzzle": "^7.9",
+        "nyholm/psr7": "^1.8"
+    },
+    "suggest": {
+        "guzzlehttp/guzzle": "A PSR-18 HTTP client, discovered automatically when no client is injected",
+        "nyholm/psr7": "A lightweight PSR-7 and PSR-17 implementation"
+    },
+    "autoload": {
+        "psr-4": {
+            "LuckyWins\\YandexMusic\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "LuckyWins\\YandexMusic\\Tests\\": "tests/",
+            "LuckyWins\\YandexMusic\\Examples\\": "examples/"
+        }
+    },
+    "scripts": {
+        "test": "phpunit",
+        "stan": "phpstan analyse",
+        "cs": "php-cs-fixer fix --dry-run --diff",
+        "cs-fix": "php-cs-fixer fix",
+        "check": [
+            "@test",
+            "@stan",
+            "@cs"
+        ]
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "php-http/discovery": true
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
