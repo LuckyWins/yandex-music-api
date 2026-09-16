@@ -89,7 +89,7 @@ supplies.
 | `trackSupplement()` | `GET /tracks/{trackId}/supplement` | `?Supplement` | Videos and, for podcasts, the full description. |
 | `tracks()` | `POST /tracks` | `array` | Fetch tracks by id. |
 | `tracksCredits()` | `GET /tracks/{trackId}/credits` | `?Credits` |  |
-| `tracksDisclaimer()` | `GET /tracks/{trackId}/disclaimer` | `?Disclaimer` |  |
+| `tracksDisclaimer()` | `GET /tracks/{trackId}/disclaimer` | `array` | Notices that must accompany a track. |
 | `tracksDownloadInfo()` | `GET /tracks/{trackId}/download-info` | `array` | The ways a track can be downloaded. |
 | `tracksFullInfo()` | `GET /tracks/{trackId}/full-info` | `?TrackFullInfo` |  |
 | `tracksLyrics()` | `GET /tracks/{trackId}/lyrics` | `?TrackLyrics` | Where to fetch a track's lyrics. |

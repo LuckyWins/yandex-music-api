@@ -118,9 +118,19 @@ trait Tracks
         return Credits::fromApi($this->request->get($this->getBaseUrl().'/tracks/'.$trackId.'/credits'), $this);
     }
 
-    public function tracksDisclaimer(string|int $trackId): ?Disclaimer
+    /**
+     * Notices that must accompany a track.
+     *
+     * A list, despite the singular path and despite the reference library
+     * declaring a single object — checked against the live API.
+     *
+     * @return list<Disclaimer>
+     */
+    public function tracksDisclaimer(string|int $trackId): array
     {
-        return Disclaimer::fromApi($this->request->get($this->getBaseUrl().'/tracks/'.$trackId.'/disclaimer'), $this);
+        $result = $this->request->get($this->getBaseUrl().'/tracks/'.$trackId.'/disclaimer');
+
+        return Disclaimer::listFromApi($result, $this);
     }
 
     /**

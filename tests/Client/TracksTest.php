@@ -188,6 +188,18 @@ final class TracksTest extends TestCase
     }
 
     /**
+     * A list, despite the singular path and despite the reference library
+     * declaring a single object. Checked against the live API.
+     */
+    public function testDisclaimersComeBackAsAList(): void
+    {
+        $http = (new MockHttpClient())->queue(['result' => []]);
+
+        self::assertSame([], $this->client($http)->tracksDisclaimer(1));
+        self::assertSame('https://api.music.yandex.net/tracks/1/disclaimer', (string) $http->lastRequest()->getUri());
+    }
+
+    /**
      * The signature, timestamp and format from a signed request's query.
      *
      * @return array{0: string, 1: string, 2: string}
