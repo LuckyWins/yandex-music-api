@@ -161,8 +161,9 @@ $variants[0]->download('track.mp3');   // streamed, not buffered
 
 Two things to know. A download manifest is good for about a minute, so resolve
 it and fetch promptly rather than collecting manifests for later. And the audio
-does not come from the API host — a network that reaches `api.music.yandex.net`
-but not Yandex's storage hosts will hang here rather than fail cleanly.
+does not come from the API host — it is served by redirect from Yandex's
+streaming hosts, so a network that reaches `api.music.yandex.net` but not those
+will fail here even though everything else works.
 
 ## Errors
 

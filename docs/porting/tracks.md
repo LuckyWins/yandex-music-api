@@ -49,10 +49,20 @@ manifest XML still carries `host`, `path`, `ts` and `s` — the same fields as i
 2019. The host has changed: it is `api.music.yandex.net` now, where it used to
 be a storage host.
 
-**The URL built by the old md5-and-salt scheme is still accepted.** The service
-answers it with a redirect to its streaming hosts, carrying a fresh signature
-minted for that track. The stage-one conclusion that the scheme was dead, and
-the exception `getDirectLink()` threw as a result, were premature.
+**The old md5-and-salt scheme still works.** Verified end to end by fetching a
+real track: 10.4 MiB of MPEG layer III, 320 kbps, 44.1 kHz, its duration
+matching the value on the model. The stage-one conclusion that the scheme was
+dead — and the exception `getDirectLink()` threw as a result — was simply
+wrong.
+
+What had made it look dead was our own HTTP layer. Audio is served by redirect,
+and a PSR-18 client does not follow redirects: it hands back the 3xx so the
+caller can decide. Correct for API calls, fatal for files. Fetching a file now
+follows up to five hops; API calls still treat a redirect as the anomaly it
+would be.
+
+The URL construction is pinned by a test against a fixed manifest, so a change
+to the algorithm fails there rather than producing audio that will not play.
 
 Two caveats that matter in practice:
 

@@ -42,8 +42,11 @@ final class Bootstrap
     {
         $fromEnv = getenv($key);
 
-        if (is_string($fromEnv) && '' !== $fromEnv) {
-            return $fromEnv;
+        // A variable that is set wins, even when set to nothing: that is how
+        // you switch off something the file turns on, for one run, without
+        // editing the file. Only an unset variable falls through.
+        if (false !== $fromEnv) {
+            return '' === $fromEnv ? null : $fromEnv;
         }
 
         return self::readFromFile($key);

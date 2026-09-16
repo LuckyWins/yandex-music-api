@@ -55,7 +55,19 @@ final class DownloadInfo extends Model
             );
         }
 
-        $xml = simplexml_load_string($this->client->request->retrieve($this->downloadInfoUrl));
+        $raw = $this->client->request->retrieve($this->downloadInfoUrl);
+
+        // Parse errors are collected rather than emitted: a malformed manifest
+        // is something to report, not something to warn about from inside a
+        // library.
+        $previous = libxml_use_internal_errors(true);
+
+        try {
+            $xml = simplexml_load_string($raw);
+        } finally {
+            libxml_clear_errors();
+            libxml_use_internal_errors($previous);
+        }
 
         if (false === $xml) {
             throw new YandexMusicException('The download manifest was not valid XML.');

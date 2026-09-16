@@ -15,6 +15,7 @@ use LuckyWins\YandexMusic\Exception\YandexMusicException;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 
 /**
@@ -33,6 +34,9 @@ final class Request
 
     /** How much of a download to hold in memory at once. */
     private const CHUNK_SIZE = 65536;
+
+    /** Enough hops for the audio redirect chain, few enough to notice a loop. */
+    private const MAX_REDIRECTS = 5;
 
     private const DEFAULT_HEADERS = [
         'X-Yandex-Music-Client' => 'YandexMusicAndroid/24023621',
@@ -128,27 +132,12 @@ final class Request
     /**
      * Fetch a URL as raw bytes, without the API headers.
      *
-     * Used for files served outside the API — cover art, audio — where the
-     * Authorization header is neither wanted nor accepted.
+     * Used for files served outside the API — cover art, audio, lyrics — where
+     * the Authorization header is neither wanted nor accepted.
      */
     public function retrieve(string $url): string
     {
-        $request = $this->requestFactory->createRequest('GET', $url);
-
-        try {
-            $response = $this->client->sendRequest($request);
-        } catch (ClientExceptionInterface $e) {
-            throw new NetworkException($e->getMessage(), null, $e);
-        }
-
-        $status = $response->getStatusCode();
-        $body = (string) $response->getBody();
-
-        if ($status < 200 || $status > 299) {
-            $this->handleErrorResponse($status, $body);
-        }
-
-        return $body;
+        return (string) $this->fetchFile($url)->getBody();
     }
 
     /**
@@ -161,19 +150,7 @@ final class Request
      */
     public function download(string $url, string $path): int
     {
-        $request = $this->requestFactory->createRequest('GET', $url);
-
-        try {
-            $response = $this->client->sendRequest($request);
-        } catch (ClientExceptionInterface $e) {
-            throw new NetworkException($e->getMessage(), null, $e);
-        }
-
-        $status = $response->getStatusCode();
-
-        if ($status < 200 || $status > 299) {
-            $this->handleErrorResponse($status, (string) $response->getBody());
-        }
+        $body = $this->fetchFile($url)->getBody();
 
         $handle = fopen($path, 'wb');
 
@@ -181,7 +158,6 @@ final class Request
             throw new YandexMusicException(sprintf('Could not open %s for writing', $path));
         }
 
-        $body = $response->getBody();
         $written = 0;
 
         try {
@@ -206,6 +182,62 @@ final class Request
         }
 
         return $written;
+    }
+
+    /**
+     * Fetch a file, following redirects.
+     *
+     * PSR-18 clients do not follow redirects on their own — they hand back the
+     * 3xx so the caller can decide. For the API that is what we want; for files
+     * it is not, because audio is served by redirect: the URL built from a
+     * download manifest points at the API host, which sends you on to whichever
+     * streaming host has the file.
+     */
+    private function fetchFile(string $url): ResponseInterface
+    {
+        for ($hop = 0; $hop <= self::MAX_REDIRECTS; ++$hop) {
+            $request = $this->requestFactory->createRequest('GET', $url);
+
+            try {
+                $response = $this->client->sendRequest($request);
+            } catch (ClientExceptionInterface $e) {
+                throw new NetworkException($e->getMessage(), null, $e);
+            }
+
+            $status = $response->getStatusCode();
+
+            if ($status >= 200 && $status <= 299) {
+                return $response;
+            }
+
+            if ($status < 300 || $status > 399 || !$response->hasHeader('Location')) {
+                $this->handleErrorResponse($status, (string) $response->getBody());
+            }
+
+            $url = self::resolveLocation($url, $response->getHeaderLine('Location'));
+        }
+
+        throw new NetworkException(sprintf('Gave up after %d redirects fetching the file', self::MAX_REDIRECTS));
+    }
+
+    /**
+     * Where a Location header points, given where we asked from.
+     */
+    private static function resolveLocation(string $from, string $location): string
+    {
+        if (1 === preg_match('#^https?://#i', $location)) {
+            return $location;
+        }
+
+        $parts = parse_url($from);
+
+        if (false === $parts || !isset($parts['scheme'], $parts['host'])) {
+            throw new NetworkException(sprintf('Could not follow a redirect to %s', $location));
+        }
+
+        $origin = $parts['scheme'].'://'.$parts['host'].(isset($parts['port']) ? ':'.$parts['port'] : '');
+
+        return $origin.(str_starts_with($location, '/') ? '' : '/').$location;
     }
 
     /**
