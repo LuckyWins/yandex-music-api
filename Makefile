@@ -9,7 +9,7 @@ endif
 COMPOSER ?= composer
 MIN_VERSION := 80300
 
-.PHONY: help check-php install test coverage stan cs cs-fix check
+.PHONY: help check-php install test coverage stan cs cs-fix docs docs-check check
 
 help:
 	@echo 'install   install dependencies'
@@ -18,7 +18,8 @@ help:
 	@echo 'stan      run static analysis'
 	@echo 'cs        check code style'
 	@echo 'cs-fix    fix code style in place'
-	@echo 'check     test + stan + cs, what CI would run'
+	@echo 'docs      regenerate the model and endpoint reference'
+	@echo 'check     test + stan + cs + docs, what CI would run'
 
 check-php:
 	@command -v $(PHP) >/dev/null 2>&1 || { \
@@ -49,4 +50,13 @@ cs: check-php
 cs-fix: check-php
 	$(PHP) vendor/bin/php-cs-fixer fix
 
-check: test stan cs
+docs: check-php
+	$(PHP) tools/generate-docs.php
+
+# Fails when the committed reference no longer matches the code. Documentation
+# that can go stale unnoticed is worse than none.
+docs-check: docs
+	@git diff --exit-code -- docs/models.md docs/endpoints.md \
+		|| { echo 'docs/ is out of date — run `make docs` and commit the result'; exit 1; }
+
+check: test stan cs docs-check
