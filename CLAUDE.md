@@ -57,6 +57,22 @@ with them, and they are kept passing.
   `CLAUDE.md`, `TODO.md`, `README.md`, tests, config files, commit messages
 - Written in Russian: conversation with the user
 
+## Branches
+
+Git Flow.
+
+- `main` — released state. The 2019 library sits here untouched until the
+  modernized one is ready to replace it. Renamed from `master`; the old name
+  survives only in links predating the rename.
+- `develop` — integration branch, where the modernization accumulates
+- `feature/*` — one branch per chunk of work, off `develop` and back into it:
+  `feature/composer-skeleton`, `feature/http-client`, `feature/track-models`
+- `release/*`, `hotfix/*` — as Git Flow defines them, once there is anything
+  to release
+
+Branch names are lowercase, words separated by hyphens, and describe the work
+rather than the ticket.
+
 ## Commits
 
 **Never commit without explicit permission from the user.** Staging, amending,
