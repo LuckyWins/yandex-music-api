@@ -65,3 +65,11 @@ jobs:
 
       - name: Code style
         run: vendor/bin/php-cs-fixer fix --dry-run --diff
+
+      # The reference under docs/ is generated from the source. If it no longer
+      # matches, someone changed a model and left the documentation behind.
+      - name: Documentation is current
+        run: |
+          php tools/generate-docs.php
+          git diff --exit-code -- docs/models.md docs/endpoints.md \
+            || { echo '::error::docs/ is out of date — run `make docs` and commit the result'; exit 1; }

@@ -250,6 +250,19 @@ $ host -t AAAA api.music.yandex.net
 Putting the same hosts in `/etc/hosts` fixes every tool at once, `curl` included,
 at the cost of needing root and of going stale silently when the addresses move.
 
+## Reference
+
+- [docs/models.md](docs/models.md) — every model, its fields and what nests
+  inside what
+- [docs/endpoints.md](docs/endpoints.md) — every method, the request it makes
+  and what it returns
+- [docs/porting/](docs/porting/) — one record per domain: what the methods were,
+  what they became, and where we deliberately differ from the Python library
+
+The first two are generated from the source and checked in CI, so they cannot
+drift from the code. The third is written by hand, because decisions are not
+derivable.
+
 ## Development
 
 ```console
