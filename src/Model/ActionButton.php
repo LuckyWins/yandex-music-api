@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace LuckyWins\YandexMusic\Model\Album;
+namespace LuckyWins\YandexMusic\Model;
 
 use LuckyWins\YandexMusic\Client;
-use LuckyWins\YandexMusic\Model\Model;
 
 /**
- * A call to action shown on an album, such as a pre-save prompt.
+ * A call to action shown on an album or a playlist, such as a pre-save
+ * prompt or a link to a promotion.
  */
-final class AlbumActionButton extends Model
+final class ActionButton extends Model
 {
     public function __construct(
         public readonly ?string $text = null,

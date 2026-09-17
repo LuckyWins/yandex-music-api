@@ -26,6 +26,7 @@ final class CustomWaveTest extends ModelTestCase
             'backgroundImageUrl' => 'https://example.invalid/b.jpg',
             'position' => 'bottom',
             'squareAgentAnimation' => 'https://example.invalid/square.json',
+            'imageUrl' => 'https://example.invalid/still.jpg',
         ];
     }
 
@@ -43,6 +44,7 @@ final class CustomWaveTest extends ModelTestCase
         self::assertSame('https://example.invalid/b.jpg', $model->backgroundImageUrl);
         self::assertSame('bottom', $model->position);
         self::assertSame('https://example.invalid/square.json', $model->squareAgentAnimation);
+        self::assertSame('https://example.invalid/still.jpg', $model->imageUrl);
     }
 
     protected function equalityTriple(): array

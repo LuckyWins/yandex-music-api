@@ -43,6 +43,7 @@ final class AlbumTest extends ModelTestCase
             'derivedColors' => ['average' => '#3c3c3c'],
             'trailer' => ['available' => true],
             'hasTrailer' => true,
+            'childContent' => false,
             'customWave' => ['title' => 'Моя волна'],
             'pager' => ['total' => 28, 'page' => 0, 'perPage' => 20],
             'metaTagId' => 'rap',
@@ -72,6 +73,7 @@ final class AlbumTest extends ModelTestCase
         self::assertSame('#3c3c3c', $model->derivedColors?->average);
         self::assertTrue($model->trailer?->available);
         self::assertTrue($model->hasTrailer);
+        self::assertFalse($model->childContent);
         self::assertSame('Моя волна', $model->customWave?->title);
         self::assertSame(28, $model->pager?->total);
         self::assertSame('rap', $model->metaTagId);

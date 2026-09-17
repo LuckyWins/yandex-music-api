@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace LuckyWins\YandexMusic\Tests\Model\Playlist;
 
+use LuckyWins\YandexMusic\Model\ActionButton;
 use LuckyWins\YandexMusic\Model\Cover;
 use LuckyWins\YandexMusic\Model\CoverDerivedColors;
 use LuckyWins\YandexMusic\Model\CustomWave;
@@ -132,6 +133,7 @@ final class PlaylistTest extends ModelTestCase
             ],
             'pager' => ['total' => 2, 'page' => 0, 'perPage' => 20],
             'trailer' => ['available' => true],
+            'actionButton' => ['text' => 'Слушать', 'url' => 'https://example.invalid/promo', 'color' => '#ff0000'],
             'topArtist' => [['id' => 4611844, 'name' => 'Miyagi & Эндшпиль']],
             'recentTracks' => [['id' => 31190260, 'albumId' => 4243617]],
             'tracks' => [
@@ -188,6 +190,8 @@ final class PlaylistTest extends ModelTestCase
         self::assertInstanceOf(Pager::class, $model->pager);
         self::assertInstanceOf(PlaylistAvailability::class, $model->trailer);
         self::assertTrue($model->trailer->available);
+        self::assertInstanceOf(ActionButton::class, $model->actionButton);
+        self::assertSame('Слушать', $model->actionButton->text);
 
         self::assertCount(1, $model->topArtist);
         self::assertCount(1, $model->recentTracks);

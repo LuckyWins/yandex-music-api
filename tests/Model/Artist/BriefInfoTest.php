@@ -7,8 +7,11 @@ namespace LuckyWins\YandexMusic\Tests\Model\Artist;
 use LuckyWins\YandexMusic\Model\Album\Album;
 use LuckyWins\YandexMusic\Model\Artist\Artist;
 use LuckyWins\YandexMusic\Model\Artist\BriefInfo;
+use LuckyWins\YandexMusic\Model\Clip\Clip;
 use LuckyWins\YandexMusic\Model\Cover;
 use LuckyWins\YandexMusic\Model\Model;
+use LuckyWins\YandexMusic\Model\Playlist\Playlist;
+use LuckyWins\YandexMusic\Model\Playlist\PlaylistId;
 use LuckyWins\YandexMusic\Model\Supplement\VideoSupplement;
 use LuckyWins\YandexMusic\Model\Track\Track;
 use LuckyWins\YandexMusic\Tests\Support\ModelTestCase;
@@ -42,8 +45,8 @@ final class BriefInfoTest extends ModelTestCase
             // Domains this library has not ported; kept, not modelled.
             'playlists' => [['uid' => 1, 'kind' => 2]],
             'playlistIds' => [['uid' => 1, 'kind' => 2]],
-            'concerts' => [],
-            'clips' => [],
+            'concerts' => [['id' => 'concert-1']],
+            'clips' => [['clipId' => 91, 'title' => 'Нирвана', 'duration' => 180]],
             'vinyls' => [],
             'links' => [['title' => 'Сайт', 'subtitle' => 'официальный', 'url' => 'https://a', 'imgUrl' => 'https://b']],
             'bandlinkScannerLink' => ['title' => 'Bandlink', 'url' => 'https://c'],
@@ -86,15 +89,38 @@ final class BriefInfoTest extends ModelTestCase
     }
 
     /**
-     * The unported parts are kept as they arrived rather than dropped, so
-     * nothing is lost while those domains wait their turn.
+     * Playlists and clips became models once their domains were ported; this
+     * is the check that the wrapper actually resolves them.
+     */
+    public function testPortedDomainsAreTyped(): void
+    {
+        $model = BriefInfo::fromApi(self::fullPayload(), self::client());
+
+        self::assertInstanceOf(BriefInfo::class, $model);
+
+        self::assertCount(1, $model->playlists);
+        self::assertInstanceOf(Playlist::class, $model->playlists[0]);
+        self::assertSame(2, $model->playlists[0]->kind);
+
+        self::assertCount(1, $model->playlistIds);
+        self::assertInstanceOf(PlaylistId::class, $model->playlistIds[0]);
+        self::assertSame('1:2', $model->playlistIds[0]->pair());
+
+        self::assertCount(1, $model->clips);
+        self::assertInstanceOf(Clip::class, $model->clips[0]);
+        self::assertSame('Нирвана', $model->clips[0]->title);
+    }
+
+    /**
+     * What is left raw is left raw on purpose: those domains have not had
+     * their turn, and dropping the data would lose it.
      */
     public function testUnportedDomainsSurviveAsRawData(): void
     {
         $model = BriefInfo::fromApi(self::fullPayload(), self::client());
 
         self::assertInstanceOf(BriefInfo::class, $model);
-        self::assertSame([['uid' => 1, 'kind' => 2]], $model->playlists);
+        self::assertSame([['id' => 'concert-1']], $model->concerts);
         self::assertSame('Bandlink', $model->bandlinkScannerLink['title'] ?? null);
 
         // These links are not the artist's own: different shape, same name.

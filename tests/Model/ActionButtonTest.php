@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace LuckyWins\YandexMusic\Tests\Model\Album;
+namespace LuckyWins\YandexMusic\Tests\Model;
 
-use LuckyWins\YandexMusic\Model\Album\AlbumActionButton;
+use LuckyWins\YandexMusic\Model\ActionButton;
 use LuckyWins\YandexMusic\Model\Model;
 use LuckyWins\YandexMusic\Tests\Support\ModelTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
-#[CoversClass(AlbumActionButton::class)]
-final class AlbumActionButtonTest extends ModelTestCase
+#[CoversClass(ActionButton::class)]
+final class ActionButtonTest extends ModelTestCase
 {
     protected static function modelClass(): string
     {
-        return AlbumActionButton::class;
+        return ActionButton::class;
     }
 
     protected static function fullPayload(): array
@@ -33,13 +33,13 @@ final class AlbumActionButtonTest extends ModelTestCase
 
     protected function assertFullyPopulated(Model $model): void
     {
-        self::assertInstanceOf(AlbumActionButton::class, $model);
+        self::assertInstanceOf(ActionButton::class, $model);
         self::assertSame('Слушать', $model->text);
         self::assertSame('#ffcc00', $model->color);
     }
 
     protected function equalityTriple(): array
     {
-        return [new AlbumActionButton('a'), new AlbumActionButton('a'), new AlbumActionButton('b')];
+        return [new ActionButton('a'), new ActionButton('a'), new ActionButton('b')];
     }
 }

@@ -314,25 +314,16 @@ An album.
 | `availableForOptions` | `list<string>|null` | no |  |
 | `listeningFinished` | `?bool` | no |  |
 | `disclaimers` | `list<string>|null` | no |  |
-| `actionButton` | `?AlbumActionButton` | no | [AlbumActionButton](#albumactionbutton) |
+| `actionButton` | `?ActionButton` | no | [ActionButton](#actionbutton) |
 | `cover` | `?Cover` | no | [Cover](#cover). The cover as an object; `coverUri` carries the same art as a template. |
 | `derivedColors` | `?CoverDerivedColors` | no | [CoverDerivedColors](#coverderivedcolors) |
 | `trailer` | `?Trailer` | no | [Trailer](#trailer) |
 | `hasTrailer` | `?bool` | no |  |
+| `childContent` | `?bool` | no |  |
 | `customWave` | `?CustomWave` | no | [CustomWave](#customwave) |
 | `pager` | `?Pager` | no | [Pager](#pager). Present when the album arrives as one page of a longer list. |
 | `metaTagId` | `?string` | no |  |
 | `sortOrder` | `?string` | no |  |
-
-### AlbumActionButton
-
-A call to action shown on an album, such as a pre-save prompt.
-
-| Field | Type | Required | Notes |
-|---|---|---|---|
-| `text` | `?string` | no |  |
-| `url` | `?string` | no |  |
-| `color` | `?string` | no |  |
 
 ### Deprecation
 
@@ -437,10 +428,10 @@ Everything the service will say about an artist in one response.
 | `hasPromotions` | `?bool` | no |  |
 | `hasTrailer` | `?bool` | no |  |
 | `lastReleaseIds` | `list<int>` | no |  |
-| `playlists` | `list<mixed>` | no | Not modelled: the playlists domain is not ported. |
-| `playlistIds` | `list<mixed>` | no |  |
+| `playlists` | `list<Playlist>` | no | list of [Playlist](#playlist) |
+| `playlistIds` | `list<PlaylistId>` | no | list of [PlaylistId](#playlistid) |
 | `concerts` | `list<mixed>` | no |  |
-| `clips` | `list<mixed>` | no |  |
+| `clips` | `list<Clip>` | no | list of [Clip](#clip) |
 | `vinyls` | `list<mixed>` | no |  |
 | `links` | `list<mixed>` | no | Promotional links — a different shape from the artist's own `links`, despite the name: these carry a subtitle and an image. |
 | `bandlinkScannerLink` | `array<string,` | no |  |
@@ -504,6 +495,38 @@ How many people listened to an artist lately, and whether that is rising.
 |---|---|---|---|
 | `lastMonthListeners` | `int` | **yes** |  |
 | `lastMonthListenersDelta` | `int` | **yes** |  |
+
+## Clip
+
+### Clip
+
+A short video for a track.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `clipId` | `?int` | no |  |
+| `title` | `?string` | no |  |
+| `version` | `?string` | no |  |
+| `playerId` | `?string` | no |  |
+| `uuid` | `?string` | no |  |
+| `thumbnail` | `?string` | no |  |
+| `previewUrl` | `?string` | no |  |
+| `duration` | `?int` | no |  |
+| `trackIds` | `list<int>` | no |  |
+| `artists` | `list<Artist>` | no | list of [Artist](#artist) |
+| `disclaimers` | `list<string>` | no |  |
+| `explicit` | `?bool` | no |  |
+| `cover` | `?Cover` | no | [Cover](#cover) |
+| `contentRestrictions` | `?ContentRestrictions` | no | [ContentRestrictions](#contentrestrictions) |
+
+### ClipsWillLike
+
+A page of clips: the ones liked, or the ones suggested.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `clips` | `list<Clip>` | no | list of [Clip](#clip) |
+| `pager` | `?Pager` | no | [Pager](#pager) |
 
 ## DeviceAuth
 
@@ -757,6 +780,7 @@ A playlist.
 | `customWave` | `?CustomWave` | no | [CustomWave](#customwave) |
 | `pager` | `?Pager` | no | [Pager](#pager) |
 | `hasTrailer` | `?bool` | no |  |
+| `actionButton` | `?ActionButton` | no | [ActionButton](#actionbutton) |
 | `trailer` | `?PlaylistAvailability` | no | [PlaylistAvailability](#playlistavailability) |
 | `tags` | `list<mixed>` | no |  |
 | `prerolls` | `list<mixed>` | no |  |
@@ -779,6 +803,15 @@ Whether a playlist's trailer can be played.
 | Field | Type | Required | Notes |
 |---|---|---|---|
 | `available` | `?bool` | no |  |
+
+### PlaylistId
+
+A reference to a playlist rather than the playlist itself: its owner and its kind, which is what identifies one.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `uid` | `?int` | no |  |
+| `kind` | `?int` | no |  |
 
 ### PlaylistRecommendations
 
@@ -927,6 +960,16 @@ A video tied to a track, usually its official clip.
 
 ## Top level
 
+### ActionButton
+
+A call to action shown on an album or a playlist, such as a pre-save prompt or a link to a promotion.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `text` | `?string` | no |  |
+| `url` | `?string` | no |  |
+| `color` | `?string` | no |  |
+
 ### ContentRestrictions
 
 Why something may not be playable here.
@@ -997,6 +1040,7 @@ The personal radio station offered for an artist or album, and how to present it
 | `backgroundImageUrl` | `?string` | no |  |
 | `position` | `?string` | no | Where the offer sits on the page, such as `bottom`. |
 | `squareAgentAnimation` | `?string` | no |  |
+| `imageUrl` | `?string` | no |  |
 
 ### Disclaimer
 
@@ -1014,6 +1058,23 @@ The notice Russian law requires be shown for material by someone designated a fo
 |---|---|---|---|
 | `reason` | `?string` | no |  |
 | `title` | `?string` | no |  |
+
+### Like
+
+One entry in a user's likes: what was liked, and when.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `type` | `?string` | no |  |
+| `id` | `mixed` | no |  |
+| `timestamp` | `?string` | no |  |
+| `album` | `?Album` | no | [Album](#album) |
+| `artist` | `?Artist` | no | [Artist](#artist) |
+| `playlist` | `?Playlist` | no | [Playlist](#playlist) |
+| `shortDescription` | `?string` | no |  |
+| `description` | `?string` | no |  |
+| `isPremiere` | `?bool` | no |  |
+| `isBanner` | `?bool` | no |  |
 
 ### Pager
 
@@ -1055,6 +1116,17 @@ What the account can be sold, and where to buy it.
 | `nativeProducts` | `list<Product>` | no | list of [Product](#product) |
 | `webPaymentMonthProductPrice` | `?Price` | no | [Price](#price) |
 | `offersBatchId` | `?string` | no | Identifies the batch of offers this response was generated from. |
+
+### TracksList
+
+A user's library of liked or disliked tracks.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `uid` | `?int` | no |  |
+| `revision` | `?int` | no |  |
+| `playlistUuid` | `?string` | no | The library is itself a playlist; this is its uuid. |
+| `tracks` | `list<TrackShort>` | no | list of [TrackShort](#trackshort) |
 
 ### Trailer
 
