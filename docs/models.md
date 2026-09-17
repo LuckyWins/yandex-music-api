@@ -1055,6 +1055,24 @@ A record label.
 | `links` | `list<Link>|null` | no | list of [Link](#link) |
 | `type` | `?string` | no |  |
 
+### LabelAlbums
+
+A page of a label's releases.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `albums` | `list<Album>` | no | list of [Album](#album) |
+| `pager` | `?Pager` | no | [Pager](#pager) |
+
+### LabelArtists
+
+A page of the artists signed to a label.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `artists` | `list<Artist>` | no | list of [Artist](#artist) |
+| `pager` | `?Pager` | no | [Pager](#pager) |
+
 ## Landing
 
 ### Block
@@ -1241,6 +1259,216 @@ A track reference as the landing sends it: the pair of ids and when it was playe
 |---|---|---|---|
 | `trackId` | `?TrackId` | no | [TrackId](#trackid) |
 | `timestamp` | `?string` | no |  |
+
+## Metatag
+
+### Metatag
+
+A tag's page: a bit of everything filed under it, and a station to play it.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `id` | `?string` | no |  |
+| `title` | `?MetatagTitle` | no | [MetatagTitle](#metatagtitle) |
+| `coverUri` | `?string` | no |  |
+| `color` | `?string` | no |  |
+| `liked` | `?bool` | no |  |
+| `stationId` | `?string` | no |  |
+| `customWaveAnimationUrl` | `?string` | no |  |
+| `artists` | `list<Artist>` | no | list of [Artist](#artist) |
+| `albums` | `list<Album>` | no | list of [Album](#album) |
+| `playlists` | `list<Playlist>` | no | list of [Playlist](#playlist) |
+| `tracksSortByValues` | `list<MetatagSortByValue>` | no | list of [MetatagSortByValue](#metatagsortbyvalue) |
+| `albumsSortByValues` | `list<MetatagSortByValue>` | no | list of [MetatagSortByValue](#metatagsortbyvalue) |
+| `playlistsSortByValues` | `list<MetatagSortByValue>` | no | list of [MetatagSortByValue](#metatagsortbyvalue) |
+| `tracks` | `list<mixed>` | no | The four below are sent and have never been seen holding anything. |
+| `composers` | `list<mixed>` | no |  |
+| `promotions` | `list<mixed>` | no |  |
+| `features` | `list<mixed>` | no |  |
+
+### MetatagAlbums
+
+A page of the albums under a tag, ordered however the request asked.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `id` | `?string` | no |  |
+| `title` | `?MetatagTitle` | no | [MetatagTitle](#metatagtitle) |
+| `coverUri` | `?string` | no |  |
+| `color` | `?string` | no |  |
+| `stationId` | `?string` | no |  |
+| `pager` | `?Pager` | no | [Pager](#pager) |
+| `albums` | `list<Album>` | no | list of [Album](#album) |
+| `sortByValues` | `list<MetatagSortByValue>` | no | list of [MetatagSortByValue](#metatagsortbyvalue) |
+
+### MetatagArtistEntry
+
+An artist under a tag, with a few of their tracks to hear why.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `artist` | `?Artist` | no | [Artist](#artist) |
+| `popularTracks` | `list<Track>` | no | list of [Track](#track) |
+
+### MetatagArtists
+
+A page of the artists under a tag, each with a few tracks of theirs.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `id` | `?string` | no |  |
+| `title` | `?MetatagTitle` | no | [MetatagTitle](#metatagtitle) |
+| `coverUri` | `?string` | no |  |
+| `color` | `?string` | no |  |
+| `stationId` | `?string` | no |  |
+| `pager` | `?Pager` | no | [Pager](#pager) |
+| `artists` | `list<MetatagArtistEntry>` | no | list of [MetatagArtistEntry](#metatagartistentry) |
+| `sortByValues` | `list<MetatagSortByValue>` | no | list of [MetatagSortByValue](#metatagsortbyvalue) |
+
+### MetatagLeaf
+
+A branch of the tag tree, holding branches of its own.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `tag` | `?string` | no |  |
+| `title` | `?string` | no |  |
+| `leaves` | `list<self>` | no | list of [MetatagLeaf](#metatagleaf) |
+
+### MetatagPlaylists
+
+A page of the playlists under a tag.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `id` | `?string` | no |  |
+| `title` | `?MetatagTitle` | no | [MetatagTitle](#metatagtitle) |
+| `coverUri` | `?string` | no |  |
+| `color` | `?string` | no |  |
+| `stationId` | `?string` | no |  |
+| `pager` | `?Pager` | no | [Pager](#pager) |
+| `playlists` | `list<Playlist>` | no | list of [Playlist](#playlist) |
+| `sortByValues` | `list<MetatagSortByValue>` | no | list of [MetatagSortByValue](#metatagsortbyvalue) |
+
+### MetatagSortByValue
+
+One way a tag's contents can be ordered, and whether it is the one in use.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `value` | `?string` | no |  |
+| `title` | `?string` | no |  |
+| `active` | `?bool` | no |  |
+
+### MetatagTitle
+
+A tag's name, short and long.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `title` | `?string` | no |  |
+| `fullTitle` | `?string` | no |  |
+
+### MetatagTree
+
+One tree of tags — a way of navigating them, such as by mood or by era.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `title` | `?string` | no |  |
+| `navigationId` | `?string` | no |  |
+| `leaves` | `list<MetatagLeaf>` | no | list of [MetatagLeaf](#metatagleaf) |
+
+### Metatags
+
+Every way the catalogue is tagged.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `trees` | `list<MetatagTree>` | no | list of [MetatagTree](#metatagtree) |
+
+## MusicHistory
+
+### MusicHistory
+
+What the account has been listening to, a day at a time.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `historyTabs` | `list<MusicHistoryTab>` | no | list of [MusicHistoryTab](#musichistorytab) |
+
+### MusicHistoryContextFullModel
+
+Whatever was being listened to, filled in.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `album` | `?Album` | no | [Album](#album) |
+| `artist` | `?Artist` | no | [Artist](#artist) |
+| `playlist` | `?Playlist` | no | [Playlist](#playlist) |
+| `wave` | `?Wave` | no | [Wave](#wave) |
+| `artists` | `list<Artist>` | no | list of [Artist](#artist) |
+| `available` | `?bool` | no |  |
+| `tracksCount` | `?int` | no |  |
+| `simpleWaveForegroundImageUrl` | `?string` | no |  |
+| `simpleWaveBackgroundColor` | `?string` | no |  |
+
+### MusicHistoryGroup
+
+A stretch of listening: what it was played from, and what was played.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `context` | `?MusicHistoryItem` | no | [MusicHistoryItem](#musichistoryitem) |
+| `tracks` | `list<MusicHistoryItem>` | no | list of [MusicHistoryItem](#musichistoryitem) |
+
+### MusicHistoryItem
+
+One entry of the history: a type, what it points at, and optionally the thing itself.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `type` | `?string` | no |  |
+| `data` | `?MusicHistoryItemData` | no |  |
+
+### MusicHistoryItemData
+
+An entry's identity and, when asked for, the thing itself.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `itemId` | `?MusicHistoryItemId` | no | [MusicHistoryItemId](#musichistoryitemid) |
+| `fullModel` | `mixed` | no |  |
+
+### MusicHistoryItemId
+
+What an entry of the history points at.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `id` | `?string` | no |  |
+| `trackId` | `?string` | no |  |
+| `albumId` | `?string` | no |  |
+| `uid` | `mixed` | no |  |
+| `kind` | `mixed` | no |  |
+| `seeds` | `list<string>` | no |  |
+
+### MusicHistoryItems
+
+The entries asked about, filled in.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `items` | `list<MusicHistoryItem>` | no | list of [MusicHistoryItem](#musichistoryitem) |
+
+### MusicHistoryTab
+
+One day of listening.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `date` | `?string` | no |  |
+| `items` | `list<MusicHistoryGroup>` | no | list of [MusicHistoryGroup](#musichistorygroup) |
 
 ## Pin
 
