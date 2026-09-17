@@ -33,6 +33,8 @@ supplies.
 | `album()` | `GET /albums/{albumId}` | `?Album` | One album, without its tracks. |
 | `albums()` | `POST /albums` | `array` | Fetch albums by id. |
 | `albumsDisclaimer()` | `GET /albums/{albumId}/disclaimer` | `array` | Notices that must accompany an album. |
+| `albumsSimilarEntities()` | `GET /albums/{albumId}/similar-entities` | `?AlbumSimilarEntities` | What to listen to next when the album runs out. |
+| `albumsTrailer()` | `GET /albums/{albumId}/trailer` | `?AlbumTrailer` | An album's trailer and the tracks it plays. |
 | `albumsWithTracks()` | `GET /albums/{albumId}/with-tracks` | `?Album` | One album with everything on it. |
 
 ## Artists
@@ -40,18 +42,31 @@ supplies.
 | Method | Request | Returns | Notes |
 |---|---|---|---|
 | `artists()` | `POST /artists` | `array` | Fetch artists by id. |
+| `artistsAbout()` | `GET /artists/{artistId}/about-artist` | `?AboutArtist` | The artist's page: their description, covers and links. |
 | `artistsAlsoAlbums()` | — | `?ArtistAlbums` | A page of the albums an artist appears on without being their author — compilations, guest spots. |
 | `artistsBriefInfo()` | `GET /artists/{artistId}/brief-info` | `?BriefInfo` | Everything the service will say about an artist at once — albums, popular tracks, similar artists, covers, chart positions. |
+| `artistsClips()` | `GET /artists/{artistId}/blocks/artist-clips` | `?ArtistClips` | A page of the artist's clips. |
 | `artistsDirectAlbums()` | — | `?ArtistAlbums` | A page of the albums an artist made. |
+| `artistsDisclaimer()` | `GET /artists/{artistId}/disclaimer` | `array` | Notices that must accompany an artist. |
+| `artistsDiscographyAlbums()` | — | `?ArtistAlbums` | Albums the artist made, in the discography arrangement. |
+| `artistsDonation()` | `GET /artists/{artistId}/blocks/artist-donation` | `?ArtistDonations` | How the artist can be supported, when they accept support at all. |
+| `artistsInfo()` | `GET /artists/{artistId}/info` | `?ArtistInfo` | An artist with the numbers around them, without the albums and tracks that make artistsBriefInfo() heavy. |
+| `artistsLinks()` | `GET /artists/{artistId}/artist-links` | `?ArtistLinks` | Everywhere else the artist can be found. |
+| `artistsSafeDirectAlbums()` | — | `?ArtistAlbums` | The artist's own albums, with whatever the service considers unsafe left out. |
 | `artistsSimilar()` | `GET /artists/{artistId}/similar` | `?SimilarArtists` | Who else sounds like this artist. |
+| `artistsSkeleton()` | `GET /artists/{artistId}/skeletons/{skeletonId}` | `?ArtistSkeleton` | How the artist's page is laid out — which blocks to draw, and where each one's contents come from. |
+| `artistsTrackIds()` | `GET /artists/{artistId}/track-ids` | `array` | Every track id of the artist, unordered. |
 | `artistsTrackIdsByRating()` | `GET /artists/{artistId}/track-ids-by-rating` | `array` | The artist's tracks as bare ids, ordered by rating. |
 | `artistsTracks()` | `GET /artists/{artistId}/tracks` | `?ArtistTracks` | A page of an artist's tracks, most popular first. |
+| `artistsTrailer()` | `GET /artists/{artistId}/trailer` | `?ArtistTrailer` | The artist's trailer and the tracks it plays. |
 
 ## Clips
 
 | Method | Request | Returns | Notes |
 |---|---|---|---|
 | `clips()` | `GET /clips` | `array` | Fetch clips by id. |
+| `clipsCredits()` | `GET /clips/{clipId}/credits` | `?Credits` | Who made a clip. |
+| `clipsDisclaimer()` | `GET /clips/{clipId}/disclaimer` | `array` | Notices that must accompany a clip. |
 | `clipsWillLike()` | `GET /clips/will/like` | `?ClipsWillLike` | A page of clips the service thinks the account will like. |
 
 ## DeviceAuth

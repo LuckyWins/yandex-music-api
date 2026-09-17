@@ -24,6 +24,8 @@ final class Clip extends Model
 
     public function __construct(
         public readonly ?int $clipId = null,
+        /** Sent alongside clipId, and not always the same value. */
+        public readonly string|int|null $id = null,
         public readonly ?string $title = null,
         public readonly ?string $version = null,
         public readonly ?string $playerId = null,
@@ -46,6 +48,6 @@ final class Clip extends Model
 
     protected function identity(): array
     {
-        return [$this->clipId, $this->uuid];
+        return [$this->clipId ?? $this->id, $this->uuid];
     }
 }

@@ -7,6 +7,7 @@ namespace LuckyWins\YandexMusic\Tests\Model\Artist;
 use LuckyWins\YandexMusic\Model\Album\Album;
 use LuckyWins\YandexMusic\Model\Artist\Artist;
 use LuckyWins\YandexMusic\Model\Artist\BriefInfo;
+use LuckyWins\YandexMusic\Model\Artist\Vinyl;
 use LuckyWins\YandexMusic\Model\Clip\Clip;
 use LuckyWins\YandexMusic\Model\Cover;
 use LuckyWins\YandexMusic\Model\Model;
@@ -47,7 +48,7 @@ final class BriefInfoTest extends ModelTestCase
             'playlistIds' => [['uid' => 1, 'kind' => 2]],
             'concerts' => [['id' => 'concert-1']],
             'clips' => [['clipId' => 91, 'title' => 'Нирвана', 'duration' => 180]],
-            'vinyls' => [],
+            'vinyls' => [['offerId' => 12345, 'title' => 'Hajime', 'year' => 2017, 'price' => 2990]],
             'links' => [['title' => 'Сайт', 'subtitle' => 'официальный', 'url' => 'https://a', 'imgUrl' => 'https://b']],
             'bandlinkScannerLink' => ['title' => 'Bandlink', 'url' => 'https://c'],
             'extraActions' => [],
@@ -109,6 +110,10 @@ final class BriefInfoTest extends ModelTestCase
         self::assertCount(1, $model->clips);
         self::assertInstanceOf(Clip::class, $model->clips[0]);
         self::assertSame('Нирвана', $model->clips[0]->title);
+
+        self::assertCount(1, $model->vinyls);
+        self::assertInstanceOf(Vinyl::class, $model->vinyls[0]);
+        self::assertSame(2990, $model->vinyls[0]->price);
     }
 
     /**

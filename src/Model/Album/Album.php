@@ -7,6 +7,7 @@ namespace LuckyWins\YandexMusic\Model\Album;
 use LuckyWins\YandexMusic\Client;
 use LuckyWins\YandexMusic\Model\ActionButton;
 use LuckyWins\YandexMusic\Model\Artist\Artist;
+use LuckyWins\YandexMusic\Model\ContentRestrictions;
 use LuckyWins\YandexMusic\Model\Cover;
 use LuckyWins\YandexMusic\Model\CoverDerivedColors;
 use LuckyWins\YandexMusic\Model\CustomWave;
@@ -35,6 +36,7 @@ final class Album extends Model
         'actionButton' => [ActionButton::class, 'one'],
         'cover' => [Cover::class, 'one'],
         'derivedColors' => [CoverDerivedColors::class, 'one'],
+        'contentRestrictions' => [ContentRestrictions::class, 'one'],
         'trailer' => [Trailer::class, 'one'],
         'customWave' => [CustomWave::class, 'one'],
         'pager' => [Pager::class, 'one'],
@@ -116,6 +118,7 @@ final class Album extends Model
         public readonly ?Trailer $trailer = null,
         public readonly ?bool $hasTrailer = null,
         public readonly ?bool $childContent = null,
+        public readonly ?ContentRestrictions $contentRestrictions = null,
         public readonly ?CustomWave $customWave = null,
         /** Present when the album arrives as one page of a longer list. */
         public readonly ?Pager $pager = null,

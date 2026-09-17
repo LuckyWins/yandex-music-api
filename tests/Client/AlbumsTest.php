@@ -8,6 +8,8 @@ use LuckyWins\YandexMusic\Client;
 use LuckyWins\YandexMusic\Client\Albums as AlbumsTrait;
 use LuckyWins\YandexMusic\Http\Request;
 use LuckyWins\YandexMusic\Model\Album\Album;
+use LuckyWins\YandexMusic\Model\Album\AlbumSimilarEntities;
+use LuckyWins\YandexMusic\Model\Album\AlbumTrailer;
 use LuckyWins\YandexMusic\Model\Track\Track;
 use LuckyWins\YandexMusic\Tests\Support\MockHttpClient;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -81,6 +83,28 @@ final class AlbumsTest extends TestCase
 
         self::assertSame([], $this->client($http)->albumsDisclaimer(1));
         self::assertSame('https://api.music.yandex.net/albums/1/disclaimer', (string) $http->lastRequest()->getUri());
+    }
+
+
+    public function testTheTrailerAndWhatComesAfterTheAlbum(): void
+    {
+        $http = (new MockHttpClient())
+            ->queue(['result' => ['album' => ['id' => 4243617, 'title' => 'Hajime']]])
+            ->queue(['result' => ['items' => [['type' => 'wave']]]]);
+
+        $client = $this->client($http);
+
+        self::assertInstanceOf(AlbumTrailer::class, $client->albumsTrailer(4243617));
+        self::assertSame(
+            'https://api.music.yandex.net/albums/4243617/trailer',
+            (string) $http->requestAt(0)->getUri(),
+        );
+
+        self::assertInstanceOf(AlbumSimilarEntities::class, $client->albumsSimilarEntities(4243617));
+        self::assertSame(
+            'https://api.music.yandex.net/albums/4243617/similar-entities',
+            (string) $http->requestAt(1)->getUri(),
+        );
     }
 
     private function client(MockHttpClient $http): Client

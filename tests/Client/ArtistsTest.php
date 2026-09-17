@@ -7,9 +7,16 @@ namespace LuckyWins\YandexMusic\Tests\Client;
 use LuckyWins\YandexMusic\Client;
 use LuckyWins\YandexMusic\Client\Artists as ArtistsTrait;
 use LuckyWins\YandexMusic\Http\Request;
+use LuckyWins\YandexMusic\Model\Artist\AboutArtist;
 use LuckyWins\YandexMusic\Model\Artist\Artist;
 use LuckyWins\YandexMusic\Model\Artist\ArtistAlbums;
+use LuckyWins\YandexMusic\Model\Artist\ArtistClips;
+use LuckyWins\YandexMusic\Model\Artist\ArtistDonations;
+use LuckyWins\YandexMusic\Model\Artist\ArtistInfo;
+use LuckyWins\YandexMusic\Model\Artist\ArtistLinks;
+use LuckyWins\YandexMusic\Model\Artist\ArtistSkeleton;
 use LuckyWins\YandexMusic\Model\Artist\ArtistTracks;
+use LuckyWins\YandexMusic\Model\Artist\ArtistTrailer;
 use LuckyWins\YandexMusic\Model\Artist\BriefInfo;
 use LuckyWins\YandexMusic\Model\Artist\SimilarArtists;
 use LuckyWins\YandexMusic\Tests\Support\MockHttpClient;
@@ -111,6 +118,95 @@ final class ArtistsTest extends TestCase
         self::assertSame('a', $brief->artist?->name);
         self::assertSame(100, $brief->stats?->lastMonthListeners);
         self::assertSame('https://api.music.yandex.net/artists/1/brief-info', (string) $http->lastRequest()->getUri());
+    }
+
+
+    /**
+     * The endpoints added after the artists stage, each a plain read.
+     */
+    public function testTheReadOnlyArtistEndpoints(): void
+    {
+        foreach ([
+            ['artistsAbout', 'about-artist', ['description' => 'Дуэт'], AboutArtist::class],
+            ['artistsInfo', 'info', ['likesCount' => 1], ArtistInfo::class],
+            ['artistsLinks', 'artist-links', ['links' => [['title' => 'Сайт']]], ArtistLinks::class],
+            ['artistsClips', 'blocks/artist-clips', ['items' => [['type' => 'clip']]], ArtistClips::class],
+            ['artistsDonation', 'blocks/artist-donation', ['donations' => []], ArtistDonations::class],
+            ['artistsTrailer', 'trailer', ['artist' => ['id' => 1, 'name' => 'Miyagi']], ArtistTrailer::class],
+        ] as [$method, $path, $payload, $expected]) {
+            $http = (new MockHttpClient())->queue(['result' => $payload]);
+
+            self::assertInstanceOf($expected, $this->client($http)->{$method}(4611844), $method);
+            self::assertSame(
+                'https://api.music.yandex.net/artists/4611844/'.$path,
+                (string) $http->lastRequest()->getUri(),
+                $method,
+            );
+        }
+    }
+
+    /**
+     * Both new listings go through the same helper as the older two, so the
+     * paging parameters have to survive.
+     */
+    public function testTheTwoFurtherAlbumListings(): void
+    {
+        foreach (['artistsDiscographyAlbums' => 'discography-albums', 'artistsSafeDirectAlbums' => 'safe-direct-albums'] as $method => $path) {
+            $http = (new MockHttpClient())->queue(['result' => ['albums' => [['id' => 1, 'title' => 'Hajime']]]]);
+
+            $albums = $this->client($http)->{$method}(4611844, 2, 5, 'rating');
+
+            self::assertInstanceOf(ArtistAlbums::class, $albums, $method);
+            self::assertSame(
+                'https://api.music.yandex.net/artists/4611844/'.$path.'?page=2&page-size=5&sort-by=rating',
+                (string) $http->lastRequest()->getUri(),
+                $method,
+            );
+        }
+    }
+
+    /**
+     * The layout endpoint takes a second identifier in its path.
+     */
+    public function testTheSkeletonNamesBothIds(): void
+    {
+        $http = (new MockHttpClient())->queue(['result' => ['id' => 'artist-page', 'blocks' => []]]);
+
+        $skeleton = $this->client($http)->artistsSkeleton(4611844, 'artist-page');
+
+        self::assertInstanceOf(ArtistSkeleton::class, $skeleton);
+        self::assertSame(
+            'https://api.music.yandex.net/artists/4611844/skeletons/artist-page',
+            (string) $http->lastRequest()->getUri(),
+        );
+    }
+
+    /**
+     * Ids only, unordered — the cheap way to ask what an artist has.
+     */
+    public function testTrackIdsComeBackAsStrings(): void
+    {
+        $http = (new MockHttpClient())->queue(['result' => ['tracks' => ['31190260', 31190261]]]);
+
+        self::assertSame(['31190260', '31190261'], $this->client($http)->artistsTrackIds(4611844));
+        self::assertSame(
+            'https://api.music.yandex.net/artists/4611844/track-ids',
+            (string) $http->lastRequest()->getUri(),
+        );
+    }
+
+    /**
+     * A list, like the track and album disclaimers before it.
+     */
+    public function testDisclaimersAreAList(): void
+    {
+        $http = (new MockHttpClient())->queue(['result' => []]);
+
+        self::assertSame([], $this->client($http)->artistsDisclaimer(4611844));
+        self::assertSame(
+            'https://api.music.yandex.net/artists/4611844/disclaimer',
+            (string) $http->lastRequest()->getUri(),
+        );
     }
 
     private function client(MockHttpClient $http): Client

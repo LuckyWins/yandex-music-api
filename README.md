@@ -13,19 +13,31 @@ Python library is right and this one has a bug.
 
 ## Status
 
-**The port is finished.** Every endpoint returns typed models: authorization,
-the account, tracks, albums, artists, playlists, likes, clips, search, radio,
-and the landing with its feed and genres. 147 models, 104 methods, no raw
-decoded arrays anywhere.
+**Nothing returns raw decoded JSON.** Every method hands back typed models:
+authorization, the account, tracks, albums, artists, playlists, likes, clips,
+search, radio, and the landing with its feed and genres. 177 models, 127
+methods, checked against the live API rather than against the Python library —
+which matters, because the reference is wrong in places the API has moved on
+from. Each stage is written up in [docs/porting/](docs/porting/), divergences
+included.
 
-It was done in nine stages, one domain at a time, each checked against the live
-API rather than against the Python library — which turned out to matter, since
-the reference is wrong in places the API has moved on from. Every stage is
-written up in [docs/porting/](docs/porting/), including where this library
-deliberately differs.
+**Not everything the Python library has is here yet.** It has 144 client
+methods to our 127, and the gap is 32:
 
-What is not here: Ynison, the websocket protocol for remote playback, and a
-release workflow. Both are in [TODO.md](TODO.md).
+| Missing | Methods | What it is |
+|---|---|---|
+| pins | 9 | what is pinned to the front page |
+| concerts | 6 | listings, venues, a concert's page |
+| metatags | 5 | themed selections — "for running", "new" |
+| queue | 4 | the play queue, shared across devices |
+| labels | 3 | labels and their releases |
+| presaves | 3 | pre-saving unreleased albums |
+| music history | 2 | what was listened to, and when |
+| `artistsConcerts` | 1 | deferred: it answers with concerts |
+
+Those are the work in progress, in that order, tracked in [TODO.md](TODO.md)
+along with Ynison — the websocket protocol for remote playback — and a release
+workflow.
 
 ## Requirements
 
