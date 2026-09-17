@@ -82,6 +82,7 @@ final class Playlist extends Model
         public readonly ?bool $ready = null,
         public readonly ?bool $everPlayed = null,
         public readonly ?string $generatedPlaylistType = null,
+        public readonly ?string $artistPlaylistType = null,
         public readonly ?MadeFor $madeFor = null,
         public readonly ?MadeForUser $madeForUser = null,
         public readonly ?CoverDerivedColors $derivedColors = null,

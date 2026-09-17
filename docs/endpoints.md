@@ -46,6 +46,7 @@ supplies.
 | `artistsAlsoAlbums()` | — | `?ArtistAlbums` | A page of the albums an artist appears on without being their author — compilations, guest spots. |
 | `artistsBriefInfo()` | `GET /artists/{artistId}/brief-info` | `?BriefInfo` | Everything the service will say about an artist at once — albums, popular tracks, similar artists, covers, chart positions. |
 | `artistsClips()` | `GET /artists/{artistId}/blocks/artist-clips` | `?ArtistClips` | A page of the artist's clips. |
+| `artistsConcerts()` | `GET /artists/{artistId}/concerts` | `?ArtistConcerts` | Where the artist is playing next. |
 | `artistsDirectAlbums()` | — | `?ArtistAlbums` | A page of the albums an artist made. |
 | `artistsDisclaimer()` | `GET /artists/{artistId}/disclaimer` | `array` | Notices that must accompany an artist. |
 | `artistsDiscographyAlbums()` | — | `?ArtistAlbums` | Albums the artist made, in the discography arrangement. |
@@ -68,6 +69,16 @@ supplies.
 | `clipsCredits()` | `GET /clips/{clipId}/credits` | `?Credits` | Who made a clip. |
 | `clipsDisclaimer()` | `GET /clips/{clipId}/disclaimer` | `array` | Notices that must accompany a clip. |
 | `clipsWillLike()` | `GET /clips/will/like` | `?ClipsWillLike` | A page of clips the service thinks the account will like. |
+
+## Concerts
+
+| Method | Request | Returns | Notes |
+|---|---|---|---|
+| `concertInfo()` | `GET /concerts/{concertId}/info` | `?ConcertInfo` | One concert's page. |
+| `concertSkeleton()` | `GET /concerts/{concertId}/skeletons/{skeletonId}` | `?ConcertSkeleton` | How a concert's page is laid out — the same skeleton models an artist's page uses. |
+| `concertsFeed()` | `GET /concerts/feed` | `?ConcertFeed` | What is on. |
+| `concertsLocations()` | `GET /concerts/locations` | `?ConcertLocations` | Everywhere concerts are listed for. |
+| `concertsTabConfig()` | `GET /concerts/tab-config` | `?ConcertTabConfig` | How much of the concerts tab to show at once. |
 
 ## DeviceAuth
 

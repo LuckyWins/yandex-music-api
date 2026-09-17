@@ -15,22 +15,20 @@ Python library is right and this one has a bug.
 
 **Nothing returns raw decoded JSON.** Every method hands back typed models:
 authorization, the account, tracks, albums, artists, playlists, likes, clips,
-search, radio, the landing, pins, queues and presaves. 184 models, 144
-methods, checked against the live API rather than against the Python library —
+search, radio, the landing, pins, queues, presaves and concerts. 200 models,
+150 methods, checked against the live API rather than against the Python library —
 which matters, because the reference is wrong in places the API has moved on
 from. Each stage is written up in [docs/porting/](docs/porting/), divergences
 included.
 
 **Not everything the Python library has is here yet.** It has 144 client
-methods to our 144, and the gap is 16:
+methods to our 150, and the gap is 10:
 
 | Missing | Methods | What it is |
 |---|---|---|
-| concerts | 6 | listings, venues, a concert's page |
 | metatags | 5 | themed selections — "for running", "new" |
 | labels | 3 | labels and their releases |
 | music history | 2 | what was listened to, and when |
-| `artistsConcerts` | 1 | deferred: it answers with concerts |
 
 Those are the work in progress, in that order, tracked in [TODO.md](TODO.md)
 along with Ynison — the websocket protocol for remote playback — and a release

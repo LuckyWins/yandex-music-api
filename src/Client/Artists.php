@@ -16,6 +16,7 @@ use LuckyWins\YandexMusic\Model\Artist\ArtistTracks;
 use LuckyWins\YandexMusic\Model\Artist\ArtistTrailer;
 use LuckyWins\YandexMusic\Model\Artist\BriefInfo;
 use LuckyWins\YandexMusic\Model\Artist\SimilarArtists;
+use LuckyWins\YandexMusic\Model\Concert\ArtistConcerts;
 use LuckyWins\YandexMusic\Model\Disclaimer;
 
 /**
@@ -271,6 +272,20 @@ trait Artists
     {
         return Disclaimer::listFromApi(
             $this->request->get($this->getBaseUrl().'/artists/'.$artistId.'/disclaimer'),
+            $this,
+        );
+    }
+
+    /**
+     * Where the artist is playing next.
+     *
+     * Lives with the artists because the path does: the rest of the concerts
+     * domain is in Client\Concerts.
+     */
+    public function artistsConcerts(string|int $artistId): ?ArtistConcerts
+    {
+        return ArtistConcerts::fromApi(
+            $this->request->get($this->getBaseUrl().'/artists/'.$artistId.'/concerts'),
             $this,
         );
     }

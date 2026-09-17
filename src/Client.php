@@ -8,6 +8,7 @@ use LuckyWins\YandexMusic\Client\Account;
 use LuckyWins\YandexMusic\Client\Albums;
 use LuckyWins\YandexMusic\Client\Artists;
 use LuckyWins\YandexMusic\Client\Clips;
+use LuckyWins\YandexMusic\Client\Concerts;
 use LuckyWins\YandexMusic\Client\DeviceAuth;
 use LuckyWins\YandexMusic\Client\Landing;
 use LuckyWins\YandexMusic\Client\Likes;
@@ -38,6 +39,7 @@ final class Client
     use Albums;
     use Artists;
     use Clips;
+    use Concerts;
     use DeviceAuth;
     use Landing;
     use Likes;
