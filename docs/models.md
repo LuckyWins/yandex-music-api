@@ -321,10 +321,29 @@ An album.
 | `trailer` | `?Trailer` | no | [Trailer](#trailer) |
 | `hasTrailer` | `?bool` | no |  |
 | `childContent` | `?bool` | no |  |
+| `contentRestrictions` | `?ContentRestrictions` | no | [ContentRestrictions](#contentrestrictions) |
 | `customWave` | `?CustomWave` | no | [CustomWave](#customwave) |
 | `pager` | `?Pager` | no | [Pager](#pager). Present when the album arrives as one page of a longer list. |
 | `metaTagId` | `?string` | no |  |
 | `sortOrder` | `?string` | no |  |
+
+### AlbumSimilarEntities
+
+What to listen to next when an album runs out — the same shape a playlist's similar entities arrive in.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `items` | `list<SimilarEntityItem>` | no | list of [SimilarEntityItem](#similarentityitem) |
+
+### AlbumTrailer
+
+An album's trailer: the album, who made it, and what the trailer plays.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `album` | `?Album` | no | [Album](#album) |
+| `artists` | `list<Artist>` | no | list of [Artist](#artist) |
+| `trailer` | `?TrailerInfo` | no | [TrailerInfo](#trailerinfo) |
 
 ### Deprecation
 
@@ -346,6 +365,19 @@ Where a track sits on an album: which disc, and which slot on it.
 | `index` | `int` | **yes** |  |
 
 ## Artist
+
+### AboutArtist
+
+The artist's own page: who they are, what is written about them, and where else to find them.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `artist` | `?Artist` | no | [Artist](#artist) |
+| `stats` | `?Stats` | no | [Stats](#stats) |
+| `description` | `?string` | no |  |
+| `links` | `list<ArtistLink>` | no | list of [ArtistLink](#artistlink) |
+| `covers` | `list<Cover>` | no | list of [Cover](#cover) |
+| `artistType` | `?string` | no |  |
 
 ### Artist
 
@@ -400,6 +432,111 @@ A page of an artist's albums.
 | `albums` | `list<Album>` | no | list of [Album](#album) |
 | `pager` | `?Pager` | no | [Pager](#pager) |
 
+### ArtistClipData
+
+A clip and who is in it.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `clip` | `?Clip` | no | [Clip](#clip) |
+| `artists` | `list<Artist>` | no | list of [Artist](#artist) |
+
+### ArtistClipItem
+
+One entry in an artist's clips, wrapped the way the landing wraps its own — a type beside the thing itself.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `type` | `?string` | no |  |
+| `data` | `?ArtistClipData` | no |  |
+
+### ArtistClips
+
+A page of an artist's clips.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `items` | `list<ArtistClipItem>` | no | list of [ArtistClipItem](#artistclipitem) |
+| `pager` | `?Pager` | no | [Pager](#pager) |
+
+### ArtistDonationData
+
+Where to send an artist money, and what for.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `tipUrl` | `?string` | no |  |
+| `artist` | `?Artist` | no | [Artist](#artist) |
+| `goal` | `?ArtistDonationGoal` | no | [ArtistDonationGoal](#artistdonationgoal) |
+
+### ArtistDonationGoal
+
+What an artist is collecting for.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `title` | `?string` | no |  |
+
+### ArtistDonationItem
+
+One entry in an artist's donation block, wrapped as a type beside its data.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `type` | `?string` | no |  |
+| `data` | `?ArtistDonationData` | no |  |
+
+### ArtistDonations
+
+The ways an artist can be supported.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `donations` | `list<ArtistDonationItem>` | no | list of [ArtistDonationItem](#artistdonationitem) |
+
+### ArtistInfo
+
+An artist with the numbers around them, without the albums and tracks that make brief-info heavy.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `artist` | `?Artist` | no | [Artist](#artist) |
+| `likesCount` | `?int` | no |  |
+| `stats` | `?Stats` | no | [Stats](#stats) |
+| `trailer` | `?ArtistTrailerStatus` | no | [ArtistTrailerStatus](#artisttrailerstatus) |
+| `covers` | `list<Cover>` | no | list of [Cover](#cover) |
+| `description` | `?string` | no |  |
+| `artistType` | `?string` | no |  |
+
+### ArtistLink
+
+A link an artist put on their page, with something to show for it.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `title` | `?string` | no |  |
+| `subtitle` | `?string` | no |  |
+| `url` | `?string` | no |  |
+| `imgUrl` | `?string` | no |  |
+
+### ArtistLinks
+
+Everywhere else an artist can be found.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `links` | `list<ArtistLink>` | no | list of [ArtistLink](#artistlink) |
+
+### ArtistSkeleton
+
+The layout of an artist's page: which blocks to draw and where each one's contents come from.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `id` | `?string` | no |  |
+| `title` | `?string` | no |  |
+| `blocks` | `list<SkeletonBlock>` | no | list of [SkeletonBlock](#skeletonblock) |
+
 ### ArtistTracks
 
 A page of an artist's tracks.
@@ -408,6 +545,23 @@ A page of an artist's tracks.
 |---|---|---|---|
 | `tracks` | `list<Track>` | no | list of [Track](#track) |
 | `pager` | `?Pager` | no | [Pager](#pager) |
+
+### ArtistTrailer
+
+An artist's trailer and the tracks it plays.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `artist` | `?Artist` | no | [Artist](#artist) |
+| `trailer` | `?TrailerInfo` | no | [TrailerInfo](#trailerinfo) |
+
+### ArtistTrailerStatus
+
+Whether an artist has a trailer to play.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `available` | `?bool` | no |  |
 
 ### BriefInfo
 
@@ -433,7 +587,7 @@ Everything the service will say about an artist in one response.
 | `playlistIds` | `list<PlaylistId>` | no | list of [PlaylistId](#playlistid) |
 | `concerts` | `list<mixed>` | no |  |
 | `clips` | `list<Clip>` | no | list of [Clip](#clip) |
-| `vinyls` | `list<mixed>` | no |  |
+| `vinyls` | `list<Vinyl>` | no | list of [Vinyl](#vinyl) |
 | `links` | `list<mixed>` | no | Promotional links — a different shape from the artist's own `links`, despite the name: these carry a subtitle and an image. |
 | `bandlinkScannerLink` | `array<string,` | no |  |
 | `extraActions` | `list<mixed>` | no |  |
@@ -497,6 +651,21 @@ How many people listened to an artist lately, and whether that is rising.
 | `lastMonthListeners` | `int` | **yes** |  |
 | `lastMonthListenersDelta` | `int` | **yes** |  |
 
+### Vinyl
+
+A record for sale, as brief-info offers it.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `url` | `?string` | no |  |
+| `title` | `?string` | no |  |
+| `year` | `?int` | no |  |
+| `price` | `?int` | no |  |
+| `media` | `?string` | no |  |
+| `offerId` | `?int` | no |  |
+| `artistIds` | `list<int>` | no |  |
+| `picture` | `?string` | no |  |
+
 ## Clip
 
 ### Clip
@@ -506,6 +675,7 @@ A short video for a track.
 | Field | Type | Required | Notes |
 |---|---|---|---|
 | `clipId` | `?int` | no |  |
+| `id` | `mixed` | no | Sent alongside clipId, and not always the same value. |
 | `title` | `?string` | no |  |
 | `version` | `?string` | no |  |
 | `playerId` | `?string` | no |  |
@@ -1432,6 +1602,60 @@ What kind of interjection a shot is.
 | `id` | `string` | **yes** |  |
 | `title` | `string` | **yes** |  |
 
+## Skeleton
+
+### SkeletonBlock
+
+One block of a page laid out by the service.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `id` | `?string` | no |  |
+| `type` | `?string` | no |  |
+| `data` | `?SkeletonBlockData` | no | [SkeletonBlockData](#skeletonblockdata) |
+
+### SkeletonBlockData
+
+What a block of a page holds: its tabs, where its contents come from, and how to see the rest.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `tabs` | `list<SkeletonTab>` | no | list of [SkeletonTab](#skeletontab) |
+| `selectedTabIndex` | `?int` | no |  |
+| `source` | `?SkeletonSource` | no | [SkeletonSource](#skeletonsource) |
+| `title` | `?string` | no |  |
+| `showPolicy` | `?string` | no |  |
+| `viewAllAction` | `?SkeletonViewAllAction` | no | [SkeletonViewAllAction](#skeletonviewallaction) |
+
+### SkeletonSource
+
+Where a block's contents come from, and how much of it there is.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `uri` | `?string` | no |  |
+| `count` | `?int` | no |  |
+| `countWeb` | `?int` | no |  |
+
+### SkeletonTab
+
+A tab of a block, holding blocks of its own.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `id` | `?string` | no |  |
+| `title` | `?string` | no |  |
+| `blocks` | `list<SkeletonBlock>` | no | list of [SkeletonBlock](#skeletonblock) |
+
+### SkeletonViewAllAction
+
+Where "see all" leads, in an app and on the web.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `deeplink` | `?string` | no |  |
+| `weblink` | `?string` | no |  |
+
 ## Supplement
 
 ### Lyrics
@@ -1930,6 +2154,9 @@ What a similar entity actually is, once its type has said which half of this to 
 |---|---|---|---|
 | `wave` | `?Wave` | no | [Wave](#wave) |
 | `agent` | `?WaveAgent` | no | [WaveAgent](#waveagent) |
+| `album` | `?Album` | no | [Album](#album). An album's similar entities point at albums rather than at waves. |
+| `artist` | `?Artist` | no | [Artist](#artist) |
+| `artists` | `list<Artist>` | no | list of [Artist](#artist) |
 
 ### SimilarEntityItem
 

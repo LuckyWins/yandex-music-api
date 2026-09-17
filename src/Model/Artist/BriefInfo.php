@@ -41,6 +41,7 @@ final class BriefInfo extends Model
         'playlists' => [Playlist::class, 'list'],
         'playlistIds' => [PlaylistId::class, 'list'],
         'clips' => [Clip::class, 'list'],
+        'vinyls' => [Vinyl::class, 'list'],
     ];
 
     public function __construct(
@@ -75,7 +76,7 @@ final class BriefInfo extends Model
         public readonly array $concerts = [],
         /** @var list<Clip> */
         public readonly array $clips = [],
-        /** @var list<mixed> Not modelled: the vinyls domain is not ported. */
+        /** @var list<Vinyl> */
         public readonly array $vinyls = [],
         /**
          * Promotional links — a different shape from the artist's own `links`,

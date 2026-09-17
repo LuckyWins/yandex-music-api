@@ -9,6 +9,7 @@ use LuckyWins\YandexMusic\Client\Clips as ClipsTrait;
 use LuckyWins\YandexMusic\Http\Request;
 use LuckyWins\YandexMusic\Model\Clip\Clip;
 use LuckyWins\YandexMusic\Model\Clip\ClipsWillLike;
+use LuckyWins\YandexMusic\Model\Credits;
 use LuckyWins\YandexMusic\Tests\Support\MockHttpClient;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
@@ -58,6 +59,23 @@ final class ClipsTest extends TestCase
             'https://api.music.yandex.net/clips/will/like?page=1&pageSize=10',
             (string) $http->lastRequest()->getUri(),
         );
+    }
+
+
+    public function testCreditsAndDisclaimersForAClip(): void
+    {
+        $http = (new MockHttpClient())
+            ->queue(['result' => ['credits' => []]])
+            ->queue(['result' => []]);
+
+        $client = $this->client($http);
+
+        self::assertInstanceOf(Credits::class, $client->clipsCredits(91));
+        self::assertSame('https://api.music.yandex.net/clips/91/credits', (string) $http->requestAt(0)->getUri());
+
+        // A list, like every other disclaimer endpoint.
+        self::assertSame([], $client->clipsDisclaimer(91));
+        self::assertSame('https://api.music.yandex.net/clips/91/disclaimer', (string) $http->requestAt(1)->getUri());
     }
 
     private function client(MockHttpClient $http): Client

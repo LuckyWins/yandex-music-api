@@ -331,6 +331,13 @@ final class Request
             $message = 'Unknown HTTP error';
         }
 
+        if ('Unknown HTTP error' === $message || 'Unknown error' === $message) {
+            // The body said nothing, so the status is all there is to report —
+            // and a bare "Unknown HTTP error" tells a caller nothing at all.
+            // An artist with no donations answers exactly like this.
+            $message = sprintf('%s (%d)', $message, $status);
+        }
+
         throw match (true) {
             401 === $status, 403 === $status => new UnauthorizedException($message, $code),
             400 === $status => new BadRequestException($message, $code),

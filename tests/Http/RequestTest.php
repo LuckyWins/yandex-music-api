@@ -146,6 +146,12 @@ final class RequestTest extends TestCase
         $request->get('https://api.music.yandex.net/genres');
     }
 
+    /**
+     * An empty or unreadable body leaves the status as the only thing worth
+     * saying — and saying it matters: an artist who takes no donations
+     * answers 404 with nothing in it, which read as "Unknown HTTP error"
+     * until the status was included.
+     */
     public function testUndecodableErrorBodyStillMapsTheStatus(): void
     {
         $http = new MockHttpClient();
@@ -153,8 +159,20 @@ final class RequestTest extends TestCase
         $http->queue('<html>Gateway Timeout</html>', 404);
 
         $this->expectException(NotFoundException::class);
-        $this->expectExceptionMessage('Unknown HTTP error');
+        $this->expectExceptionMessage('Unknown HTTP error (404)');
 
         $request->get('https://api.music.yandex.net/genres');
+    }
+
+    public function testAnEmptyErrorBodyNamesTheStatusToo(): void
+    {
+        $http = new MockHttpClient();
+        $request = new Request($http);
+        $http->queue('', 404);
+
+        $this->expectException(NotFoundException::class);
+        $this->expectExceptionMessage('(404)');
+
+        $request->get('https://api.music.yandex.net/artists/1/blocks/artist-donation');
     }
 }

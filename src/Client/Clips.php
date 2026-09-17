@@ -6,6 +6,8 @@ namespace LuckyWins\YandexMusic\Client;
 
 use LuckyWins\YandexMusic\Model\Clip\Clip;
 use LuckyWins\YandexMusic\Model\Clip\ClipsWillLike;
+use LuckyWins\YandexMusic\Model\Credits;
+use LuckyWins\YandexMusic\Model\Disclaimer;
 
 /**
  * Clips — short videos attached to tracks.
@@ -39,5 +41,32 @@ trait Clips
         ]);
 
         return ClipsWillLike::fromApi($result, $this);
+    }
+
+    /**
+     * Who made a clip.
+     */
+    public function clipsCredits(string|int $clipId): ?Credits
+    {
+        return Credits::fromApi(
+            $this->request->get($this->getBaseUrl().'/clips/'.$clipId.'/credits'),
+            $this,
+        );
+    }
+
+    /**
+     * Notices that must accompany a clip.
+     *
+     * A list, like every other disclaimer endpoint, despite the reference
+     * declaring a single object.
+     *
+     * @return list<Disclaimer>
+     */
+    public function clipsDisclaimer(string|int $clipId): array
+    {
+        return Disclaimer::listFromApi(
+            $this->request->get($this->getBaseUrl().'/clips/'.$clipId.'/disclaimer'),
+            $this,
+        );
     }
 }

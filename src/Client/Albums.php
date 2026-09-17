@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace LuckyWins\YandexMusic\Client;
 
 use LuckyWins\YandexMusic\Model\Album\Album;
+use LuckyWins\YandexMusic\Model\Album\AlbumSimilarEntities;
+use LuckyWins\YandexMusic\Model\Album\AlbumTrailer;
 use LuckyWins\YandexMusic\Model\Disclaimer;
 
 /**
@@ -60,5 +62,27 @@ trait Albums
         $result = $this->request->get($this->getBaseUrl().'/albums/'.$albumId.'/disclaimer');
 
         return Disclaimer::listFromApi($result, $this);
+    }
+
+    /**
+     * An album's trailer and the tracks it plays.
+     */
+    public function albumsTrailer(string|int $albumId): ?AlbumTrailer
+    {
+        return AlbumTrailer::fromApi(
+            $this->request->get($this->getBaseUrl().'/albums/'.$albumId.'/trailer'),
+            $this,
+        );
+    }
+
+    /**
+     * What to listen to next when the album runs out.
+     */
+    public function albumsSimilarEntities(string|int $albumId): ?AlbumSimilarEntities
+    {
+        return AlbumSimilarEntities::fromApi(
+            $this->request->get($this->getBaseUrl().'/albums/'.$albumId.'/similar-entities'),
+            $this,
+        );
     }
 }

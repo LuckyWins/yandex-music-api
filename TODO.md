@@ -24,16 +24,16 @@ here; this is only what to come back to.
 
 ## Port
 
-- [ ] **Close the gap with the Python library.** It has 145 client methods;
-      this one has 111. Nothing here returns raw data any more, and everything
+- [ ] **Close the gap with the Python library.** It has 144 client methods;
+      this one has 127. Nothing here returns raw data any more, and everything
       the 2019 library had is ported — but seven domains were never in it and
       are still missing, along with fifteen newer methods in domains that are
       ported.
 
       In the order they are being done:
 
-      1. gaps in ported domains — artists mostly, plus album trailers and
-         similar entities, and credits and disclaimers for clips
+      1. ~~gaps in ported domains~~ — done, see
+         `docs/porting/artists-albums-clips-gaps.md`
       2. `pins`, `queue`, `presaves` — 7 models, 16 methods
       3. `concerts` — 16 models, 6 methods, and with it `artistsConcerts`,
          which returns concerts and was deferred for that reason
