@@ -89,6 +89,14 @@ supplies.
 | `requestDeviceCode()` | `POST /device/code` | `DeviceCode` | Step one: ask for a code for the user to confirm. |
 | `revokeToken()` | `POST /revoke_token` | `void` | Revoke a token, so that it stops working immediately. |
 
+## Labels
+
+| Method | Request | Returns | Notes |
+|---|---|---|---|
+| `label()` | `GET /labels/{labelId}` | `?Label` | A label's page. |
+| `labelAlbums()` | `GET /labels/{labelId}/albums` | `?LabelAlbums` | A page of a label's releases. |
+| `labelArtists()` | `GET /labels/{labelId}/artists` | `?LabelArtists` | A page of the artists signed to a label. |
+
 ## Landing
 
 | Method | Request | Returns | Notes |
@@ -128,6 +136,23 @@ supplies.
 | `usersLikesTracks()` | `GET /users/{userId}/likes/tracks` | `?TracksList` | The account's liked tracks. |
 | `usersLikesTracksAdd()` | — | `bool` |  |
 | `usersLikesTracksRemove()` | — | `bool` |  |
+
+## Metatags
+
+| Method | Request | Returns | Notes |
+|---|---|---|---|
+| `metatag()` | `GET /metatags/{value}` | `?Metatag` | A tag's page: a bit of everything filed under it. |
+| `metatagAlbums()` | `GET /metatags/{value}/albums` | `?MetatagAlbums` | A page of the albums under a tag. |
+| `metatagArtists()` | `GET /metatags/{value}/artists` | `?MetatagArtists` | A page of the artists under a tag, each with a few of their tracks. |
+| `metatagPlaylists()` | `GET /metatags/{value}/playlists` | `?MetatagPlaylists` | A page of the playlists under a tag. |
+| `metatags()` | `GET /landing3/metatags` | `?Metatags` | Every way the catalogue is tagged, as trees to navigate. |
+
+## MusicHistory
+
+| Method | Request | Returns | Notes |
+|---|---|---|---|
+| `musicHistory()` | `GET /music-history` | `?MusicHistory` | What the account has been listening to, a day at a time. |
+| `musicHistoryItems()` | — | `?MusicHistoryItems` | Fill in particular entries of the history. |
 
 ## Pins
 

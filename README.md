@@ -13,26 +13,26 @@ Python library is right and this one has a bug.
 
 ## Status
 
-**Nothing returns raw decoded JSON.** Every method hands back typed models:
-authorization, the account, tracks, albums, artists, playlists, likes, clips,
-search, radio, the landing, pins, queues, presaves and concerts. 200 models,
-150 methods, checked against the live API rather than against the Python library —
-which matters, because the reference is wrong in places the API has moved on
-from. Each stage is written up in [docs/porting/](docs/porting/), divergences
+**Everything the Python library does, this one does.** 221 models, 159 methods,
+and every endpoint returns typed models — nothing hands back decoded JSON for
+the caller to guess at. The reference has 144 client methods and none of them
+is missing here; the extra fifteen are accessors and conveniences of our own.
+
+That claim is checked rather than remembered:
+
+```
+php tools/compare-with-reference.php      # needs a checkout of the reference beside this one
+```
+
+It was reached in thirteen stages, one domain at a time, each checked against
+the live API rather than against the Python library — which mattered more than
+expected, since the reference is wrong in several places the API has moved on
+from. Every stage is written up in [docs/porting/](docs/porting/), divergences
 included.
 
-**Not everything the Python library has is here yet.** It has 144 client
-methods to our 150, and the gap is 10:
-
-| Missing | Methods | What it is |
-|---|---|---|
-| metatags | 5 | themed selections — "for running", "new" |
-| labels | 3 | labels and their releases |
-| music history | 2 | what was listened to, and when |
-
-Those are the work in progress, in that order, tracked in [TODO.md](TODO.md)
-along with Ynison — the websocket protocol for remote playback — and a release
-workflow.
+What is still open, in [TODO.md](TODO.md): creating a playback queue, which no
+body shape has been found for; Ynison, the websocket protocol for remote
+playback; and a release workflow.
 
 ## Requirements
 

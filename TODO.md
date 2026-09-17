@@ -24,24 +24,6 @@ here; this is only what to come back to.
 
 ## Port
 
-- [ ] **Close the gap with the Python library.** It has 144 client methods;
-      this one has 150. Nothing here returns raw data any more, and everything
-      the 2019 library had is ported — but seven domains were never in it and
-      are still missing, along with fifteen newer methods in domains that are
-      ported.
-
-      In the order they are being done:
-
-      1. ~~gaps in ported domains~~ — done, see
-         `docs/porting/artists-albums-clips-gaps.md`
-      2. ~~`pins`, `queue`, `presaves`~~ — done, see
-         `docs/porting/pins-queue-presaves.md`
-      3. ~~`concerts`~~ — done, see `docs/porting/concerts.md`
-      4. `metatags`, `labels`, `music_history` — 21 models, 10 methods
-
-      The count is checked rather than remembered: compare the `def` names in
-      the reference's `_client/` against this library's public methods.
-
 - [ ] **A live sweep that finds fields the models are missing.** Unknown-field
       reporting already exists, and `examples/playlist_roundtrip.php` prints a
       summary of what one domain sent that no model declares. What is missing
