@@ -59,36 +59,6 @@ trait Legacy
 
     // -- Search -------------------------------------------------------------
 
-    /**
-     * @param bool   $noCorrect leave a misspelled query uncorrected
-     * @param string $type      all, track, artist, album, playlist, video, podcast
-     *
-     * @return array<string, mixed>
-     */
-    public function search(
-        string $text,
-        bool $noCorrect = false,
-        string $type = 'all',
-        int $page = 0,
-        bool $playlistInBest = true,
-    ): array {
-        return $this->getArray('/search', [
-            'text' => $text,
-            // Capitalized on purpose: this is what the reference library sends
-            // and what the endpoint is known to accept.
-            'nocorrect' => $noCorrect ? 'True' : 'False',
-            'type' => $type,
-            'page' => $page,
-            'playlist-in-best' => $playlistInBest ? 'True' : 'False',
-        ]);
-    }
-
-    /** @return array<string, mixed> */
-    public function searchSuggest(string $part): array
-    {
-        return $this->getArray('/search/suggest', ['part' => $part]);
-    }
-
     // -- Radio --------------------------------------------------------------
 
     /**

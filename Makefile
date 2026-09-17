@@ -56,6 +56,11 @@ docs: check-php
 # Fails when the committed reference no longer matches the code. Documentation
 # that can go stale unnoticed is worse than none.
 docs-check: docs
+	@# Refresh the index first. Regenerating the docs gives them new timestamps,
+	@# and files whose timestamp matches the index's are "racily clean" to git:
+	@# it reports them as changed until it has re-read them, which made this
+	@# check fail spuriously on the first run after a commit.
+	@git update-index -q --refresh || true
 	@git diff --exit-code -- docs/models.md docs/endpoints.md \
 		|| { echo 'docs/ is out of date — run `make docs` and commit the result'; exit 1; }
 

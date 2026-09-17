@@ -88,6 +88,14 @@ final class Track extends Model
         public readonly ?bool $explicit = null,
         public readonly ?int $previewDurationMs = null,
         public readonly ?bool $availableFullWithoutPermission = null,
+        /**
+         * A podcast episode's kind — `full` or `trailer` on everything seen so
+         * far. Podcast episodes are tracks, so these two live here rather than
+         * in a model of their own.
+         */
+        public readonly ?string $podcastEpisodeType = null,
+        /** When the episode was published, as `YYYY-MM-DD`. */
+        public readonly ?string $pubDate = null,
         public readonly ?string $version = null,
         public readonly ?bool $rememberPosition = null,
         public readonly ?string $backgroundVideoUri = null,
