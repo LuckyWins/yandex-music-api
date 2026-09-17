@@ -21,6 +21,7 @@ somebody trusts the prose.
 
 - [audit.md](audit.md) — how `make audit` checks this library against the live
   API, and what it deliberately does not check
+- [releasing.md](releasing.md) — how a version gets cut, tagged and published
 
 **Also written by hand, under [porting/](porting/):**
 

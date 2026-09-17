@@ -100,14 +100,15 @@ sign that it should be deleted rather than ported.
 
 Git Flow.
 
-- `main` — released state. The 2019 library sits here untouched until the
-  modernized one is ready to replace it. Renamed from `master`; the old name
-  survives only in links predating the rename.
-- `develop` — integration branch, where the modernization accumulates
+- `main` — released state, and since 2.0.0 that is the modernized library
+  rather than the 2019 one. Renamed from `master`; the old name survives only
+  in links predating the rename.
+- `develop` — integration branch, where the next release accumulates
 - `feature/*` — one branch per chunk of work, off `develop` and back into it:
   `feature/composer-skeleton`, `feature/http-client`, `feature/track-models`
-- `release/*`, `hotfix/*` — as Git Flow defines them, once there is anything
-  to release
+- `release/*` — off `develop` and into `main`, the one branch that goes that
+  way. See [docs/releasing.md](docs/releasing.md) for what happens on it.
+- `hotfix/*` — as Git Flow defines them
 
 Branch names are lowercase, words separated by hyphens, and describe the work
 rather than the ticket.
@@ -118,7 +119,8 @@ Link a finished branch for review with the base already chosen:
 
 The `pull/new/<branch>` form git prints on push defaults the base to `main`,
 which has to be changed by hand — and a missed change puts every commit since
-the 2019 code into the diff instead of the one stage under review.
+the last release into the diff instead of the one stage under review. A
+release branch is the exception: its base really is `main`.
 
 ## Commits
 

@@ -1,0 +1,28 @@
+# What a release tarball holds.
+#
+# Composer fetches a tag's archive when it installs with --prefer-dist, and
+# without this it would ship the whole repository: the test suite, the example
+# scripts, the tooling and this project's own notes. None of that is any use
+# inside somebody's vendor directory, and the tests alone outweigh the library.
+#
+# What is left is src/, composer.json, LICENSE and README.md.
+
+/tests            export-ignore
+/examples         export-ignore
+/tools            export-ignore
+/docs             export-ignore
+/.github          export-ignore
+/.claude          export-ignore
+
+/.gitattributes   export-ignore
+/.gitignore       export-ignore
+/.env.local.example export-ignore
+/.php-cs-fixer.dist.php export-ignore
+/phpstan.neon     export-ignore
+/phpunit.xml      export-ignore
+/Makefile         export-ignore
+/CLAUDE.md        export-ignore
+/TODO.md          export-ignore
+/composer.lock    export-ignore
+
+# Kept: CHANGELOG.md, so that what changed travels with the code.

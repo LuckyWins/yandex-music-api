@@ -41,9 +41,13 @@ expected, since the reference is wrong in several places the API has moved on
 from. Every stage is written up in [docs/porting/](docs/porting/), divergences
 included.
 
+Released as 2.0.0, which is what `main` holds; `develop` is where the next one
+accumulates. What changed is in [CHANGELOG.md](CHANGELOG.md), and how a version
+gets cut in [docs/releasing.md](docs/releasing.md).
+
 What is still open, in [TODO.md](TODO.md): creating a playback queue, which no
-body shape has been found for; Ynison, the websocket protocol for remote
-playback; and a release workflow.
+body shape has been found for, and Ynison, the websocket protocol for remote
+playback.
 
 ## Requirements
 
@@ -62,7 +66,7 @@ The package is not on Packagist. Point Composer at the repository:
         { "type": "vcs", "url": "https://github.com/LuckyWins/yandex-music-api" }
     ],
     "require": {
-        "luckywins/yandex-music-api": "dev-develop"
+        "luckywins/yandex-music-api": "^2.0"
     }
 }
 ```
@@ -343,6 +347,9 @@ CI runs the suite against every supported PHP version on pull requests into
 `develop` and `main`, and runs PHPStan and the style check once on 8.3. That
 matrix is the only thing verifying the `^8.3` constraint in `composer.json`,
 since development happens on a single version.
+
+Pushing a version tag runs it all again and then publishes the release, with
+the notes taken from `CHANGELOG.md` — see [docs/releasing.md](docs/releasing.md).
 
 Tests never touch the network and never need credentials: HTTP is mocked at the
 PSR-18 boundary, and time is injected, so polling loops run instantly. Only the
