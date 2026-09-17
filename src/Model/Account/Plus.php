@@ -15,6 +15,8 @@ final class Plus extends Model
     public function __construct(
         public readonly bool $hasPlus,
         public readonly bool $isTutorialCompleted,
+        /** Only ever seen null, so its type is a reading of the name. */
+        public readonly ?bool $migrated = null,
         public readonly ?Client $client = null,
     ) {
     }

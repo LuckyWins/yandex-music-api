@@ -26,7 +26,12 @@ final class Subscription extends Model
     ];
 
     public function __construct(
-        public readonly bool $hadAnySubscription,
+        /**
+         * Optional despite the reference declaring it required: the radio's
+         * own view of the account omits it, and a subscription that cannot be
+         * deserialized takes the whole status with it.
+         */
+        public readonly ?bool $hadAnySubscription = null,
         public readonly ?RenewableRemainder $nonAutoRenewableRemainder = null,
         /** @var list<AutoRenewable> */
         public readonly array $autoRenewable = [],

@@ -72,14 +72,6 @@ supplies.
 | `feedWizardIsPassed()` | `GET /feed/wizard/is-passed` | `mixed` |  |
 | `genres()` | `GET /genres` | `array` |  |
 | `landing()` | `GET /landing3` | `array` | Blocks understood by the endpoint: personalplaylists, promotions, new-releases, new-playlists, mixes, chart, artists, albums, playlists, play_contexts. |
-| `rotorAccountStatus()` | `GET /rotor/account/status` | `?Status` | The account as radio sees it — the same model, with a few extra fields filled in such as how many skips per hour are left. |
-| `rotorStationGenreFeedback()` | `POST {url}` | `mixed` |  |
-| `rotorStationGenreFeedbackRadioStarted()` | — | `mixed` |  |
-| `rotorStationGenreFeedbackTrackStarted()` | — | `mixed` |  |
-| `rotorStationGenreInfo()` | `GET /rotor/station/genre:{genre}/info` | `mixed` |  |
-| `rotorStationGenreTracks()` | `GET /rotor/station/genre:{genre}/tracks` | `mixed` |  |
-| `rotorStationsDashboard()` | `GET /rotor/stations/dashboard` | `array` |  |
-| `rotorStationsList()` | `GET /rotor/stations/list` | `mixed` |  |
 
 ## Likes
 
@@ -131,6 +123,22 @@ supplies.
 | `usersPlaylistsRecommendations()` | `GET /users/{userId}/playlists/{kind}/recommendations` | `?PlaylistRecommendations` | Tracks the service suggests adding to a playlist. |
 | `usersPlaylistsTrailer()` | `GET /users/{userId}/playlists/{kind}/trailer` | `?PlaylistTrailer` | A playlist's trailer, and the tracks it is built from. |
 | `usersPlaylistsVisibility()` | — | `?Playlist` | Make a playlist public or private. |
+
+## Radio
+
+| Method | Request | Returns | Notes |
+|---|---|---|---|
+| `rotorAccountStatus()` | `GET /rotor/account/status` | `?Status` | The account as radio sees it — the same model as accountStatus(), with a few extra fields filled in such as how many skips are left this hour. |
+| `rotorStationFeedback()` | — | `bool` | Tell a station what happened. |
+| `rotorStationFeedbackRadioStarted()` | — | `bool` | Playback of the station has begun. |
+| `rotorStationFeedbackSkip()` | — | `bool` | A track was skipped. |
+| `rotorStationFeedbackTrackFinished()` | — | `bool` | A track has played to the end — or as far as it got. |
+| `rotorStationFeedbackTrackStarted()` | — | `bool` | A track has started playing. |
+| `rotorStationInfo()` | `GET /rotor/station/{value}/info` | `array` | One station, with how it is tuned. |
+| `rotorStationSettings()` | — | `bool` | Tune a station. |
+| `rotorStationTracks()` | `GET /rotor/station/{value}/tracks` | `?StationTracksResult` | What the station will play next. |
+| `rotorStationsDashboard()` | `GET /rotor/stations/dashboard` | `?Dashboard` | The stations offered to this account. |
+| `rotorStationsList()` | `GET /rotor/stations/list` | `array` | Every station there is. |
 
 ## Search
 

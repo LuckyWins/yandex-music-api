@@ -54,6 +54,20 @@ final class SubscriptionTest extends ModelTestCase
         return ['hadAnySubscription' => false];
     }
 
+    /**
+     * The reference library declares this one required, and so did we until
+     * the radio's view of the account turned out to leave it out. A missing
+     * flag must not take the whole status down.
+     */
+    public function testASubscriptionWithoutTheHadAnyFlag(): void
+    {
+        $model = Subscription::fromApi(['canStartTrial' => true], self::client());
+
+        self::assertInstanceOf(Subscription::class, $model);
+        self::assertNull($model->hadAnySubscription);
+        self::assertTrue($model->canStartTrial);
+    }
+
     protected function assertFullyPopulated(Model $model): void
     {
         self::assertInstanceOf(Subscription::class, $model);

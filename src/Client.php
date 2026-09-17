@@ -12,6 +12,7 @@ use LuckyWins\YandexMusic\Client\DeviceAuth;
 use LuckyWins\YandexMusic\Client\Legacy;
 use LuckyWins\YandexMusic\Client\Likes;
 use LuckyWins\YandexMusic\Client\Playlists;
+use LuckyWins\YandexMusic\Client\Radio;
 use LuckyWins\YandexMusic\Client\Search;
 use LuckyWins\YandexMusic\Client\Tracks;
 use LuckyWins\YandexMusic\Http\Request;
@@ -38,6 +39,7 @@ final class Client
     use Legacy;
     use Likes;
     use Playlists;
+    use Radio;
     use Search;
     use Tracks;
 

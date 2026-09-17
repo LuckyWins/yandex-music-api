@@ -4,10 +4,6 @@ declare(strict_types=1);
 
 namespace LuckyWins\YandexMusic\Client;
 
-use DateTimeImmutable;
-use DateTimeInterface;
-use LuckyWins\YandexMusic\Model\Account\Status;
-
 /**
  * Endpoints carried over from the 2019 library, not yet converted to models.
  *
@@ -58,80 +54,6 @@ trait Legacy
     }
 
     // -- Search -------------------------------------------------------------
-
-    // -- Radio --------------------------------------------------------------
-
-    /**
-     * The account as radio sees it — the same model, with a few extra fields
-     * filled in such as how many skips per hour are left.
-     */
-    public function rotorAccountStatus(): ?Status
-    {
-        return Status::fromApi($this->request->get($this->getBaseUrl().'/rotor/account/status'), $this);
-    }
-
-    /** @return array<string, mixed> */
-    public function rotorStationsDashboard(): array
-    {
-        return $this->getArray('/rotor/stations/dashboard');
-    }
-
-    /**
-     * @param string $language response language, ISO 639-1
-     */
-    public function rotorStationsList(string $language = 'en'): mixed
-    {
-        return $this->request->get($this->getBaseUrl().'/rotor/stations/list', ['language' => $language]);
-    }
-
-    public function rotorStationGenreFeedback(
-        string $genre,
-        string $type,
-        ?string $from = null,
-        string|int|null $batchId = null,
-        string|int|null $trackId = null,
-    ): mixed {
-        $url = $this->getBaseUrl().'/rotor/station/genre:'.$genre.'/feedback';
-
-        if (null !== $batchId) {
-            $url .= '?'.http_build_query(['batch-id' => $batchId]);
-        }
-
-        $data = [
-            'type' => $type,
-            'timestamp' => (new DateTimeImmutable())->format(DateTimeInterface::ATOM),
-        ];
-
-        if (null !== $from) {
-            $data['from'] = $from;
-        }
-
-        if (null !== $trackId) {
-            $data['trackId'] = $trackId;
-        }
-
-        return $this->request->post($url, $data);
-    }
-
-    public function rotorStationGenreFeedbackRadioStarted(string $genre, string $from): mixed
-    {
-        return $this->rotorStationGenreFeedback($genre, 'radioStarted', $from);
-    }
-
-    public function rotorStationGenreFeedbackTrackStarted(string $genre, string $from): mixed
-    {
-        return $this->rotorStationGenreFeedback($genre, 'trackStarted', $from);
-    }
-
-    public function rotorStationGenreInfo(string $genre): mixed
-    {
-        return $this->request->get($this->getBaseUrl().'/rotor/station/genre:'.$genre.'/info');
-    }
-
-    public function rotorStationGenreTracks(string $genre): mixed
-    {
-        return $this->request->get($this->getBaseUrl().'/rotor/station/genre:'.$genre.'/tracks');
-    }
 
     // -- Batch lookups ------------------------------------------------------
 
