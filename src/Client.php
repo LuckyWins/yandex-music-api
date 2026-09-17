@@ -9,7 +9,7 @@ use LuckyWins\YandexMusic\Client\Albums;
 use LuckyWins\YandexMusic\Client\Artists;
 use LuckyWins\YandexMusic\Client\Clips;
 use LuckyWins\YandexMusic\Client\DeviceAuth;
-use LuckyWins\YandexMusic\Client\Legacy;
+use LuckyWins\YandexMusic\Client\Landing;
 use LuckyWins\YandexMusic\Client\Likes;
 use LuckyWins\YandexMusic\Client\Playlists;
 use LuckyWins\YandexMusic\Client\Radio;
@@ -25,9 +25,9 @@ use Psr\Log\LoggerInterface;
  * visitor may see — thirty-second previews rather than whole tracks. To get a
  * token, run the device flow: see deviceAuth().
  *
- * Methods are organized into traits by domain. DeviceAuth is ported to typed
- * models; Legacy holds everything still returning raw decoded data, and shrinks
- * as domains are converted.
+ * Methods are organized into traits by domain, and every one of them returns
+ * typed models. Nothing hands back raw decoded JSON any more: the Legacy trait
+ * that used to hold the un-ported endpoints is gone.
  */
 final class Client
 {
@@ -36,7 +36,7 @@ final class Client
     use Artists;
     use Clips;
     use DeviceAuth;
-    use Legacy;
+    use Landing;
     use Likes;
     use Playlists;
     use Radio;

@@ -95,20 +95,34 @@ function fieldType(ReflectionProperty $property, ReflectionParameter $parameter)
 
     $type = $parameter->getType();
 
-    return $type instanceof ReflectionNamedType ? shorten(typeName($type)) : 'mixed';
+    if (!$type instanceof ReflectionNamedType) {
+        return 'mixed';
+    }
+
+    return shorten(typeName($type, $property->getDeclaringClass()->getShortName()));
 }
 
 /**
  * A type as it should read: nullable marked, except for mixed, which already
  * admits null.
+ *
+ * A self-referencing field is written as the class it points at rather than
+ * as `self`, which says nothing to a reader of the table — and which
+ * reflection has been seen to report both ways.
  */
-function typeName(ReflectionNamedType $type): string
+function typeName(ReflectionNamedType $type, ?string $declaringClass = null): string
 {
-    if ('mixed' === $type->getName()) {
+    $name = $type->getName();
+
+    if ('mixed' === $name) {
         return 'mixed';
     }
 
-    return ($type->allowsNull() ? '?' : '').$type->getName();
+    if (('self' === $name || 'static' === $name) && null !== $declaringClass) {
+        $name = $declaringClass;
+    }
+
+    return ($type->allowsNull() ? '?' : '').$name;
 }
 
 /**
@@ -374,8 +388,7 @@ foreach ($byNamespace as $group => $classes) {
 
 $endpoints = "# Endpoints\n\n"
     ."Generated from the source by `make docs` — do not edit.\n\n"
-    ."Methods still returning raw decoded arrays live in `Legacy` and move into a\n"
-    ."typed trait as each domain is ported.\n\n"
+    ."One trait per domain, and every method returns typed models.\n\n"
     ."A dash in the request column means the method issues no request of its own —\n"
     ."it delegates to another one. Braces mark the parts of a path the caller\n"
     ."supplies.\n\n";

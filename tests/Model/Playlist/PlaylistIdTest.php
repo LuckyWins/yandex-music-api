@@ -19,7 +19,7 @@ final class PlaylistIdTest extends ModelTestCase
 
     protected static function fullPayload(): array
     {
-        return ['uid' => 503646255, 'kind' => 1042];
+        return ['uid' => 503646255, 'kind' => 1042, 'playlistUuid' => 'a9f0c1e2-0000-4000-8000-000000000001'];
     }
 
     protected static function requiredPayload(): array
@@ -33,6 +33,7 @@ final class PlaylistIdTest extends ModelTestCase
         self::assertSame(503646255, $model->uid);
         self::assertSame(1042, $model->kind);
         self::assertSame('503646255:1042', $model->pair());
+        self::assertSame('a9f0c1e2-0000-4000-8000-000000000001', $model->playlistUuid);
     }
 
     public function testThePairNeedsBothHalves(): void

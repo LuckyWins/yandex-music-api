@@ -16,7 +16,8 @@ use LuckyWins\YandexMusic\Examples\UnknownFieldCollector;
 use LuckyWins\YandexMusic\Model\Search\Search;
 use LuckyWins\YandexMusic\Model\Search\SearchType;
 
-$query = $argv[1] ?? 'нирвана';
+$arguments = Bootstrap::arguments();
+$query = $arguments[1] ?? 'нирвана';
 
 $unknownFields = new UnknownFieldCollector();
 $client = Bootstrap::authorizedClient($unknownFields);

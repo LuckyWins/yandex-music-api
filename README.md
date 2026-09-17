@@ -13,18 +13,19 @@ Python library is right and this one has a bug.
 
 ## Status
 
-The library is being modernized in stages. Right now:
+**The port is finished.** Every endpoint returns typed models: authorization,
+the account, tracks, albums, artists, playlists, likes, clips, search, radio,
+and the landing with its feed and genres. 147 models, 104 methods, no raw
+decoded arrays anywhere.
 
-- Everything except the landing is ported: authorization, account, tracks,
-  albums, artists, playlists, likes, clips, search and radio — typed models,
-  tested, working against the current API
-- **The landing** — the feed, the genres and the front page — still returns raw
-  decoded arrays. It is the last thing in `Client\Legacy`, and the port is done
-  when that trait is empty.
+It was done in nine stages, one domain at a time, each checked against the live
+API rather than against the Python library — which turned out to matter, since
+the reference is wrong in places the API has moved on from. Every stage is
+written up in [docs/porting/](docs/porting/), including where this library
+deliberately differs.
 
-Downloading works, including direct links: the old signing scheme was never
-replaced, and what looked like its death was our own HTTP layer declining to
-follow a redirect. See [docs/porting/tracks.md](docs/porting/tracks.md).
+What is not here: Ynison, the websocket protocol for remote playback, and a
+release workflow. Both are in [TODO.md](TODO.md).
 
 ## Requirements
 
@@ -144,8 +145,9 @@ foreach ($client->rotorStationsDashboard()?->stations ?? [] as $offered) {
     echo $offered->station?->name, "\n";
 }
 
-// Raw arrays, because the landing is not ported yet.
-$feed = $client->feed();
+foreach ($client->chart()?->chart?->tracks ?? [] as $position) {
+    echo $position->chart?->position, '. ', $position->track?->title, "\n";
+}
 ```
 
 `init()` is a separate step on purpose: constructing a client performs no

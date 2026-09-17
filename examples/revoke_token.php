@@ -35,7 +35,7 @@ if (null === $token) {
 
 // Revocation is immediate and cannot be undone, so never do it on the strength
 // of the script having been started. Anything automated has to say so out loud.
-$confirmed = in_array('--yes', $argv, true);
+$confirmed = in_array('--yes', Bootstrap::arguments(), true);
 
 if (!$confirmed) {
     if (!stream_isatty(STDIN)) {

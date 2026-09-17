@@ -84,6 +84,35 @@ final class Bootstrap
     }
 
     /**
+     * The command line, as a list of strings.
+     *
+     * `$argv` is only a global when `register_argc_argv` is on, and static
+     * analysis is right to say so — it reported these examples as reading a
+     * variable that might not exist. This reads the same list from a place
+     * that is always there.
+     *
+     * @return list<string>
+     */
+    public static function arguments(): array
+    {
+        $arguments = $_SERVER['argv'] ?? [];
+
+        if (!is_array($arguments)) {
+            return [];
+        }
+
+        $result = [];
+
+        foreach ($arguments as $argument) {
+            if (is_string($argument)) {
+                $result[] = $argument;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
      * A client, with the address overrides applied if any are configured.
      */
     public static function client(?string $token = null, ?LoggerInterface $logger = null): Client
