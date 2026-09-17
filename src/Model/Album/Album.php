@@ -91,6 +91,14 @@ final class Album extends Model
         public readonly ?int $year = null,
         public readonly ?string $releaseDate = null,
         public readonly ?string $type = null,
+        /**
+         * How the release is classified, alongside $type.
+         *
+         * Newer than the reference library, which does not have it. Seen on
+         * ordinary albums where $type itself is absent, so the two are not the
+         * same field under two names.
+         */
+        public readonly ?string $albumType = null,
         public readonly ?TrackPosition $trackPosition = null,
         /** @var list<string>|null */
         public readonly ?array $regions = null,

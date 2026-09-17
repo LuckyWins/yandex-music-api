@@ -96,6 +96,12 @@ trait Account
      * The same model as accountSettings(), read through the user rather than
      * through the account. The reference library files this among the
      * playlist methods; it belongs with the account.
+     *
+     * The service no longer serves it. `/users/{uid}/settings` answers
+     * `not-found` whether the id is passed or taken from the account, while
+     * `/account/settings` answers normally — checked on 2026-09-17, and the
+     * reference is behind here too. Kept rather than deleted because it costs
+     * nothing and the endpoint may come back; use accountSettings() instead.
      */
     public function usersSettings(string|int|null $userId = null): ?UserSettings
     {

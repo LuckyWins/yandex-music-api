@@ -33,6 +33,8 @@ final class TrackShort extends Model
         public readonly ?Chart $chart = null,
         public readonly ?Track $track = null,
         public readonly ?int $originalIndex = null,
+        /** Where the track sits once the playlist is shuffled. */
+        public readonly ?int $originalShuffleIndex = null,
         public readonly ?Client $client = null,
     ) {
     }
