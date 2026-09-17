@@ -1082,6 +1082,48 @@ A track reference as the landing sends it: the pair of ids and when it was playe
 | `trackId` | `?TrackId` | no | [TrackId](#trackid) |
 | `timestamp` | `?string` | no |  |
 
+## Pin
+
+### Pin
+
+One thing pinned to the top of the front page.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `type` | `?string` | no |  |
+| `data` | `?PinData` | no | [PinData](#pindata) |
+
+### PinData
+
+Whatever was pinned, in the little the front page needs to draw it.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `id` | `?int` | no |  |
+| `uid` | `?int` | no |  |
+| `kind` | `?int` | no |  |
+| `playlistUuid` | `?string` | no |  |
+| `name` | `?string` | no |  |
+| `title` | `?string` | no |  |
+| `cover` | `?Cover` | no | [Cover](#cover) |
+| `contentRestrictions` | `?ContentRestrictions` | no | [ContentRestrictions](#contentrestrictions) |
+| `contentWarning` | `?string` | no |  |
+| `header` | `?string` | no | A pinned wave describes itself rather than pointing at something: these five are what it fills instead of an id. |
+| `animationUrl` | `?string` | no |  |
+| `backgroundImageUrl` | `?string` | no |  |
+| `stationId` | `?string` | no |  |
+| `seeds` | `list<string>` | no |  |
+| `colors` | `array<string,` | no |  |
+| `agent` | `array<string,` | no |  |
+
+### PinsList
+
+Everything the account has pinned, in the order it is shown.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `pins` | `list<Pin>` | no | list of [Pin](#pin) |
+
 ## Playlist
 
 ### Brand
@@ -1331,6 +1373,52 @@ A Yandex.Music user.
 | `sex` | `?string` | no |  |
 | `verified` | `?bool` | no |  |
 | `regions` | `list<int>` | no |  |
+
+## Presave
+
+### Presaves
+
+Albums the account asked to be told about: the ones still to come, and the ones that have since come out.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `upcomingAlbums` | `list<Album>` | no | list of [Album](#album) |
+| `releasedAlbums` | `list<Album>` | no | list of [Album](#album) |
+
+## Queue
+
+### Context
+
+Where a queue came from: a playlist, an album, a station.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `type` | `?string` | no |  |
+| `id` | `?string` | no |  |
+| `description` | `?string` | no |  |
+
+### Queue
+
+What a device is playing, so another device can pick it up.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `context` | `?Context` | no | [Context](#context) |
+| `tracks` | `list<TrackId>` | no | list of [TrackId](#trackid) |
+| `currentIndex` | `?int` | no |  |
+| `modified` | `?string` | no |  |
+| `id` | `?string` | no |  |
+| `from` | `?string` | no | Where playback was started from; `from` on the wire. |
+
+### QueueItem
+
+A queue as the listing shows it — enough to choose one, without its tracks.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `id` | `?string` | no |  |
+| `context` | `?Context` | no | [Context](#context) |
+| `modified` | `?string` | no |  |
 
 ## Rotor
 

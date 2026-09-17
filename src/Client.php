@@ -11,7 +11,10 @@ use LuckyWins\YandexMusic\Client\Clips;
 use LuckyWins\YandexMusic\Client\DeviceAuth;
 use LuckyWins\YandexMusic\Client\Landing;
 use LuckyWins\YandexMusic\Client\Likes;
+use LuckyWins\YandexMusic\Client\Pins;
 use LuckyWins\YandexMusic\Client\Playlists;
+use LuckyWins\YandexMusic\Client\Presaves;
+use LuckyWins\YandexMusic\Client\Queues;
 use LuckyWins\YandexMusic\Client\Radio;
 use LuckyWins\YandexMusic\Client\Search;
 use LuckyWins\YandexMusic\Client\Tracks;
@@ -38,12 +41,28 @@ final class Client
     use DeviceAuth;
     use Landing;
     use Likes;
+    use Pins;
     use Playlists;
+    use Presaves;
+    use Queues;
     use Radio;
     use Search;
     use Tracks;
+    use Account;
 
     public const BASE_URL = 'https://api.music.yandex.net';
+
+    /**
+     * How this library describes the machine it runs on.
+     *
+     * The queue endpoints want a device, because a queue belongs to one. The
+     * identifiers stay the literal `random` the reference library sends:
+     * nothing is known to depend on them, and inventing plausible-looking ones
+     * would be worse than saying nothing. Pass your own to the constructor if
+     * you have something real to say.
+     */
+    public const DEVICE = 'os=PHP; os_version=; manufacturer=LuckyWins; '
+        .'model=Yandex Music API; clid=; device_id=random; uuid=random';
 
     public readonly Request $request;
 
@@ -64,6 +83,7 @@ final class Client
         private readonly string $language = 'ru',
         private readonly bool $reportUnknownFields = false,
         private readonly ?LoggerInterface $logger = null,
+        private readonly string $device = self::DEVICE,
         ?Clock $clock = null,
         private readonly string $baseUrl = self::BASE_URL,
     ) {
@@ -115,6 +135,15 @@ final class Client
     public function getBaseUrl(): string
     {
         return $this->baseUrl;
+    }
+
+    /**
+     * How this client describes the device it runs on, for the endpoints that
+     * ask — the queues.
+     */
+    public function getDevice(): string
+    {
+        return $this->device;
     }
 
     public function reportsUnknownFields(): bool
