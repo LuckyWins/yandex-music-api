@@ -16,11 +16,11 @@ Python library is right and this one has a bug.
 The library is being modernized in stages. Right now:
 
 - **Authorization**, **account**, **tracks**, **albums**, **artists**,
-  **playlists**, **likes** and **clips** are ported: typed models, tested,
-  working against the current API
-- **Everything else** — search, radio and the landing — works, but returns raw
-  decoded arrays rather than typed models. These live in `Client\Legacy` and
-  move out domain by domain.
+  **playlists**, **likes**, **clips** and **search** are ported: typed models,
+  tested, working against the current API
+- **The landing and radio** still return raw decoded arrays rather than typed
+  models. They live in `Client\Legacy`, which empties out as the port
+  finishes.
 
 Downloading works, including direct links: the old signing scheme was never
 replaced, and what looked like its death was our own HTTP layer declining to
@@ -120,13 +120,15 @@ Constructing a client performs no requests. Endpoints that act on behalf of a
 user need the account loaded first:
 
 ```php
+use LuckyWins\YandexMusic\Model\Search\SearchType;
+
 $client = (new Client($token))->init();
 
-// Typed, because the account domain is ported.
+// Typed, because these domains are ported.
 echo $client->me()?->account?->login;
 echo $client->me()?->plus?->hasPlus ? 'Plus' : 'no Plus';
 
-$album = $client->albumsWithTracks(4243617);
+$album = $client->albumsWithTracks(40926432);
 echo $album?->title;
 
 foreach ($client->usersPlaylistsList() as $playlist) {
@@ -135,9 +137,12 @@ foreach ($client->usersPlaylistsList() as $playlist) {
 
 echo count($client->usersLikesTracks()?->tracks ?? []), " liked tracks\n";
 
-// Raw arrays, because these domains are not.
-$results = $client->search('nirvana');
-$liked = $client->getLikesTracks();
+$found = $client->search('nirvana', type: SearchType::Track);
+echo $found?->tracks?->results[0]->title;
+
+// Raw arrays, because the landing and radio are not ported yet.
+$feed = $client->feed();
+$stations = $client->rotorStationsList();
 ```
 
 `init()` is a separate step on purpose: constructing a client performs no

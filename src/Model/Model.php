@@ -321,8 +321,11 @@ abstract class Model
      * `lastFmScrobblingEnabled` and `lastFMScrobblingEnabled` are both
      * plausible, and the reference library's snake_case names cannot tell us
      * which one arrives. Matching on this form makes the question moot.
+     *
+     * Protected rather than private because prepare() implementations reach
+     * into the raw response by key and have to match it the same way.
      */
-    private static function canonical(string $key): string
+    protected static function canonical(string $key): string
     {
         return self::$canonicalCache[$key] ??= strtolower(str_replace(['-', '_'], '', $key));
     }

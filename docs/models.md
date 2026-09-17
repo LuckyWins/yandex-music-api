@@ -873,6 +873,65 @@ The personal radio station attached to an account.
 |---|---|---|---|
 | `name` | `string` | **yes** |  |
 
+## Search
+
+### Best
+
+The single best match for a query, whatever kind of thing that turned out to be.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `type` | `?string` | no |  |
+| `result` | `mixed` | no |  |
+| `text` | `?string` | no |  |
+
+### Search
+
+What a search found.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `searchRequestId` | `?string` | no |  |
+| `text` | `?string` | no |  |
+| `best` | `?Best` | no | [Best](#best) |
+| `albums` | `SearchResult<Album>|null` | no |  |
+| `artists` | `SearchResult<Artist>|null` | no |  |
+| `playlists` | `SearchResult<Playlist>|null` | no |  |
+| `tracks` | `SearchResult<Track>|null` | no |  |
+| `videos` | `SearchResult<Video>|null` | no |  |
+| `clips` | `SearchResult<Clip>|null` | no | Clips, which arrive without a type of their own — the only set that relies on the field name to say what it holds. |
+| `users` | `SearchResult<User>|null` | no |  |
+| `podcasts` | `SearchResult<Album>|null` | no |  |
+| `podcastEpisodes` | `SearchResult<Track>|null` | no |  |
+| `type` | `?string` | no |  |
+| `page` | `?int` | no |  |
+| `perPage` | `?int` | no |  |
+| `misspellResult` | `?string` | no |  |
+| `misspellOriginal` | `?string` | no |  |
+| `misspellCorrected` | `?bool` | no |  |
+| `nocorrect` | `?bool` | no |  |
+
+### SearchResult
+
+One kind of thing a search found, and where in the whole of it this page sits.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `type` | `?string` | no |  |
+| `total` | `?int` | no |  |
+| `perPage` | `?int` | no |  |
+| `order` | `?int` | no |  |
+| `results` | `array` | no |  |
+
+### Suggestions
+
+What to offer someone who has typed part of a query.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `best` | `?Best` | no | [Best](#best) |
+| `suggestions` | `list<string>` | no |  |
+
 ## Shot
 
 ### Shot
@@ -1145,6 +1204,24 @@ The tracks a playlist's trailer is built from.
 | `title` | `?string` | no |  |
 | `tracks` | `list<Track>` | no | list of [Track](#track) |
 
+### Video
+
+A music video, as search returns it.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `title` | `?string` | no |  |
+| `cover` | `?string` | no |  |
+| `embedUrl` | `?string` | no |  |
+| `provider` | `?string` | no |  |
+| `providerVideoId` | `mixed` | no |  |
+| `youtubeUrl` | `?string` | no |  |
+| `thumbnailUrl` | `?string` | no |  |
+| `duration` | `?int` | no |  |
+| `text` | `?string` | no |  |
+| `htmlAutoPlayVideoPlayer` | `?string` | no |  |
+| `regions` | `list<string>` | no |  |
+
 ## Track
 
 ### DownloadInfo
@@ -1308,6 +1385,8 @@ A track.
 | `explicit` | `?bool` | no |  |
 | `previewDurationMs` | `?int` | no |  |
 | `availableFullWithoutPermission` | `?bool` | no |  |
+| `podcastEpisodeType` | `?string` | no | A podcast episode's kind — `full` or `trailer` on everything seen so far. |
+| `pubDate` | `?string` | no | When the episode was published, as `YYYY-MM-DD`. |
 | `version` | `?string` | no |  |
 | `rememberPosition` | `?bool` | no |  |
 | `backgroundVideoUri` | `?string` | no |  |

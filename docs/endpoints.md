@@ -80,8 +80,6 @@ supplies.
 | `rotorStationGenreTracks()` | `GET /rotor/station/genre:{genre}/tracks` | `mixed` |  |
 | `rotorStationsDashboard()` | `GET /rotor/stations/dashboard` | `array` |  |
 | `rotorStationsList()` | `GET /rotor/stations/list` | `mixed` |  |
-| `search()` | `GET /search` | `array` |  |
-| `searchSuggest()` | `GET /search/suggest` | `array` |  |
 
 ## Likes
 
@@ -133,6 +131,13 @@ supplies.
 | `usersPlaylistsRecommendations()` | `GET /users/{userId}/playlists/{kind}/recommendations` | `?PlaylistRecommendations` | Tracks the service suggests adding to a playlist. |
 | `usersPlaylistsTrailer()` | `GET /users/{userId}/playlists/{kind}/trailer` | `?PlaylistTrailer` | A playlist's trailer, and the tracks it is built from. |
 | `usersPlaylistsVisibility()` | — | `?Playlist` | Make a playlist public or private. |
+
+## Search
+
+| Method | Request | Returns | Notes |
+|---|---|---|---|
+| `search()` | `GET /search` | `?Search` | Search for something. |
+| `searchSuggest()` | `GET /search/suggest` | `?Suggestions` | What to offer for a partly typed query. |
 
 ## Tracks
 

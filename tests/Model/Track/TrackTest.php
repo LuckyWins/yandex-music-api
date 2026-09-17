@@ -42,6 +42,9 @@ final class TrackTest extends ModelTestCase
             'poetryLoverMatches' => [['begin' => 0, 'end' => 12, 'line' => 1]],
             'contentWarning' => 'explicit',
             'explicit' => true,
+            // A podcast episode is a track with these two extra fields.
+            'podcastEpisodeType' => 'full',
+            'pubDate' => '2024-03-19',
         ];
     }
 
@@ -77,6 +80,9 @@ final class TrackTest extends ModelTestCase
 
         self::assertCount(1, $model->poetryLoverMatches);
         self::assertSame(12, $model->poetryLoverMatches[0]->end);
+
+        self::assertSame('full', $model->podcastEpisodeType);
+        self::assertSame('2024-03-19', $model->pubDate);
     }
 
     protected function equalityTriple(): array
