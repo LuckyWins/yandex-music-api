@@ -2,8 +2,7 @@
 
 Generated from the source by `make docs` — do not edit.
 
-Methods still returning raw decoded arrays live in `Legacy` and move into a
-typed trait as each domain is ported.
+One trait per domain, and every method returns typed models.
 
 A dash in the request column means the method issues no request of its own —
 it delegates to another one. Braces mark the parts of a path the caller
@@ -64,14 +63,19 @@ supplies.
 | `requestDeviceCode()` | `POST /device/code` | `DeviceCode` | Step one: ask for a code for the user to confirm. |
 | `revokeToken()` | `POST /revoke_token` | `void` | Revoke a token, so that it stops working immediately. |
 
-## Legacy
+## Landing
 
 | Method | Request | Returns | Notes |
 |---|---|---|---|
-| `feed()` | `GET /feed` | `array` |  |
-| `feedWizardIsPassed()` | `GET /feed/wizard/is-passed` | `mixed` |  |
-| `genres()` | `GET /genres` | `array` |  |
-| `landing()` | `GET /landing3` | `array` | Blocks understood by the endpoint: personalplaylists, promotions, new-releases, new-playlists, mixes, chart, artists, albums, playlists, play_contexts. |
+| `chart()` | `GET {url}` | `?ChartInfo` | A chart. |
+| `feed()` | `GET /feed` | `?Feed` | The account's feed. |
+| `feedWizardIsPassed()` | `GET /feed/wizard/is-passed` | `bool` | Whether the account has answered the taste wizard, which is what makes its personal playlists worth anything. |
+| `genres()` | `GET /genres` | `array` | Every genre, each carrying its own sub-genres. |
+| `landing()` | `GET /landing3` | `?Landing` | The front page, one block at a time or several at once. |
+| `newPlaylists()` | `GET /landing3/new-playlists` | `?LandingList` | Newly published playlists, as owner-and-kind pairs. |
+| `newReleases()` | `GET /landing3/new-releases` | `?LandingList` | Newly released albums, as ids. |
+| `podcasts()` | `GET /landing3/podcasts` | `?LandingList` | Podcasts, as album ids — a podcast is an album and its episodes are tracks. |
+| `tags()` | `GET /tags/{tagId}/playlist-ids` | `?TagResult` | The playlists filed under a tag. |
 
 ## Likes
 

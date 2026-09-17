@@ -16,6 +16,8 @@ final class PlaylistId extends Model
     public function __construct(
         public readonly ?int $uid = null,
         public readonly ?int $kind = null,
+        /** Sent where a reference doubles as a link, such as a landing block. */
+        public readonly ?string $playlistUuid = null,
         public readonly ?Client $client = null,
     ) {
     }

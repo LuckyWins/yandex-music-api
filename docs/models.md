@@ -582,6 +582,133 @@ The A/B experiments an account is in, keyed by experiment name.
 |---|---|---|---|
 | `experiments` | `array<string,` | no |  |
 
+## Feed
+
+### AlbumEvent
+
+An album the feed has something to say about, with the tracks it suggests from it.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `album` | `?Album` | no | [Album](#album) |
+| `tracks` | `list<Track>` | no | list of [Track](#track) |
+
+### ArtistEvent
+
+An artist the feed is recommending, why, and what to play.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `artist` | `?Artist` | no | [Artist](#artist) |
+| `tracks` | `list<Track>` | no | list of [Track](#track) |
+| `similarToArtistsFromHistory` | `list<Artist>` | no | list of [Artist](#artist) |
+| `subscribed` | `?bool` | no |  |
+
+### Day
+
+One day of the feed.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `day` | `?string` | no |  |
+| `events` | `list<Event>` | no | list of [Event](#event) |
+| `tracksToPlayWithAds` | `list<TrackWithAds>` | no | list of [TrackWithAds](#trackwithads) |
+| `tracksToPlay` | `list<Track>` | no | list of [Track](#track) |
+
+### Event
+
+One thing the feed has to say on a given day.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `id` | `?string` | no |  |
+| `type` | `?string` | no |  |
+| `typeForFrom` | `?string` | no |  |
+| `title` | `?string` | no |  |
+| `tracks` | `list<Track>` | no | list of [Track](#track) |
+| `artists` | `list<ArtistEvent>` | no | list of [ArtistEvent](#artistevent) |
+| `albums` | `list<AlbumEvent>` | no | list of [AlbumEvent](#albumevent) |
+| `message` | `?string` | no |  |
+| `device` | `?string` | no |  |
+| `tracksCount` | `?int` | no |  |
+| `genre` | `?string` | no |  |
+| `socialTracks` | `list<SocialTrack>` | no | list of [SocialTrack](#socialtrack) |
+
+### Feed
+
+The account's feed: what the service made for it, and what happened on which day.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `canGetMoreEvents` | `?bool` | no |  |
+| `pumpkin` | `?bool` | no |  |
+| `isWizardPassed` | `?bool` | no |  |
+| `generatedPlaylists` | `list<GeneratedPlaylist>` | no | list of [GeneratedPlaylist](#generatedplaylist) |
+| `headlines` | `list<string>` | no |  |
+| `today` | `?string` | no |  |
+| `days` | `list<Day>` | no | list of [Day](#day) |
+| `nextRevision` | `?string` | no |  |
+
+### SocialTrack
+
+A track the feed is showing because people you follow liked it.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `track` | `?Track` | no | [Track](#track) |
+| `likedByUsers` | `list<User>` | no | list of [User](#user) |
+
+### TrackWithAds
+
+A track in a day's playback queue, or the slot where an advertisement goes.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `type` | `?string` | no |  |
+| `track` | `?Track` | no | [Track](#track) |
+
+## Genre
+
+### Genre
+
+A genre, and the genres inside it.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `id` | `?string` | no |  |
+| `title` | `?string` | no |  |
+| `fullTitle` | `?string` | no |  |
+| `titles` | `array<string,` | no |  |
+| `weight` | `?int` | no |  |
+| `composerTop` | `?bool` | no |  |
+| `showInMenu` | `?bool` | no |  |
+| `showInRegions` | `list<int>` | no |  |
+| `hideInRegions` | `list<int>` | no |  |
+| `urlPart` | `?string` | no |  |
+| `color` | `?string` | no |  |
+| `images` | `?Images` | no | [Images](#images) |
+| `radioIcon` | `?Icon` | no | [Icon](#icon) |
+| `subGenres` | `list<self>` | no | list of [Genre](#genre) |
+
+### Images
+
+A genre's artwork, in the two sizes the service offers.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `_20x20` | `?string` | no |  |
+| `_208x208` | `?string` | no |  |
+| `_300x300` | `?string` | no |  |
+
+### Title
+
+A genre's name in one language.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `title` | `string` | **yes** |  |
+| `fullTitle` | `?string` | no |  |
+
 ## Label
 
 ### Label
@@ -600,6 +727,34 @@ A record label.
 
 ## Landing
 
+### Block
+
+One block of the front page: a heading and the things under it.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `id` | `?string` | no |  |
+| `type` | `?string` | no |  |
+| `typeForFrom` | `?string` | no |  |
+| `title` | `?string` | no |  |
+| `entities` | `list<BlockEntity>` | no | list of [BlockEntity](#blockentity) |
+| `description` | `?string` | no |  |
+| `data` | `mixed` | no |  |
+| `playContext` | `?PlaylistId` | no | [PlaylistId](#playlistid). The playlist this block plays when it is played as a whole. |
+| `backgroundImageUrl` | `?string` | no |  |
+| `backgroundVideoUrl` | `?string` | no |  |
+| `backgroundVideoId` | `?string` | no |  |
+
+### BlockEntity
+
+One item inside a block of the front page.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `id` | `?string` | no |  |
+| `type` | `?string` | no |  |
+| `data` | `mixed` | no |  |
+
 ### Chart
 
 A track's standing in a chart, and which way it is moving.
@@ -613,6 +768,130 @@ A track's standing in a chart, and which way it is moving.
 | `bgColor` | `?string` | no |  |
 | `trackId` | `?TrackId` | no | [TrackId](#trackid) |
 
+### ChartInfo
+
+A chart, which the service models as a playlist whose tracks carry their standing, plus the menu of other charts.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `id` | `?string` | no |  |
+| `type` | `?string` | no |  |
+| `typeForFrom` | `?string` | no |  |
+| `title` | `?string` | no |  |
+| `menu` | `?ChartInfoMenu` | no | [ChartInfoMenu](#chartinfomenu) |
+| `chart` | `?Playlist` | no | [Playlist](#playlist) |
+| `chartDescription` | `?string` | no |  |
+
+### ChartInfoMenu
+
+The charts on offer beside the one being shown.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `items` | `list<ChartInfoMenuItem>` | no | list of [ChartInfoMenuItem](#chartinfomenuitem) |
+
+### ChartInfoMenuItem
+
+One choice of chart — a country, or a kind of music.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `title` | `?string` | no |  |
+| `url` | `?string` | no |  |
+| `selected` | `?bool` | no |  |
+
+### ChartItem
+
+A track in a chart, with its standing.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `track` | `?Track` | no | [Track](#track) |
+| `chart` | `?Chart` | no | [Chart](#chart) |
+
+### Landing
+
+The front page: whichever blocks were asked for, in the order to show them.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `pumpkin` | `?bool` | no |  |
+| `contentId` | `mixed` | no |  |
+| `blocks` | `list<Block>` | no | list of [Block](#block) |
+
+### LandingList
+
+A page of one kind of thing — new releases, new playlists or podcasts.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `type` | `?string` | no |  |
+| `typeForFrom` | `?string` | no |  |
+| `title` | `?string` | no |  |
+| `id` | `?string` | no |  |
+| `newReleases` | `list<int>` | no |  |
+| `newPlaylists` | `list<PlaylistId>` | no | list of [PlaylistId](#playlistid) |
+| `podcasts` | `list<int>` | no |  |
+
+### MixLink
+
+A link to a mix — one of the coloured tiles on the front page.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `title` | `?string` | no |  |
+| `url` | `?string` | no |  |
+| `urlScheme` | `?string` | no |  |
+| `textColor` | `?string` | no |  |
+| `backgroundColor` | `?string` | no |  |
+| `backgroundImageUri` | `?string` | no |  |
+| `coverWhite` | `?string` | no |  |
+| `coverUri` | `?string` | no |  |
+
+### PersonalPlaylistsData
+
+What the personal-playlists block knows beyond its entities: whether the account has answered the taste wizard, which decides how good they are.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `isWizardPassed` | `?bool` | no |  |
+
+### PlayContext
+
+Somewhere the account was listening, so it can be picked up again.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `playedIn` | `?string` | no | The client it was played in; `client` on the wire, renamed to leave that name to the back-reference. |
+| `context` | `?string` | no |  |
+| `contextItem` | `?string` | no |  |
+| `tracks` | `list<TrackShortOld>` | no | list of [TrackShortOld](#trackshortold) |
+| `payload` | `mixed` | no | What was being listened to: whichever kind $context names. |
+
+### PlayContextsData
+
+The tracks a play-contexts block offers beyond its entities.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `otherTracks` | `list<TrackShortOld>` | no | list of [TrackShortOld](#trackshortold) |
+
+### Promotion
+
+A promoted something on the front page, with everything needed to draw it.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `promoId` | `?string` | no |  |
+| `title` | `?string` | no |  |
+| `subtitle` | `?string` | no |  |
+| `heading` | `?string` | no |  |
+| `url` | `?string` | no |  |
+| `urlScheme` | `?string` | no |  |
+| `textColor` | `?string` | no |  |
+| `gradient` | `?string` | no |  |
+| `image` | `?string` | no |  |
+
 ### TrackId
 
 A reference to a track rather than the track itself.
@@ -623,6 +902,15 @@ A reference to a track rather than the track itself.
 | `trackId` | `?int` | no |  |
 | `albumId` | `?int` | no |  |
 | `from` | `?string` | no |  |
+
+### TrackShortOld
+
+A track reference as the landing sends it: the pair of ids and when it was played, without the track.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `trackId` | `?TrackId` | no | [TrackId](#trackid) |
+| `timestamp` | `?string` | no |  |
 
 ## Playlist
 
@@ -813,6 +1101,7 @@ A reference to a playlist rather than the playlist itself: its owner and its kin
 |---|---|---|---|
 | `uid` | `?int` | no |  |
 | `kind` | `?int` | no |  |
+| `playlistUuid` | `?string` | no | Sent where a reference doubles as a link, such as a landing block. |
 
 ### PlaylistRecommendations
 
@@ -848,6 +1137,15 @@ The envelope /playlists answers with.
 | Field | Type | Required | Notes |
 |---|---|---|---|
 | `playlists` | `list<Playlist>` | no | list of [Playlist](#playlist) |
+
+### TagResult
+
+The playlists filed under a tag, as references rather than playlists.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `tag` | `?string` | no |  |
+| `ids` | `list<PlaylistId>` | no | list of [PlaylistId](#playlistid) |
 
 ### User
 

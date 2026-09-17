@@ -374,8 +374,7 @@ foreach ($byNamespace as $group => $classes) {
 
 $endpoints = "# Endpoints\n\n"
     ."Generated from the source by `make docs` — do not edit.\n\n"
-    ."Methods still returning raw decoded arrays live in `Legacy` and move into a\n"
-    ."typed trait as each domain is ported.\n\n"
+    ."One trait per domain, and every method returns typed models.\n\n"
     ."A dash in the request column means the method issues no request of its own —\n"
     ."it delegates to another one. Braces mark the parts of a path the caller\n"
     ."supplies.\n\n";
