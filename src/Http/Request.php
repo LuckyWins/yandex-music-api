@@ -96,21 +96,26 @@ final class Request
     /**
      * @param array<string, scalar|null> $params query parameters
      */
-    public function get(string $url, array $params = []): mixed
+    /**
+     * @param array<string, mixed>  $params  query string
+     * @param array<string, string> $headers sent with this request only
+     */
+    public function get(string $url, array $params = [], array $headers = []): mixed
     {
         if ([] !== $params) {
             $url .= (str_contains($url, '?') ? '&' : '?').http_build_query($params);
         }
 
-        return $this->send('GET', $url);
+        return $this->send('GET', $url, headers: $headers);
     }
 
     /**
-     * @param array<string, mixed> $data form-encoded body
+     * @param array<string, mixed>  $data    form-encoded body
+     * @param array<string, string> $headers sent with this request only
      */
-    public function post(string $url, array $data = []): mixed
+    public function post(string $url, array $data = [], array $headers = []): mixed
     {
-        return $this->send('POST', $url, $data);
+        return $this->send('POST', $url, $data, headers: $headers);
     }
 
     /**
@@ -121,11 +126,12 @@ final class Request
      * JSON. Checked against the live API — the reference library still sends
      * forms there, and is refused.
      *
-     * @param array<string, mixed> $data
+     * @param array<string, mixed>  $data
+     * @param array<string, string> $headers sent with this request only
      */
-    public function postJson(string $url, array $data = []): mixed
+    public function postJson(string $url, array $data = [], array $headers = []): mixed
     {
-        return $this->send('POST', $url, $data, json: true);
+        return $this->send('POST', $url, $data, json: true, headers: $headers);
     }
 
     /**
@@ -137,11 +143,32 @@ final class Request
     }
 
     /**
+     * Put a JSON body. Pinning wants one.
+     *
+     * @param array<string, mixed> $data
+     */
+    public function putJson(string $url, array $data = []): mixed
+    {
+        return $this->send('PUT', $url, $data, json: true);
+    }
+
+    /**
      * @param array<string, mixed> $data form-encoded body
      */
     public function delete(string $url, array $data = []): mixed
     {
         return $this->send('DELETE', $url, $data);
+    }
+
+    /**
+     * Delete with a JSON body — unusual, and what unpinning wants: the thing
+     * to unpin is named in the body rather than in the path.
+     *
+     * @param array<string, mixed> $data
+     */
+    public function deleteJson(string $url, array $data = []): mixed
+    {
+        return $this->send('DELETE', $url, $data, json: true);
     }
 
     /**
@@ -258,11 +285,24 @@ final class Request
     /**
      * @param array<string, mixed>|null $data
      */
-    private function send(string $method, string $url, ?array $data = null, bool $json = false): mixed
-    {
+    /**
+     * @param array<string, mixed>|null $data
+     * @param array<string, string>     $headers
+     */
+    private function send(
+        string $method,
+        string $url,
+        ?array $data = null,
+        bool $json = false,
+        array $headers = [],
+    ): mixed {
         $request = $this->requestFactory->createRequest($method, $url);
 
-        foreach ($this->headers as $name => $value) {
+        // The client's own headers, then whatever this one call adds. Headers
+        // that belong to a single request are passed rather than set: the
+        // reference library writes its device descriptor into the shared
+        // headers, where it then travels with every later request too.
+        foreach ([...$this->headers, ...$headers] as $name => $value) {
             $request = $request->withHeader($name, $value);
         }
 

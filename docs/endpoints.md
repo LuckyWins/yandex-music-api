@@ -118,6 +118,20 @@ supplies.
 | `usersLikesTracksAdd()` | — | `bool` |  |
 | `usersLikesTracksRemove()` | — | `bool` |  |
 
+## Pins
+
+| Method | Request | Returns | Notes |
+|---|---|---|---|
+| `pinAlbum()` | — | `?Pin` |  |
+| `pinArtist()` | — | `?Pin` |  |
+| `pinPlaylist()` | — | `?Pin` |  |
+| `pinWave()` | — | `?Pin` | Pin a station. |
+| `pins()` | `GET /pins` | `?PinsList` | Everything pinned, in the order it is shown. |
+| `unpinAlbum()` | — | `bool` |  |
+| `unpinArtist()` | — | `bool` |  |
+| `unpinPlaylist()` | — | `bool` |  |
+| `unpinWave()` | — | `bool` |  |
+
 ## Playlists
 
 | Method | Request | Returns | Notes |
@@ -142,6 +156,23 @@ supplies.
 | `usersPlaylistsRecommendations()` | `GET /users/{userId}/playlists/{kind}/recommendations` | `?PlaylistRecommendations` | Tracks the service suggests adding to a playlist. |
 | `usersPlaylistsTrailer()` | `GET /users/{userId}/playlists/{kind}/trailer` | `?PlaylistTrailer` | A playlist's trailer, and the tracks it is built from. |
 | `usersPlaylistsVisibility()` | — | `?Playlist` | Make a playlist public or private. |
+
+## Presaves
+
+| Method | Request | Returns | Notes |
+|---|---|---|---|
+| `usersPresaves()` | `GET /users/{userId}/presaves` | `?Presaves` | What the account has presaved. |
+| `usersPresavesAdd()` | `POST /users/{userId}/presaves/add` | `bool` | Ask to be told about an album when it comes out. |
+| `usersPresavesRemove()` | `POST /users/{userId}/presaves/remove` | `bool` |  |
+
+## Queues
+
+| Method | Request | Returns | Notes |
+|---|---|---|---|
+| `queue()` | `GET /queues/{queueId}` | `?Queue` | One queue, with its tracks. |
+| `queueCreate()` | — | `?string` | Hand a queue to the service, and get back the id it filed it under. |
+| `queueUpdatePosition()` | `POST {url}` | `bool` | Say which track of a queue is playing now. |
+| `queuesList()` | `GET /queues` | `array` | The queues this account has, newest first. |
 
 ## Radio
 

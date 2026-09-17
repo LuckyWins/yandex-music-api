@@ -25,7 +25,7 @@ here; this is only what to come back to.
 ## Port
 
 - [ ] **Close the gap with the Python library.** It has 144 client methods;
-      this one has 127. Nothing here returns raw data any more, and everything
+      this one has 144. Nothing here returns raw data any more, and everything
       the 2019 library had is ported — but seven domains were never in it and
       are still missing, along with fifteen newer methods in domains that are
       ported.
@@ -34,7 +34,8 @@ here; this is only what to come back to.
 
       1. ~~gaps in ported domains~~ — done, see
          `docs/porting/artists-albums-clips-gaps.md`
-      2. `pins`, `queue`, `presaves` — 7 models, 16 methods
+      2. ~~`pins`, `queue`, `presaves`~~ — done, see
+         `docs/porting/pins-queue-presaves.md`
       3. `concerts` — 16 models, 6 methods, and with it `artistsConcerts`,
          which returns concerts and was deferred for that reason
       4. `metatags`, `labels`, `music_history` — 21 models, 10 methods
@@ -56,6 +57,25 @@ here; this is only what to come back to.
 
       The playlists stage is the argument for it: two models turned out to be
       behind the API, and only a run with reporting on showed it.
+
+- [ ] **Creating a playback queue.** `queueCreate()` is written and refused:
+      `POST /queues` answers `400 Can't parse body` to JSON and closes the
+      connection on anything else. Five body shapes were tried, including the
+      one the reference library sends, which fails the same way. Reading
+      queues works. The likely answer is that current clients speak protobuf
+      here — which is also what Ynison below uses, so the two may be one piece
+      of work.
+
+      What was tried, so the next attempt need not repeat it: JSON with null
+      fields, JSON without them, JSON without `from`, the raw JSON string with
+      a form content type, and that string as a form field. The JSON ones
+      answer `400 Can't parse body`; the others close the connection with no
+      reply, which is how this API reacts to a body of the wrong shape — the
+      same way `/pin/wave` reacts to seeds sent as a string.
+
+      Worth trying next: capturing what the Android app actually sends, and
+      `yandex_music/ynison` in the reference, which already speaks the
+      protocol.
 
 - [ ] **Ynison.** The reference gained a websocket protocol for remote player
       control and cross-device state. Nothing here touches it.

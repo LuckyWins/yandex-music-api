@@ -146,6 +146,55 @@ final class RequestTest extends TestCase
         $request->get('https://api.music.yandex.net/genres');
     }
 
+
+    /**
+     * Pinning wants a PUT with a JSON body, and unpinning a DELETE with one —
+     * a verb that does not usually carry a body at all.
+     */
+    public function testJsonBodiesOnPutAndDelete(): void
+    {
+        $http = (new MockHttpClient())
+            ->queue(['result' => 'ok'])
+            ->queue(['result' => 'ok']);
+
+        $request = new Request($http);
+
+        $request->putJson('https://api.music.yandex.net/pin/album', ['id' => 4243617]);
+        $request->deleteJson('https://api.music.yandex.net/pin/album', ['id' => 4243617]);
+
+        foreach ([0 => 'PUT', 1 => 'DELETE'] as $index => $method) {
+            self::assertSame($method, $http->requestAt($index)->getMethod());
+            self::assertSame('application/json', $http->requestAt($index)->getHeaderLine('Content-Type'));
+            self::assertSame(['id' => 4243617], $http->jsonBodyAt($index));
+        }
+    }
+
+    /**
+     * A header given to one call belongs to that call. The reference library
+     * writes its device descriptor into the shared headers, where it then
+     * travels with every request made afterwards.
+     */
+    public function testAPerRequestHeaderDoesNotLinger(): void
+    {
+        $http = (new MockHttpClient())
+            ->queue(['result' => []])
+            ->queue(['result' => []])
+            ->queue(['result' => []]);
+
+        $request = new Request($http);
+
+        $request->get('https://api.music.yandex.net/queues', headers: ['X-Yandex-Music-Device' => 'os=iOS']);
+        $request->get('https://api.music.yandex.net/genres');
+        $request->postJson('https://api.music.yandex.net/queues', ['id' => 'q1'], ['X-Yandex-Music-Device' => 'os=iOS']);
+
+        self::assertSame('os=iOS', $http->requestAt(0)->getHeaderLine('X-Yandex-Music-Device'));
+        self::assertSame('', $http->requestAt(1)->getHeaderLine('X-Yandex-Music-Device'));
+        self::assertSame('os=iOS', $http->requestAt(2)->getHeaderLine('X-Yandex-Music-Device'));
+
+        // The library's own headers are still there beside it.
+        self::assertNotSame('', $http->requestAt(0)->getHeaderLine('X-Yandex-Music-Client'));
+    }
+
     /**
      * An empty or unreadable body leaves the status as the only thing worth
      * saying — and saying it matters: an artist who takes no donations
