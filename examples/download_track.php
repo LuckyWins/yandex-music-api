@@ -30,7 +30,8 @@ use LuckyWins\YandexMusic\Examples\Bootstrap;
 use LuckyWins\YandexMusic\Exception\YandexMusicException;
 use LuckyWins\YandexMusic\Model\Track\DownloadInfo;
 
-$trackId = $argv[1] ?? null;
+$arguments = Bootstrap::arguments();
+$trackId = $arguments[1] ?? null;
 
 if (null === $trackId) {
     echo "Usage: php examples/download_track.php <trackId> [output.mp3]\n";
@@ -72,7 +73,7 @@ try {
     )));
     printf("taking:    %s %d kbps\n", $best->codec, $best->bitrateInKbps);
 
-    $path = $argv[2] ?? sprintf('%s.%s', $trackId, $best->codec);
+    $path = $arguments[2] ?? sprintf('%s.%s', $trackId, $best->codec);
 
     $written = $best->download($path);
 

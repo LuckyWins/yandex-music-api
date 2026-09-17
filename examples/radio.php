@@ -27,8 +27,9 @@ use LuckyWins\YandexMusic\Model\Rotor\DiscreteScale as Scale;
 use LuckyWins\YandexMusic\Model\Rotor\Enum as Vocabulary;
 use LuckyWins\YandexMusic\Model\Rotor\StationResult;
 
-$station = $argv[1] ?? 'genre:allrock';
-$confirmed = in_array('--yes', $argv, true);
+$arguments = Bootstrap::arguments();
+$station = $arguments[1] ?? 'genre:allrock';
+$confirmed = in_array('--yes', $arguments, true);
 
 if (!$confirmed) {
     if (!stream_isatty(STDIN)) {

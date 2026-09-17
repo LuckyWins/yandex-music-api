@@ -29,7 +29,7 @@ use LuckyWins\YandexMusic\Model\TracksList;
 const TRACK_ID = 31190260;
 const ARTIST_ID = 4611844;
 
-$confirmed = in_array('--yes', $argv, true);
+$confirmed = in_array('--yes', Bootstrap::arguments(), true);
 
 if (!$confirmed) {
     if (!stream_isatty(STDIN)) {
