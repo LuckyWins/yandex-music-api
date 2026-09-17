@@ -25,6 +25,7 @@ supplies.
 | `me()` | — | `?Status` | The account status loaded by init(), or null if it has not run. |
 | `permissionAlerts()` | `GET /permission-alerts` | `?PermissionAlerts` |  |
 | `settings()` | `GET /settings` | `?Settings` | What the account can be sold, and where to buy it. |
+| `usersSettings()` | `GET /users/{userId}/settings` | `?UserSettings` | A user's playback settings. |
 
 ## Albums
 
@@ -68,7 +69,6 @@ supplies.
 | `getLikesPlaylists()` | — | `mixed` |  |
 | `getLikesTracks()` | — | `mixed` |  |
 | `landing()` | `GET /landing3` | `array` | Blocks understood by the endpoint: personalplaylists, promotions, new-releases, new-playlists, mixes, chart, artists, albums, playlists, play_contexts. |
-| `playlistsList()` | — | `mixed` |  |
 | `rotorAccountStatus()` | `GET /rotor/account/status` | `?Status` | The account as radio sees it — the same model, with a few extra fields filled in such as how many skips per hour are left. |
 | `rotorStationGenreFeedback()` | `POST {url}` | `mixed` |  |
 | `rotorStationGenreFeedbackRadioStarted()` | — | `mixed` |  |
@@ -90,12 +90,31 @@ supplies.
 | `usersLikesPlaylistsRemove()` | — | `mixed` |  |
 | `usersLikesTracksAdd()` | — | `mixed` |  |
 | `usersLikesTracksRemove()` | — | `mixed` |  |
-| `usersPlaylists()` | `POST /users/{userId}/playlists` | `mixed` |  |
-| `usersPlaylistsCreate()` | `POST /users/{accountUid}/playlists/create` | `array` |  |
-| `usersPlaylistsDelete()` | `POST /users/{accountUid}/playlists/{kind}/delete` | `mixed` |  |
-| `usersPlaylistsInsertTrack()` | — | `mixed` | Insert a track at a position in a playlist. |
-| `usersPlaylistsList()` | `GET /users/{accountUid}/playlists/list` | `array` |  |
-| `usersPlaylistsNameChange()` | `POST /users/{accountUid}/playlists/{kind}/name` | `mixed` |  |
+
+## Playlists
+
+| Method | Request | Returns | Notes |
+|---|---|---|---|
+| `playlist()` | `GET /playlist/{playlistUuid}` | `?Playlist` | A playlist by its uuid rather than by owner and kind. |
+| `playlistSimilarEntities()` | `GET /playlist/{playlistUuid}/similar-entities` | `?PlaylistSimilarEntities` | What to listen to next when a playlist runs out. |
+| `playlists()` | `GET /playlists` | `?PlaylistsList` | Fetch playlists by owner-and-kind pairs, as `{uid}:{kind}`. |
+| `playlistsCollectiveJoin()` | `POST {url}` | `bool` | Join a collective playlist with an invitation token. |
+| `playlistsList()` | `POST /playlists/list` | `array` | Fetch playlists by owner-and-kind pairs, as `{uid}:{kind}`. |
+| `playlistsPersonal()` | `GET /playlists/personal/{playlistId}` | `?GeneratedPlaylist` | One of the playlists the service generates for the account, such as the daily playlist. |
+| `usersPlaylists()` | `GET /users/{userId}/playlists/{kind}` | `?Playlist` | One playlist of a user's. |
+| `usersPlaylistsChange()` | `POST /users/{userId}/playlists/{kind}/change` | `?Playlist` | Apply a set of changes to a playlist's contents. |
+| `usersPlaylistsCreate()` | `POST /users/{userId}/playlists/create` | `?Playlist` | Create a playlist. |
+| `usersPlaylistsDelete()` | `POST /users/{userId}/playlists/{kind}/delete` | `bool` | Delete a playlist. |
+| `usersPlaylistsDeleteTrack()` | — | `?Playlist` | Remove the tracks in a range of positions: from $from up to but not including $to. |
+| `usersPlaylistsDescription()` | — | `?Playlist` | Set a playlist's description. |
+| `usersPlaylistsInsertTrack()` | — | `?Playlist` | Insert tracks at a position in a playlist. |
+| `usersPlaylistsKinds()` | `GET /users/{userId}/playlists/list/kinds` | `array` | The kinds of a user's playlists and nothing else. |
+| `usersPlaylistsList()` | `GET /users/{userId}/playlists/list` | `array` | Every playlist a user has. |
+| `usersPlaylistsMany()` | `POST /users/{userId}/playlists` | `array` | Several playlists of one user's, in one request. |
+| `usersPlaylistsName()` | — | `?Playlist` | Rename a playlist. |
+| `usersPlaylistsRecommendations()` | `GET /users/{userId}/playlists/{kind}/recommendations` | `?PlaylistRecommendations` | Tracks the service suggests adding to a playlist. |
+| `usersPlaylistsTrailer()` | `GET /users/{userId}/playlists/{kind}/trailer` | `?PlaylistTrailer` | A playlist's trailer, and the tracks it is built from. |
+| `usersPlaylistsVisibility()` | — | `?Playlist` | Make a playlist public or private. |
 
 ## Tracks
 

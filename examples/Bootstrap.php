@@ -7,6 +7,7 @@ namespace LuckyWins\YandexMusic\Examples;
 use GuzzleHttp\Client as Guzzle;
 use LuckyWins\YandexMusic\Client;
 use LuckyWins\YandexMusic\Http\Request;
+use Psr\Log\LoggerInterface;
 use RuntimeException;
 
 /**
@@ -85,19 +86,24 @@ final class Bootstrap
     /**
      * A client, with the address overrides applied if any are configured.
      */
-    public static function client(?string $token = null): Client
+    public static function client(?string $token = null, ?LoggerInterface $logger = null): Client
     {
-        return new Client($token, new Request(new Guzzle([
-            'timeout' => 10,
-            'http_errors' => false,
-            'curl' => self::curlOptions(),
-        ])));
+        return new Client(
+            $token,
+            new Request(new Guzzle([
+                'timeout' => 10,
+                'http_errors' => false,
+                'curl' => self::curlOptions(),
+            ])),
+            reportUnknownFields: null !== $logger,
+            logger: $logger,
+        );
     }
 
     /**
      * A client carrying the stored token, or an explanation of how to get one.
      */
-    public static function authorizedClient(): Client
+    public static function authorizedClient(?LoggerInterface $logger = null): Client
     {
         $token = self::token();
 
@@ -108,7 +114,7 @@ final class Bootstrap
             );
         }
 
-        return self::client($token);
+        return self::client($token, $logger);
     }
 
     /**

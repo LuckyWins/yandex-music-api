@@ -17,6 +17,9 @@ final class CustomWave extends Model
         public readonly ?string $animationUrl = null,
         public readonly ?string $header = null,
         public readonly ?string $backgroundImageUrl = null,
+        /** Where the offer sits on the page, such as `bottom`. */
+        public readonly ?string $position = null,
+        public readonly ?string $squareAgentAnimation = null,
         public readonly ?Client $client = null,
     ) {
     }

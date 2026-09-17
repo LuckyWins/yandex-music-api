@@ -6,7 +6,6 @@ namespace LuckyWins\YandexMusic\Client;
 
 use DateTimeImmutable;
 use DateTimeInterface;
-use LuckyWins\YandexMusic\Exception\YandexMusicException;
 use LuckyWins\YandexMusic\Model\Account\Status;
 
 /**
@@ -90,71 +89,6 @@ trait Legacy
         return $this->getArray('/search/suggest', ['part' => $part]);
     }
 
-    // -- Playlists ----------------------------------------------------------
-
-    public function usersPlaylists(string|int $kind, string|int|null $userId = null): mixed
-    {
-        $userId ??= $this->accountUid();
-
-        return $this->request->post($this->getBaseUrl().'/users/'.$userId.'/playlists', ['kind' => $kind]);
-    }
-
-    /** @return array<string, mixed> */
-    public function usersPlaylistsList(): array
-    {
-        return $this->getArray('/users/'.$this->accountUid().'/playlists/list');
-    }
-
-    /**
-     * @param string $visibility public or private
-     *
-     * @return array<string, mixed>
-     */
-    public function usersPlaylistsCreate(string $title, string $visibility = 'public'): array
-    {
-        return $this->postArray('/users/'.$this->accountUid().'/playlists/create', [
-            'title' => $title,
-            'visibility' => $visibility,
-        ]);
-    }
-
-    public function usersPlaylistsDelete(string|int $kind): mixed
-    {
-        return $this->request->post($this->getBaseUrl().'/users/'.$this->accountUid().'/playlists/'.$kind.'/delete');
-    }
-
-    public function usersPlaylistsNameChange(string|int $kind, string $name): mixed
-    {
-        return $this->request->post(
-            $this->getBaseUrl().'/users/'.$this->accountUid().'/playlists/'.$kind.'/name',
-            ['value' => $name],
-        );
-    }
-
-    /**
-     * Insert a track at a position in a playlist.
-     *
-     * When no revision is given the current one is fetched first; passing a
-     * stale revision makes the API reject the change.
-     */
-    public function usersPlaylistsInsertTrack(
-        string|int $kind,
-        string|int $trackId,
-        string|int $albumId,
-        int $at = 0,
-        ?int $revision = null,
-    ): mixed {
-        $revision ??= $this->currentPlaylistRevision($kind);
-
-        $diff = json_encode([[
-            'op' => 'insert',
-            'at' => $at,
-            'tracks' => [['id' => $trackId, 'albumId' => $albumId]],
-        ]], JSON_THROW_ON_ERROR);
-
-        return $this->usersPlaylistsChange($kind, $diff, $revision);
-    }
-
     // -- Radio --------------------------------------------------------------
 
     /**
@@ -230,12 +164,6 @@ trait Legacy
     }
 
     // -- Batch lookups ------------------------------------------------------
-
-    /** @param string|int|list<string|int> $playlistIds */
-    public function playlistsList(string|int|array $playlistIds): mixed
-    {
-        return $this->getList('playlist', $playlistIds);
-    }
 
     // -- Likes --------------------------------------------------------------
 
@@ -334,25 +262,6 @@ trait Legacy
     // -- Internals ----------------------------------------------------------
 
     /**
-     * The user id every per-user endpoint needs.
-     *
-     * @throws YandexMusicException when init() has not run or the token is anonymous
-     */
-    private function accountUid(): int
-    {
-        $uid = $this->getAccountUid();
-
-        if (null === $uid) {
-            throw new YandexMusicException(
-                'No account is loaded. Call init() on an authorized client before using '
-                .'endpoints that act on behalf of a user.',
-            );
-        }
-
-        return $uid;
-    }
-
-    /**
      * @param array<string, scalar|null> $params
      *
      * @return array<string, mixed>
@@ -374,28 +283,6 @@ trait Legacy
         $result = $this->request->post($this->getBaseUrl().$path, $data);
 
         return is_array($result) ? $result : [];
-    }
-
-    private function currentPlaylistRevision(string|int $kind): int
-    {
-        $playlists = $this->usersPlaylists($kind);
-        $first = is_array($playlists) ? ($playlists[0] ?? null) : null;
-        $revision = is_array($first) ? ($first['revision'] ?? null) : null;
-
-        if (!is_int($revision)) {
-            throw new YandexMusicException(sprintf('Could not read the current revision of playlist %s', $kind));
-        }
-
-        return $revision;
-    }
-
-    private function usersPlaylistsChange(string|int $kind, string $diff, int $revision = 1): mixed
-    {
-        return $this->request->post($this->getBaseUrl().'/users/'.$this->accountUid().'/playlists/'.$kind.'/change', [
-            'kind' => $kind,
-            'revision' => $revision,
-            'diff' => $diff,
-        ]);
     }
 
     /**
@@ -428,19 +315,6 @@ trait Legacy
             $this->getBaseUrl().'/users/'.$this->accountUid().'/dislikes/tracks/'.$action,
             // The 2019 code sent track-ids-ids here, which the API ignored.
             ['track-ids' => is_array($ids) ? implode(',', $ids) : $ids],
-        );
-    }
-
-    /**
-     * @param string|int|list<string|int> $ids
-     */
-    private function getList(string $objectType, string|int|array $ids): mixed
-    {
-        $path = '/'.$objectType.'s'.('playlist' === $objectType ? '/list' : '');
-
-        return $this->request->post(
-            $this->getBaseUrl().$path,
-            [$objectType.'-ids' => is_array($ids) ? implode(',', $ids) : $ids],
         );
     }
 
