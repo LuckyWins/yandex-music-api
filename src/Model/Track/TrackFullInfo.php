@@ -31,6 +31,20 @@ final class TrackFullInfo extends Model
         public readonly array $aliases = [],
         /** @var list<Artist> Fuller than the artists on the track itself. */
         public readonly array $artists = [],
+        /**
+         * Other cuts of the same track — remixes, live takes and the like.
+         *
+         * One of the few fields here left as a raw array, because nothing has
+         * ever arrived in it: sixty-four tracks across the chart and four
+         * searches all sent it empty, and json_decode cannot tell an empty
+         * list from an empty object. Newer than the reference library, which
+         * does not have the field at all. Give it a model the day a non-empty
+         * one turns up; until then a guess would only be a guess with a type
+         * on it.
+         *
+         * @var array<array-key, mixed>|null
+         */
+        public readonly ?array $otherVersions = null,
         public readonly ?Client $client = null,
     ) {
     }

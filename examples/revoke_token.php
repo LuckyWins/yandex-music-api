@@ -20,7 +20,7 @@ declare(strict_types=1);
 
 require __DIR__.'/../vendor/autoload.php';
 
-use LuckyWins\YandexMusic\Examples\Bootstrap;
+use LuckyWins\YandexMusic\Examples\Support\Bootstrap;
 use LuckyWins\YandexMusic\Exception\UnauthorizedException;
 use LuckyWins\YandexMusic\Exception\YandexMusicException;
 

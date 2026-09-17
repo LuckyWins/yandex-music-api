@@ -300,6 +300,7 @@ An album.
 | `year` | `?int` | no |  |
 | `releaseDate` | `?string` | no |  |
 | `type` | `?string` | no |  |
+| `albumType` | `?string` | no | How the release is classified, alongside $type. |
 | `trackPosition` | `?TrackPosition` | no | [TrackPosition](#trackposition) |
 | `regions` | `list<string>|null` | no |  |
 | `availableAsRbt` | `?bool` | no |  |
@@ -2584,6 +2585,7 @@ A track with everything the service knows about it gathered in one place.
 | `alsoInAlbums` | `list<Track>` | no | list of [Track](#track) |
 | `aliases` | `list<string>` | no |  |
 | `artists` | `list<Artist>` | no | list of [Artist](#artist) |
+| `otherVersions` | `array<array-key,` | no | Other cuts of the same track — remixes, live takes and the like. |
 
 ### TrackLyrics
 
@@ -2611,6 +2613,7 @@ A track's place in a playlist rather than the track itself.
 | `chart` | `?Chart` | no | [Chart](#chart) |
 | `track` | `?Track` | no | [Track](#track) |
 | `originalIndex` | `?int` | no |  |
+| `originalShuffleIndex` | `?int` | no | Where the track sits once the playlist is shuffled. |
 
 ### TrackTrailer
 

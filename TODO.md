@@ -24,20 +24,23 @@ here; this is only what to come back to.
 
 ## Port
 
-- [ ] **A live sweep that finds fields the models are missing.** Unknown-field
-      reporting already exists, and `examples/playlist_roundtrip.php` prints a
-      summary of what one domain sent that no model declares. What is missing
-      is one script that walks every endpoint, with reporting on, and prints
-      the whole list at once — so a change on Yandex's side is found by running
-      something rather than by noticing it during the next port.
+- [ ] **Give `TrackFullInfo::$otherVersions` a model.** It is one of the few
+      fields still declared as a raw array, because nothing has ever arrived in
+      it: sixty-four tracks across the chart and four searches all sent it
+      empty, and an empty array says nothing about whether it holds a list or a
+      map. The reference library does not have the field at all.
 
-      It needs care in two places. It must not write: reading endpoints only,
-      with the mutating ones left to the domain probes that clean up after
-      themselves. And it must print names and types, never values, because an
-      account's own responses carry personal data.
+      It needs a track that actually has other cuts — a song with a well known
+      remix or live version. Once one is found, the shape follows from one
+      response and the field becomes a NESTED list like the rest.
 
-      The playlists stage is the argument for it: two models turned out to be
-      behind the API, and only a run with reporting on showed it.
+- [ ] **Retries on 429 and 5xx.** `Http\Request` sends once and turns anything
+      unsuccessful into an exception. A rate-limited or briefly unavailable
+      response is not the same kind of failure as a 404, and a caller sweeping
+      a hundred endpoints has to write the backoff themselves.
+
+      Not urgent: nothing has hit a rate limit yet. Worth doing before anything
+      here runs unattended.
 
 - [ ] **Creating a playback queue.** `queueCreate()` is written and refused:
       `POST /queues` answers `400 Can't parse body` to JSON and closes the

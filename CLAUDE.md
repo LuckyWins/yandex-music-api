@@ -55,7 +55,7 @@ An OAuth token grants full access to the account behind it — the profile, the
 phone numbers on the Yandex ID, the subscription — and lasts about a year.
 
 - The token lives in `.env.local`: git-ignored, written owner-only, loaded by
-  `examples/Bootstrap.php`. Nothing prints it, and nothing commits it.
+  `examples/Support/Bootstrap.php`. Nothing prints it, and nothing commits it.
 - `.env.local.example` is its committed twin and documents every variable the
   project understands — what it is, what breaks without it, how to obtain it.
   A new variable lands there in the same change that starts reading it, and the

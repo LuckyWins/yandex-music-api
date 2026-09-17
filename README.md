@@ -18,11 +18,22 @@ and every endpoint returns typed models — nothing hands back decoded JSON for
 the caller to guess at. The reference has 144 client methods and none of them
 is missing here; the extra fifteen are accessors and conveniences of our own.
 
-That claim is checked rather than remembered:
+The method count is checked against the reference by
+`php tools/compare-with-reference.php`, which needs a checkout of it beside
+this one.
+
+The typed-fields half is the one that can rot, because it rots whenever Yandex
+adds a field. So it is checked against the service rather than against the
+reference:
 
 ```
-php tools/compare-with-reference.php      # needs a checkout of the reference beside this one
+make audit
 ```
+
+calls every reading endpoint and reports, by model, every field no model
+declares and what shape arrived in it. See [docs/audit.md](docs/audit.md) for
+what it does and does not check. It needs a token, and says so rather than
+failing when there is none.
 
 It was reached in thirteen stages, one domain at a time, each checked against
 the live API rather than against the Python library — which mattered more than
