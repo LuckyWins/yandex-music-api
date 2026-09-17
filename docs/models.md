@@ -1835,8 +1835,8 @@ A track.
 | `durationMs` | `?int` | no |  |
 | `storageDir` | `?string` | no |  |
 | `fileSize` | `?int` | no |  |
-| `substituted` | `?self` | no | [Track](#track). What plays instead, where the original is unavailable here. |
-| `matchedTrack` | `?self` | no | [Track](#track) |
+| `substituted` | `?Track` | no | [Track](#track). What plays instead, where the original is unavailable here. |
+| `matchedTrack` | `?Track` | no | [Track](#track) |
 | `normalization` | `?Normalization` | no | [Normalization](#normalization) |
 | `error` | `?string` | no |  |
 | `canPublish` | `?bool` | no |  |

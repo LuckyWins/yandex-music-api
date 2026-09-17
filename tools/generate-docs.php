@@ -95,20 +95,34 @@ function fieldType(ReflectionProperty $property, ReflectionParameter $parameter)
 
     $type = $parameter->getType();
 
-    return $type instanceof ReflectionNamedType ? shorten(typeName($type)) : 'mixed';
+    if (!$type instanceof ReflectionNamedType) {
+        return 'mixed';
+    }
+
+    return shorten(typeName($type, $property->getDeclaringClass()->getShortName()));
 }
 
 /**
  * A type as it should read: nullable marked, except for mixed, which already
  * admits null.
+ *
+ * A self-referencing field is written as the class it points at rather than
+ * as `self`, which says nothing to a reader of the table — and which
+ * reflection has been seen to report both ways.
  */
-function typeName(ReflectionNamedType $type): string
+function typeName(ReflectionNamedType $type, ?string $declaringClass = null): string
 {
-    if ('mixed' === $type->getName()) {
+    $name = $type->getName();
+
+    if ('mixed' === $name) {
         return 'mixed';
     }
 
-    return ($type->allowsNull() ? '?' : '').$type->getName();
+    if (('self' === $name || 'static' === $name) && null !== $declaringClass) {
+        $name = $declaringClass;
+    }
+
+    return ($type->allowsNull() ? '?' : '').$name;
 }
 
 /**
