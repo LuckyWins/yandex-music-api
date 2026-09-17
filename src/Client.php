@@ -7,8 +7,10 @@ namespace LuckyWins\YandexMusic;
 use LuckyWins\YandexMusic\Client\Account;
 use LuckyWins\YandexMusic\Client\Albums;
 use LuckyWins\YandexMusic\Client\Artists;
+use LuckyWins\YandexMusic\Client\Clips;
 use LuckyWins\YandexMusic\Client\DeviceAuth;
 use LuckyWins\YandexMusic\Client\Legacy;
+use LuckyWins\YandexMusic\Client\Likes;
 use LuckyWins\YandexMusic\Client\Playlists;
 use LuckyWins\YandexMusic\Client\Tracks;
 use LuckyWins\YandexMusic\Http\Request;
@@ -30,8 +32,10 @@ final class Client
     use Account;
     use Albums;
     use Artists;
+    use Clips;
     use DeviceAuth;
     use Legacy;
+    use Likes;
     use Playlists;
     use Tracks;
 

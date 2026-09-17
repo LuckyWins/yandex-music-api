@@ -5,10 +5,13 @@ declare(strict_types=1);
 namespace LuckyWins\YandexMusic\Model\Artist;
 
 use LuckyWins\YandexMusic\Model\Album\Album;
+use LuckyWins\YandexMusic\Model\Clip\Clip;
 use LuckyWins\YandexMusic\Model\Cover;
 use LuckyWins\YandexMusic\Model\CustomWave;
 use LuckyWins\YandexMusic\Model\Landing\Chart;
 use LuckyWins\YandexMusic\Model\Model;
+use LuckyWins\YandexMusic\Model\Playlist\Playlist;
+use LuckyWins\YandexMusic\Model\Playlist\PlaylistId;
 use LuckyWins\YandexMusic\Model\Supplement\VideoSupplement;
 use LuckyWins\YandexMusic\Model\Track\Track;
 
@@ -35,6 +38,9 @@ final class BriefInfo extends Model
         'tracksInChart' => [Chart::class, 'list'],
         'stats' => [Stats::class, 'one'],
         'customWave' => [CustomWave::class, 'one'],
+        'playlists' => [Playlist::class, 'list'],
+        'playlistIds' => [PlaylistId::class, 'list'],
+        'clips' => [Clip::class, 'list'],
     ];
 
     public function __construct(
@@ -61,17 +67,13 @@ final class BriefInfo extends Model
         public readonly ?bool $hasTrailer = null,
         /** @var list<int> */
         public readonly array $lastReleaseIds = [],
-        /**
-         * Not modelled: the playlists domain is not ported.
-         *
-         * @var list<mixed>
-         */
+        /** @var list<Playlist> */
         public readonly array $playlists = [],
-        /** @var list<mixed> Not modelled: see playlists. */
+        /** @var list<PlaylistId> */
         public readonly array $playlistIds = [],
         /** @var list<mixed> Not modelled: the concerts domain is not ported. */
         public readonly array $concerts = [],
-        /** @var list<mixed> Not modelled: the clips domain is not ported. */
+        /** @var list<Clip> */
         public readonly array $clips = [],
         /** @var list<mixed> Not modelled: the vinyls domain is not ported. */
         public readonly array $vinyls = [],

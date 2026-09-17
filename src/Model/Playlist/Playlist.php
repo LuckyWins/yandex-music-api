@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace LuckyWins\YandexMusic\Model\Playlist;
 
 use LuckyWins\YandexMusic\Client;
+use LuckyWins\YandexMusic\Model\ActionButton;
 use LuckyWins\YandexMusic\Model\Artist\Artist;
 use LuckyWins\YandexMusic\Model\Cover;
 use LuckyWins\YandexMusic\Model\CoverDerivedColors;
@@ -45,6 +46,7 @@ final class Playlist extends Model
         'customWave' => [CustomWave::class, 'one'],
         'pager' => [Pager::class, 'one'],
         'trailer' => [PlaylistAvailability::class, 'one'],
+        'actionButton' => [ActionButton::class, 'one'],
         'topArtist' => [Artist::class, 'list'],
         'recentTracks' => [TrackId::class, 'list'],
         'tracks' => [TrackShort::class, 'list'],
@@ -118,6 +120,7 @@ final class Playlist extends Model
         public readonly ?CustomWave $customWave = null,
         public readonly ?Pager $pager = null,
         public readonly ?bool $hasTrailer = null,
+        public readonly ?ActionButton $actionButton = null,
         public readonly ?PlaylistAvailability $trailer = null,
         /** @var list<mixed> Not modelled: shapes vary and the reference leaves them raw too. */
         public readonly array $tags = [],

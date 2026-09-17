@@ -48,6 +48,13 @@ supplies.
 | `artistsTrackIdsByRating()` | `GET /artists/{artistId}/track-ids-by-rating` | `array` | The artist's tracks as bare ids, ordered by rating. |
 | `artistsTracks()` | `GET /artists/{artistId}/tracks` | `?ArtistTracks` | A page of an artist's tracks, most popular first. |
 
+## Clips
+
+| Method | Request | Returns | Notes |
+|---|---|---|---|
+| `clips()` | `GET /clips` | `array` | Fetch clips by id. |
+| `clipsWillLike()` | `GET /clips/will/like` | `?ClipsWillLike` | A page of clips the service thinks the account will like. |
+
 ## DeviceAuth
 
 | Method | Request | Returns | Notes |
@@ -64,10 +71,6 @@ supplies.
 | `feed()` | `GET /feed` | `array` |  |
 | `feedWizardIsPassed()` | `GET /feed/wizard/is-passed` | `mixed` |  |
 | `genres()` | `GET /genres` | `array` |  |
-| `getLikesAlbums()` | — | `mixed` |  |
-| `getLikesArtists()` | — | `mixed` |  |
-| `getLikesPlaylists()` | — | `mixed` |  |
-| `getLikesTracks()` | — | `mixed` |  |
 | `landing()` | `GET /landing3` | `array` | Blocks understood by the endpoint: personalplaylists, promotions, new-releases, new-playlists, mixes, chart, artists, albums, playlists, play_contexts. |
 | `rotorAccountStatus()` | `GET /rotor/account/status` | `?Status` | The account as radio sees it — the same model, with a few extra fields filled in such as how many skips per hour are left. |
 | `rotorStationGenreFeedback()` | `POST {url}` | `mixed` |  |
@@ -79,17 +82,32 @@ supplies.
 | `rotorStationsList()` | `GET /rotor/stations/list` | `mixed` |  |
 | `search()` | `GET /search` | `array` |  |
 | `searchSuggest()` | `GET /search/suggest` | `array` |  |
-| `usersDislikesTracks()` | `GET /users/{accountUid}/dislikes/tracks` | `mixed` |  |
-| `usersDislikesTracksAdd()` | — | `mixed` |  |
-| `usersDislikesTracksRemove()` | — | `mixed` |  |
-| `usersLikesAlbumsAdd()` | — | `mixed` |  |
-| `usersLikesAlbumsRemove()` | — | `mixed` |  |
-| `usersLikesArtistsAdd()` | — | `mixed` |  |
-| `usersLikesArtistsRemove()` | — | `mixed` |  |
-| `usersLikesPlaylistsAdd()` | — | `mixed` |  |
-| `usersLikesPlaylistsRemove()` | — | `mixed` |  |
-| `usersLikesTracksAdd()` | — | `mixed` |  |
-| `usersLikesTracksRemove()` | — | `mixed` |  |
+
+## Likes
+
+| Method | Request | Returns | Notes |
+|---|---|---|---|
+| `usersDislikesArtists()` | `GET /users/{userId}/dislikes/artists` | `array` | The account's disliked artists. |
+| `usersDislikesArtistsAdd()` | — | `bool` |  |
+| `usersDislikesArtistsRemove()` | — | `bool` |  |
+| `usersDislikesTracks()` | `GET /users/{userId}/dislikes/tracks` | `?TracksList` | The account's disliked tracks. |
+| `usersDislikesTracksAdd()` | — | `bool` |  |
+| `usersDislikesTracksRemove()` | — | `bool` |  |
+| `usersLikesAlbums()` | — | `array` | The account's liked albums. |
+| `usersLikesAlbumsAdd()` | — | `bool` |  |
+| `usersLikesAlbumsRemove()` | — | `bool` |  |
+| `usersLikesArtists()` | — | `array` | The account's liked artists. |
+| `usersLikesArtistsAdd()` | — | `bool` |  |
+| `usersLikesArtistsRemove()` | — | `bool` |  |
+| `usersLikesClips()` | `GET /users/{userId}/likes/clips` | `?ClipsWillLike` | A page of the account's liked clips. |
+| `usersLikesClipsAdd()` | — | `bool` |  |
+| `usersLikesClipsRemove()` | — | `bool` |  |
+| `usersLikesPlaylists()` | — | `array` | The account's liked playlists. |
+| `usersLikesPlaylistsAdd()` | — | `bool` | Like playlists, identified as `{uid}:{kind}`. |
+| `usersLikesPlaylistsRemove()` | — | `bool` |  |
+| `usersLikesTracks()` | `GET /users/{userId}/likes/tracks` | `?TracksList` | The account's liked tracks. |
+| `usersLikesTracksAdd()` | — | `bool` |  |
+| `usersLikesTracksRemove()` | — | `bool` |  |
 
 ## Playlists
 

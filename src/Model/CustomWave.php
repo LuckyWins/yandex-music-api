@@ -20,6 +20,7 @@ final class CustomWave extends Model
         /** Where the offer sits on the page, such as `bottom`. */
         public readonly ?string $position = null,
         public readonly ?string $squareAgentAnimation = null,
+        public readonly ?string $imageUrl = null,
         public readonly ?Client $client = null,
     ) {
     }
