@@ -19,7 +19,14 @@ final class CustomWaveTest extends ModelTestCase
 
     protected static function fullPayload(): array
     {
-        return ['title' => 'Miyagi & Эндшпиль', 'animationUrl' => 'https://example.invalid/a.json', 'header' => 'Моя волна', 'backgroundImageUrl' => 'https://example.invalid/b.jpg'];
+        return [
+            'title' => 'Miyagi & Эндшпиль',
+            'animationUrl' => 'https://example.invalid/a.json',
+            'header' => 'Моя волна',
+            'backgroundImageUrl' => 'https://example.invalid/b.jpg',
+            'position' => 'bottom',
+            'squareAgentAnimation' => 'https://example.invalid/square.json',
+        ];
     }
 
     protected static function requiredPayload(): array
@@ -32,6 +39,10 @@ final class CustomWaveTest extends ModelTestCase
         self::assertInstanceOf(CustomWave::class, $model);
         self::assertSame('Miyagi & Эндшпиль', $model->title);
         self::assertSame('Моя волна', $model->header);
+        self::assertSame('https://example.invalid/a.json', $model->animationUrl);
+        self::assertSame('https://example.invalid/b.jpg', $model->backgroundImageUrl);
+        self::assertSame('bottom', $model->position);
+        self::assertSame('https://example.invalid/square.json', $model->squareAgentAnimation);
     }
 
     protected function equalityTriple(): array

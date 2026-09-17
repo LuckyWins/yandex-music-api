@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace LuckyWins\YandexMusic\Client;
 
+use LuckyWins\YandexMusic\Exception\YandexMusicException;
 use LuckyWins\YandexMusic\Model\Account\Status;
 use LuckyWins\YandexMusic\Model\Account\UserSettings;
 use LuckyWins\YandexMusic\Model\Experiment\ExperimentsDetails;
@@ -90,6 +91,22 @@ trait Account
     }
 
     /**
+     * A user's playback settings.
+     *
+     * The same model as accountSettings(), read through the user rather than
+     * through the account. The reference library files this among the
+     * playlist methods; it belongs with the account.
+     */
+    public function usersSettings(string|int|null $userId = null): ?UserSettings
+    {
+        $userId ??= $this->accountUid();
+
+        $result = $this->request->get($this->getBaseUrl().'/users/'.$userId.'/settings');
+
+        return UserSettings::fromApi(is_array($result) ? ($result['userSettings'] ?? null) : null, $this);
+    }
+
+    /**
      * What the account can be sold, and where to buy it.
      */
     public function settings(): ?Settings
@@ -138,6 +155,27 @@ trait Account
         ]);
 
         return PromoCodeStatus::fromApi($result, $this);
+    }
+
+    /**
+     * The account id, or a clear failure when there is none.
+     *
+     * Lives here rather than with the endpoints that need it because it is
+     * account state: playlists, likes and dislikes all act on behalf of a
+     * user and all need this answer.
+     */
+    private function accountUid(): int
+    {
+        $uid = $this->getAccountUid();
+
+        if (null === $uid) {
+            throw new YandexMusicException(
+                'No account is loaded. Call init() on an authorized client before using '
+                .'endpoints that act on behalf of a user.',
+            );
+        }
+
+        return $uid;
     }
 
     /**

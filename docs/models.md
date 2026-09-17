@@ -602,6 +602,219 @@ A reference to a track rather than the track itself.
 
 ## Playlist
 
+### Brand
+
+A sponsor's dressing for a playlist: artwork, colors and the tracking pixels that come with paid placement.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `image` | `string` | **yes** |  |
+| `background` | `string` | **yes** |  |
+| `reference` | `string` | **yes** |  |
+| `pixels` | `list<string>` | **yes** |  |
+| `theme` | `string` | **yes** |  |
+| `playlistTheme` | `string` | **yes** |  |
+| `button` | `string` | **yes** |  |
+
+### CaseForms
+
+A name in all six Russian cases.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `nominative` | `string` | **yes** |  |
+| `genitive` | `string` | **yes** |  |
+| `dative` | `string` | **yes** |  |
+| `accusative` | `string` | **yes** |  |
+| `instrumental` | `string` | **yes** |  |
+| `prepositional` | `string` | **yes** |  |
+
+### Contest
+
+A playlist's entry in a Yandex.Music contest.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `contestId` | `string` | **yes** |  |
+| `status` | `string` | **yes** |  |
+| `canEdit` | `bool` | **yes** |  |
+| `sent` | `?string` | no |  |
+| `withdrawn` | `?string` | no |  |
+
+### GeneratedPlaylist
+
+A playlist the service generated for the account — the daily playlist, the weekly release digest, and their kin.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `type` | `?string` | no |  |
+| `ready` | `?bool` | no |  |
+| `notify` | `?bool` | no |  |
+| `data` | `?Playlist` | no | [Playlist](#playlist) |
+| `description` | `list<mixed>` | no |  |
+| `previewDescription` | `?string` | no |  |
+
+### MadeFor
+
+Who a generated playlist was made for.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `userInfo` | `?User` | no | [User](#user) |
+| `caseForms` | `?CaseForms` | no | [CaseForms](#caseforms) |
+
+### MadeForUser
+
+Whether a playlist was generated for the account reading it, and that person's name in every case so a heading can be built around it.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `isMadeForUser` | `?bool` | no |  |
+| `caseForms` | `?CaseForms` | no | [CaseForms](#caseforms) |
+
+### OpenGraphData
+
+What a link to this playlist unfurls into when it is shared.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `title` | `string` | **yes** |  |
+| `description` | `string` | **yes** |  |
+| `image` | `?Cover` | no | [Cover](#cover) |
+
+### PlayCounter
+
+How many days in a row the owner has listened to a daily playlist, and the phrase the app shows for it.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `value` | `int` | **yes** |  |
+| `description` | `string` | **yes** |  |
+| `updated` | `bool` | **yes** |  |
+
+### Playlist
+
+A playlist.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `uid` | `?int` | no |  |
+| `kind` | `?int` | no |  |
+| `title` | `?string` | no |  |
+| `owner` | `?User` | no | [User](#user) |
+| `cover` | `?Cover` | no | [Cover](#cover) |
+| `trackCount` | `?int` | no |  |
+| `tracks` | `list<TrackShort>` | no | list of [TrackShort](#trackshort) |
+| `revision` | `?int` | no |  |
+| `snapshot` | `?int` | no |  |
+| `visibility` | `?string` | no |  |
+| `collective` | `?bool` | no |  |
+| `urlPart` | `?string` | no |  |
+| `created` | `?string` | no |  |
+| `modified` | `?string` | no |  |
+| `available` | `?bool` | no |  |
+| `isBanner` | `?bool` | no |  |
+| `isPremiere` | `?bool` | no |  |
+| `durationMs` | `?int` | no |  |
+| `likesCount` | `?int` | no |  |
+| `description` | `?string` | no |  |
+| `descriptionFormatted` | `?string` | no |  |
+| `playlistUuid` | `?string` | no |  |
+| `type` | `?string` | no |  |
+| `ready` | `?bool` | no |  |
+| `everPlayed` | `?bool` | no |  |
+| `generatedPlaylistType` | `?string` | no |  |
+| `madeFor` | `?MadeFor` | no | [MadeFor](#madefor) |
+| `madeForUser` | `?MadeForUser` | no | [MadeForUser](#madeforuser) |
+| `derivedColors` | `?CoverDerivedColors` | no | [CoverDerivedColors](#coverderivedcolors) |
+| `playCounter` | `?PlayCounter` | no | [PlayCounter](#playcounter) |
+| `playlistAbsence` | `?PlaylistAbsence` | no | [PlaylistAbsence](#playlistabsence) |
+| `contest` | `?Contest` | no | [Contest](#contest) |
+| `branding` | `?Brand` | no | [Brand](#brand) |
+| `ogData` | `?OpenGraphData` | no | [OpenGraphData](#opengraphdata) |
+| `ogImage` | `?string` | no |  |
+| `ogTitle` | `?string` | no |  |
+| `ogDescription` | `?string` | no |  |
+| `image` | `?string` | no |  |
+| `coverWithoutText` | `?Cover` | no | [Cover](#cover) |
+| `animatedCoverUri` | `?string` | no |  |
+| `backgroundColor` | `?string` | no |  |
+| `textColor` | `?string` | no |  |
+| `backgroundImageUrl` | `?string` | no |  |
+| `backgroundVideoUrl` | `?string` | no |  |
+| `backgroundVideoId` | `?string` | no |  |
+| `idForFrom` | `?string` | no |  |
+| `dummyDescription` | `?string` | no |  |
+| `dummyPageDescription` | `?string` | no |  |
+| `dummyCover` | `?Cover` | no | [Cover](#cover) |
+| `dummyRolloverCover` | `?Cover` | no | [Cover](#cover) |
+| `metrikaId` | `?int` | no |  |
+| `coauthors` | `list<int>` | no |  |
+| `topArtist` | `list<Artist>` | no | list of [Artist](#artist) |
+| `recentTracks` | `list<TrackId>` | no | list of [TrackId](#trackid) |
+| `similarPlaylists` | `list<self>` | no | list of [Playlist](#playlist) |
+| `lastOwnerPlaylists` | `list<self>` | no | list of [Playlist](#playlist) |
+| `customWave` | `?CustomWave` | no | [CustomWave](#customwave) |
+| `pager` | `?Pager` | no | [Pager](#pager) |
+| `hasTrailer` | `?bool` | no |  |
+| `trailer` | `?PlaylistAvailability` | no | [PlaylistAvailability](#playlistavailability) |
+| `tags` | `list<mixed>` | no |  |
+| `prerolls` | `list<mixed>` | no |  |
+| `regions` | `list<mixed>` | no |  |
+| `isForFrom` | `mixed` | no | Not modelled: the reference types it as Any, and live responses vary. |
+
+### PlaylistAbsence
+
+Why a playlist that was asked for is not there.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `kind` | `int` | **yes** |  |
+| `reason` | `string` | **yes** |  |
+
+### PlaylistAvailability
+
+Whether a playlist's trailer can be played.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `available` | `?bool` | no |  |
+
+### PlaylistRecommendations
+
+Tracks the service suggests adding to a playlist.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `tracks` | `list<Track>` | no | list of [Track](#track) |
+| `batchId` | `?string` | no |  |
+
+### PlaylistSimilarEntities
+
+Things to listen to next when this playlist runs out.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `items` | `list<SimilarEntityItem>` | no | list of [SimilarEntityItem](#similarentityitem) |
+
+### PlaylistTrailer
+
+A playlist's trailer: the playlist itself, the tracks the trailer plays, and whether it may be shared.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `playlist` | `?Playlist` | no | [Playlist](#playlist) |
+| `trailer` | `?TrailerInfo` | no | [TrailerInfo](#trailerinfo) |
+| `shareable` | `?bool` | no |  |
+
+### PlaylistsList
+
+The envelope /playlists answers with.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `playlists` | `list<Playlist>` | no | list of [Playlist](#playlist) |
+
 ### User
 
 A Yandex.Music user.
@@ -782,6 +995,8 @@ The personal radio station offered for an artist or album, and how to present it
 | `animationUrl` | `?string` | no |  |
 | `header` | `?string` | no |  |
 | `backgroundImageUrl` | `?string` | no |  |
+| `position` | `?string` | no | Where the offer sits on the page, such as `bottom`. |
+| `squareAgentAnimation` | `?string` | no |  |
 
 ### Disclaimer
 
@@ -848,6 +1063,15 @@ Whether a trailer exists for something.
 | Field | Type | Required | Notes |
 |---|---|---|---|
 | `available` | `?bool` | no |  |
+
+### TrailerInfo
+
+The tracks a playlist's trailer is built from.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `title` | `?string` | no |  |
+| `tracks` | `list<Track>` | no | list of [Track](#track) |
 
 ## Track
 
@@ -1055,6 +1279,21 @@ A pointer to a track's lyrics — the text itself is not in the response.
 | `writers` | `list<string>` | **yes** |  |
 | `major` | `?LyricsMajor` | no | [LyricsMajor](#lyricsmajor) |
 
+### TrackShort
+
+A track's place in a playlist rather than the track itself.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `id` | `mixed` | **yes** |  |
+| `timestamp` | `?string` | no |  |
+| `albumId` | `mixed` | no |  |
+| `playCount` | `?int` | no |  |
+| `recent` | `?bool` | no |  |
+| `chart` | `?Chart` | no | [Chart](#chart) |
+| `track` | `?Track` | no | [Track](#track) |
+| `originalIndex` | `?int` | no |  |
+
 ### TrackTrailer
 
 A trailer introducing a track or episode.
@@ -1063,4 +1302,52 @@ A trailer introducing a track or episode.
 |---|---|---|---|
 | `title` | `?string` | no |  |
 | `track` | `?Track` | no | [Track](#track) |
+
+## Wave
+
+### SimilarEntityData
+
+What a similar entity actually is, once its type has said which half of this to read.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `wave` | `?Wave` | no | [Wave](#wave) |
+| `agent` | `?WaveAgent` | no | [WaveAgent](#waveagent) |
+
+### SimilarEntityItem
+
+One entry in a list of things like the one you asked about.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `type` | `?string` | no |  |
+| `data` | `?SimilarEntityData` | no | [SimilarEntityData](#similarentitydata) |
+
+### Wave
+
+A personal radio station — what it plays and what it was seeded from.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `name` | `?string` | no |  |
+| `description` | `?string` | no |  |
+| `seeds` | `list<string>` | no |  |
+
+### WaveAgent
+
+The face a wave is presented under.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `animationUri` | `?string` | no |  |
+| `cover` | `?Cover` | no | [Cover](#cover) |
+| `entity` | `?WaveAgentEntity` | no | [WaveAgentEntity](#waveagententity) |
+
+### WaveAgentEntity
+
+What a wave agent stands for.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `type` | `?string` | no |  |
 

@@ -30,6 +30,14 @@ final class AccountTest extends TestCase
         ],
     ];
 
+    private const SETTINGS = [
+        'uid' => 1130000002804451, 'lastFmScrobblingEnabled' => false, 'shuffleEnabled' => true,
+        'volumePercents' => 70, 'modified' => 'm', 'facebookScrobblingEnabled' => false,
+        'addNewTrackOnPlaylistTop' => true, 'userMusicVisibility' => 'public',
+        'userSocialVisibility' => 'public', 'rbtDisabled' => false, 'theme' => 'black',
+        'promosDisabled' => true, 'autoPlayRadio' => true, 'syncQueueEnabled' => true,
+    ];
+
     public function testAccountStatusIsTyped(): void
     {
         $http = (new MockHttpClient())->queue(self::STATUS);
@@ -71,14 +79,30 @@ final class AccountTest extends TestCase
         self::assertSame(0, $http->requestCount());
     }
 
+    /**
+     * The same settings read through the user rather than the account. The
+     * reference library files this method among the playlists; it is account
+     * state, so it lives here.
+     */
+    public function testUsersSettingsUnwrapsTheEnvelope(): void
+    {
+        $http = (new MockHttpClient())
+            ->queue(self::STATUS)
+            ->queue(['result' => ['userSettings' => self::SETTINGS]]);
+
+        $settings = $this->client($http)->init()->usersSettings();
+
+        self::assertInstanceOf(UserSettings::class, $settings);
+        self::assertSame('black', $settings->theme);
+        self::assertSame(
+            'https://api.music.yandex.net/users/1130000002804451/settings',
+            (string) $http->lastRequest()->getUri(),
+        );
+    }
+
     public function testAccountSettingsIsTyped(): void
     {
-        $http = (new MockHttpClient())->queue(['result' => [
-            'uid' => 1, 'lastFmScrobblingEnabled' => false, 'shuffleEnabled' => true, 'volumePercents' => 70,
-            'modified' => 'm', 'facebookScrobblingEnabled' => false, 'addNewTrackOnPlaylistTop' => true,
-            'userMusicVisibility' => 'public', 'userSocialVisibility' => 'public', 'rbtDisabled' => false,
-            'theme' => 'black', 'promosDisabled' => true, 'autoPlayRadio' => true, 'syncQueueEnabled' => true,
-        ]]);
+        $http = (new MockHttpClient())->queue(['result' => self::SETTINGS]);
 
         $settings = $this->client($http)->accountSettings();
 

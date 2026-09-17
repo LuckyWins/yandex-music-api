@@ -15,10 +15,11 @@ Python library is right and this one has a bug.
 
 The library is being modernized in stages. Right now:
 
-- **Authorization**, **account**, **tracks**, **albums** and **artists** are
-  ported: typed models, tested, working against the current API
-- **Everything else** — search, playlists, likes, radio and the landing —
-  works, but returns raw decoded arrays rather than typed models. These live in
+- **Authorization**, **account**, **tracks**, **albums**, **artists** and
+  **playlists** are ported: typed models, tested, working against the current
+  API
+- **Everything else** — search, likes, radio and the landing — works, but
+  returns raw decoded arrays rather than typed models. These live in
   `Client\Legacy` and move out domain by domain.
 
 Downloading works, including direct links: the old signing scheme was never
@@ -127,6 +128,10 @@ echo $client->me()?->plus?->hasPlus ? 'Plus' : 'no Plus';
 
 $album = $client->albumsWithTracks(4243617);
 echo $album?->title;
+
+foreach ($client->usersPlaylistsList() as $playlist) {
+    echo $playlist->title, ' — ', $playlist->trackCount, " tracks\n";
+}
 
 // Raw arrays, because these domains are not.
 $results = $client->search('nirvana');
