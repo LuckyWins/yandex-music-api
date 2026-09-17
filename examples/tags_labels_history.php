@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 require __DIR__.'/../vendor/autoload.php';
 
-use LuckyWins\YandexMusic\Examples\Bootstrap;
-use LuckyWins\YandexMusic\Examples\UnknownFieldCollector;
+use LuckyWins\YandexMusic\Examples\Support\Bootstrap;
+use LuckyWins\YandexMusic\Examples\Support\UnknownFieldCollector;
 use LuckyWins\YandexMusic\Exception\YandexMusicException;
 use LuckyWins\YandexMusic\Model\MusicHistory\MusicHistoryQuery;
 

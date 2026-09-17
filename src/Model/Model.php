@@ -67,6 +67,8 @@ abstract class Model
         $meta = self::metaOf(static::class);
         $known = $meta['names'];
         $args = [];
+
+        /** @var array<string, string> field name to the type of what arrived in it */
         $unknown = [];
 
         foreach ($data as $key => $value) {
@@ -77,7 +79,11 @@ abstract class Model
             $name = $meta['byKey'][self::canonical($key)] ?? null;
 
             if (null === $name) {
-                $unknown[] = $key;
+                // The type is recorded alongside the name, never the value:
+                // `migrated: bool` says far more about what a new field is for
+                // than `migrated` alone, while the values themselves are the
+                // account's own data and have no business in a log.
+                $unknown[$key] = self::describeType($value);
             } else {
                 $args[$name] = $value;
             }
@@ -96,7 +102,7 @@ abstract class Model
         }
 
         if ([] !== $unknown && true === $client?->reportsUnknownFields()) {
-            $client->reportUnknownFields(static::class, $unknown);
+            $client->reportUnknownFields(static::class, array_keys($unknown), $unknown);
         }
 
         if (in_array('client', $known, true)) {
@@ -325,6 +331,42 @@ abstract class Model
      * Protected rather than private because prepare() implementations reach
      * into the raw response by key and have to match it the same way.
      */
+    /**
+     * Name the shape of a value without repeating the value itself.
+     *
+     * get_debug_type() alone would call every JSON object and every JSON list
+     * `array`, which loses the one distinction that matters when deciding what
+     * a missing field needs: a scalar is a property, an object is a model, and
+     * a list of objects is a NESTED list. One level deep is enough to say
+     * which, and stopping there keeps a deeply nested response from producing
+     * a type longer than the field name.
+     */
+    private static function describeType(mixed $value): string
+    {
+        if (!is_array($value)) {
+            return get_debug_type($value);
+        }
+
+        if (!array_is_list($value)) {
+            return 'object';
+        }
+
+        if ([] === $value) {
+            // json_decode() turns both `[]` and `{}` into an empty array, so
+            // there is nothing here to tell a list from an object. Saying
+            // `empty` is the honest answer; a second sample gives the shape.
+            return 'empty';
+        }
+
+        $first = $value[0];
+
+        if (is_array($first)) {
+            return array_is_list($first) ? 'list<list>' : 'list<object>';
+        }
+
+        return 'list<'.get_debug_type($first).'>';
+    }
+
     protected static function canonical(string $key): string
     {
         return self::$canonicalCache[$key] ??= strtolower(str_replace(['-', '_'], '', $key));

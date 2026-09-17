@@ -17,7 +17,12 @@ That check exists because documentation of typed signatures is exactly the kind
 that rots. The code changes, the prose does not, and nobody notices until
 somebody trusts the prose.
 
-**Written by hand, under [porting/](porting/):**
+**Written by hand:**
+
+- [audit.md](audit.md) — how `make audit` checks this library against the live
+  API, and what it deliberately does not check
+
+**Also written by hand, under [porting/](porting/):**
 
 One record per domain as it is ported from the Python reference — what the
 methods were, what they became, how they differ from the reference and why.

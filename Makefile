@@ -9,7 +9,7 @@ endif
 COMPOSER ?= composer
 MIN_VERSION := 80300
 
-.PHONY: help check-php install test coverage stan cs cs-fix docs docs-check check
+.PHONY: help check-php install test coverage stan cs cs-fix docs docs-check check audit
 
 help:
 	@echo 'install   install dependencies'
@@ -20,6 +20,7 @@ help:
 	@echo 'cs-fix    fix code style in place'
 	@echo 'docs      regenerate the model and endpoint reference'
 	@echo 'check     test + stan + cs + docs, what CI would run'
+	@echo 'audit     find fields the models are missing, live — needs a token'
 
 check-php:
 	@command -v $(PHP) >/dev/null 2>&1 || { \
@@ -65,3 +66,16 @@ docs-check: docs
 		|| { echo 'docs/ is out of date — run `make docs` and commit the result'; exit 1; }
 
 check: test stan cs docs-check
+
+# What `check` cannot answer: whether the models still match what the service
+# sends. Calls every reading endpoint and reports the fields no model declares.
+#
+# The Python reference is not consulted. It was the map while the library was
+# being ported and the port is done; from here the service itself is the only
+# thing worth checking against, and where the two disagree the service wins.
+# `tools/compare-with-reference.php` is still there for a one-off comparison.
+#
+# Deliberately not part of `check`: it needs a token and a network, and CI has
+# neither. It ends quietly rather than failing when there is no token.
+audit: check-php
+	@$(PHP) examples/audit.php

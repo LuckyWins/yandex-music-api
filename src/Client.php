@@ -56,7 +56,6 @@ final class Client
     use Radio;
     use Search;
     use Tracks;
-    use Account;
 
     public const BASE_URL = 'https://api.music.yandex.net';
 
@@ -162,15 +161,20 @@ final class Client
     /**
      * Called by models when the API sends a field none of them declare.
      *
-     * @param class-string $model
-     * @param list<string> $fields
+     * The names go into `fields` and the types of what arrived in them into
+     * `types`. Never the values: a response about this account carries its
+     * owner's data, and a log is the wrong place for it.
+     *
+     * @param class-string          $model
+     * @param list<string>          $fields
+     * @param array<string, string> $types  field name to type, as get_debug_type() names it
      */
-    public function reportUnknownFields(string $model, array $fields): void
+    public function reportUnknownFields(string $model, array $fields, array $types = []): void
     {
         $this->logger?->warning(
             'Yandex.Music API returned fields this library does not know about. '
             .'This usually means the API changed and the model needs updating.',
-            ['model' => $model, 'fields' => $fields],
+            ['model' => $model, 'fields' => $fields, 'types' => $types],
         );
     }
 }

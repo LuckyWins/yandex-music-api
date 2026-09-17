@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace LuckyWins\YandexMusic\Examples;
+namespace LuckyWins\YandexMusic\Examples\Support;
 
 use GuzzleHttp\Client as Guzzle;
 use LuckyWins\YandexMusic\Client;
@@ -217,9 +217,13 @@ final class Bootstrap
         return is_scalar($value) ? (string) $value : $fallback;
     }
 
+    /**
+     * Where the token file lives: the repository root, two levels up from this
+     * class rather than one, because this class sits in examples/Support.
+     */
     public static function envPath(): string
     {
-        return dirname(__DIR__).'/.env.local';
+        return dirname(__DIR__, 2).'/.env.local';
     }
 
     private static function readFromFile(string $key): ?string
