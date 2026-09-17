@@ -585,7 +585,7 @@ Everything the service will say about an artist in one response.
 | `lastReleaseIds` | `list<int>` | no |  |
 | `playlists` | `list<Playlist>` | no | list of [Playlist](#playlist) |
 | `playlistIds` | `list<PlaylistId>` | no | list of [PlaylistId](#playlistid) |
-| `concerts` | `list<mixed>` | no |  |
+| `concerts` | `list<mixed>` | no | Not modelled: the concerts domain is ported, but this field has only ever been seen empty, and the reference does not type it either. |
 | `clips` | `list<Clip>` | no | list of [Clip](#clip) |
 | `vinyls` | `list<Vinyl>` | no | list of [Vinyl](#vinyl) |
 | `links` | `list<mixed>` | no | Promotional links — a different shape from the artist's own `links`, despite the name: these carry a subtitle and an image. |
@@ -698,6 +698,166 @@ A page of clips: the ones liked, or the ones suggested.
 |---|---|---|---|
 | `clips` | `list<Clip>` | no | list of [Clip](#clip) |
 | `pager` | `?Pager` | no | [Pager](#pager) |
+
+## Concert
+
+### ArtistConcerts
+
+Where an artist is playing next.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `artistTitle` | `?string` | no |  |
+| `concerts` | `list<Concert>` | no | list of [Concert](#concert) |
+
+### Concert
+
+A concert: when, where, how much, and where to buy a ticket.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `id` | `?string` | no |  |
+| `concertTitle` | `?string` | no |  |
+| `city` | `?string` | no |  |
+| `place` | `?string` | no |  |
+| `address` | `?string` | no |  |
+| `datetime` | `?string` | no | When it happens, as the service formats it. |
+| `afishaUrl` | `?string` | no |  |
+| `contentRating` | `?string` | no |  |
+| `imageUrl` | `?string` | no |  |
+| `images` | `list<string>` | no |  |
+| `cover` | `?Cover` | no | [Cover](#cover) |
+| `minPrice` | `?ConcertMinPrice` | no | [ConcertMinPrice](#concertminprice) |
+| `cashback` | `?ConcertCashback` | no | [ConcertCashback](#concertcashback) |
+| `eventInfo` | `?ConcertEventInfo` | no | [ConcertEventInfo](#concerteventinfo) |
+| `dataSessionId` | `?string` | no |  |
+
+### ConcertCashback
+
+What part of the ticket price comes back as points.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `title` | `?string` | no |  |
+| `valuePercent` | `?int` | no |  |
+
+### ConcertDescription
+
+What is written about a concert, and who wrote it.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `text` | `?string` | no |  |
+| `source` | `?string` | no |  |
+
+### ConcertEventInfo
+
+What kind of event this is — a concert, a festival.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `type` | `?string` | no |  |
+
+### ConcertFeed
+
+What is on, wherever the listing was asked about.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `items` | `list<ConcertFeedItem>` | no | list of [ConcertFeedItem](#concertfeeditem) |
+
+### ConcertFeedItem
+
+One entry in the listing — a type beside the thing itself, the same arrangement the landing blocks and an artist's clips use.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `type` | `?string` | no |  |
+| `data` | `?ConcertFeedItemData` | no |  |
+
+### ConcertFeedItemData
+
+A concert as the listing carries it, with its price alongside.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `concert` | `?Concert` | no | [Concert](#concert) |
+| `minPrice` | `?ConcertMinPrice` | no | [ConcertMinPrice](#concertminprice) |
+
+### ConcertInfo
+
+A concert's own page: the concert, what is written about it, and the artist it belongs to.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `concert` | `?Concert` | no | [Concert](#concert) |
+| `minPrice` | `?ConcertMinPrice` | no | [ConcertMinPrice](#concertminprice) |
+| `covers` | `list<Cover>` | no | list of [Cover](#cover) |
+| `description` | `?ConcertDescription` | no | [ConcertDescription](#concertdescription) |
+| `leadArtistId` | `?int` | no |  |
+
+### ConcertLocation
+
+A city the listings can be filtered to.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `id` | `?int` | no |  |
+| `name` | `?string` | no |  |
+
+### ConcertLocations
+
+Everywhere concerts are listed for.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `locations` | `list<ConcertLocation>` | no | list of [ConcertLocation](#concertlocation) |
+
+### ConcertMinPrice
+
+The cheapest ticket, in whatever currency the venue sells them.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `value` | `?int` | no |  |
+| `currency` | `?string` | no |  |
+| `currencySymbol` | `?string` | no |  |
+
+### ConcertSkeleton
+
+The layout of a concert's page — the same five skeleton models an artist's page uses.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `id` | `?string` | no |  |
+| `title` | `?string` | no |  |
+| `blocks` | `list<SkeletonBlock>` | no | list of [SkeletonBlock](#skeletonblock) |
+
+### ConcertTabConfig
+
+The wrapper the tab configuration arrives in.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `config` | `?ConcertTabConfigData` | no | [ConcertTabConfigData](#concerttabconfigdata) |
+
+### ConcertTabConfigData
+
+How the concerts tab is laid out: how much goes in the top section and how much in the feed below it.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `top` | `?ConcertTabRange` | no | [ConcertTabRange](#concerttabrange) |
+| `feed` | `?ConcertTabRange` | no | [ConcertTabRange](#concerttabrange) |
+
+### ConcertTabRange
+
+How much of a section to show at once.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `offset` | `?int` | no |  |
+| `limit` | `?int` | no |  |
 
 ## DeviceAuth
 
@@ -1248,6 +1408,7 @@ A playlist.
 | `ready` | `?bool` | no |  |
 | `everPlayed` | `?bool` | no |  |
 | `generatedPlaylistType` | `?string` | no |  |
+| `artistPlaylistType` | `?string` | no |  |
 | `madeFor` | `?MadeFor` | no | [MadeFor](#madefor) |
 | `madeForUser` | `?MadeForUser` | no | [MadeForUser](#madeforuser) |
 | `derivedColors` | `?CoverDerivedColors` | no | [CoverDerivedColors](#coverderivedcolors) |

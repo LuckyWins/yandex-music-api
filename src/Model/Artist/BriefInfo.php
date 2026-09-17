@@ -72,7 +72,13 @@ final class BriefInfo extends Model
         public readonly array $playlists = [],
         /** @var list<PlaylistId> */
         public readonly array $playlistIds = [],
-        /** @var list<mixed> Not modelled: the concerts domain is not ported. */
+        /**
+         * Not modelled: the concerts domain is ported, but this field has
+         * only ever been seen empty, and the reference does not type it
+         * either. Left raw until a response says what belongs in it.
+         *
+         * @var list<mixed>
+         */
         public readonly array $concerts = [],
         /** @var list<Clip> */
         public readonly array $clips = [],

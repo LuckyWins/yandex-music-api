@@ -19,6 +19,7 @@ use LuckyWins\YandexMusic\Model\Artist\ArtistTracks;
 use LuckyWins\YandexMusic\Model\Artist\ArtistTrailer;
 use LuckyWins\YandexMusic\Model\Artist\BriefInfo;
 use LuckyWins\YandexMusic\Model\Artist\SimilarArtists;
+use LuckyWins\YandexMusic\Model\Concert\ArtistConcerts;
 use LuckyWins\YandexMusic\Tests\Support\MockHttpClient;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
@@ -205,6 +206,28 @@ final class ArtistsTest extends TestCase
         self::assertSame([], $this->client($http)->artistsDisclaimer(4611844));
         self::assertSame(
             'https://api.music.yandex.net/artists/4611844/disclaimer',
+            (string) $http->lastRequest()->getUri(),
+        );
+    }
+
+
+    /**
+     * Deferred through two stages because it answers with concerts; it lives
+     * with the artists because its path does.
+     */
+    public function testWhereTheArtistIsPlaying(): void
+    {
+        $http = (new MockHttpClient())->queue(['result' => [
+            'artistTitle' => 'Miyagi & Эндшпиль',
+            'concerts' => [['id' => 'c1', 'city' => 'Москва']],
+        ]]);
+
+        $concerts = $this->client($http)->artistsConcerts(4611844);
+
+        self::assertInstanceOf(ArtistConcerts::class, $concerts);
+        self::assertCount(1, $concerts->concerts);
+        self::assertSame(
+            'https://api.music.yandex.net/artists/4611844/concerts',
             (string) $http->lastRequest()->getUri(),
         );
     }

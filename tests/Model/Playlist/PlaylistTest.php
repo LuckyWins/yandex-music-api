@@ -60,6 +60,7 @@ final class PlaylistTest extends ModelTestCase
             'ready' => true,
             'everPlayed' => true,
             'generatedPlaylistType' => 'playlistOfTheDay',
+            'artistPlaylistType' => 'similar',
             'animatedCoverUri' => 'avatars.invalid/animated/%%',
             'backgroundColor' => '#000000',
             'textColor' => '#ffffff',
@@ -162,6 +163,7 @@ final class PlaylistTest extends ModelTestCase
         self::assertSame('private', $model->visibility);
         self::assertSame(420000, $model->durationMs);
         self::assertSame('a9f0c1e2-0000-4000-8000-000000000001', $model->playlistUuid);
+        self::assertSame('similar', $model->artistPlaylistType);
         self::assertSame([503646256, 503646257], $model->coauthors);
 
         self::assertInstanceOf(User::class, $model->owner);
