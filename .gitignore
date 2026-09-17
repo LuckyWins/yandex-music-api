@@ -1,2 +1,25 @@
+# Dependencies
+/vendor/
+
+# Credentials. The committed twin is .env.local.example.
+/.env.local
+
+# Audio pulled down by examples/download_track.php
+*.mp3
+*.aac
+
+# Tool caches
+/.phpunit.cache/
+/.php-cs-fixer.cache
+
+# Coverage reports, when make coverage is pointed at a directory instead of stdout
+/coverage/
+
+# Editors. Project-wide Claude settings (.claude/settings.json) are committed on
+# purpose; only the personal overrides beside them are not.
 /.idea/
-/privateConfig.php
+/.vscode/
+/.claude/settings.local.json
+
+# macOS
+.DS_Store

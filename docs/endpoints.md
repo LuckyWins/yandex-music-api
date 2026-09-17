@@ -1,0 +1,251 @@
+# Endpoints
+
+Generated from the source by `make docs` — do not edit.
+
+One trait per domain, and every method returns typed models.
+
+A dash in the request column means the method issues no request of its own —
+it delegates to another one. Braces mark the parts of a path the caller
+supplies.
+
+## Account
+
+| Method | Request | Returns | Notes |
+|---|---|---|---|
+| `accountExperiments()` | `GET /account/experiments` | `array` | The A/B experiments the account is in, as a bare map. |
+| `accountExperimentsDetails()` | `GET /account/experiments/details` | `?ExperimentsDetails` |  |
+| `accountSettings()` | `GET /account/settings` | `?UserSettings` |  |
+| `accountSettingsSet()` | — | `?UserSettings` | Change one setting. |
+| `accountSettingsSetMany()` | `POST /account/settings` | `?UserSettings` | Change several settings at once. |
+| `accountStatus()` | `GET /account/status` | `?Status` |  |
+| `consumePromoCode()` | `POST /account/consume-promo-code` | `?PromoCodeStatus` | Redeem a promo code. |
+| `getAccountUid()` | — | `?int` | The user id every per-user endpoint needs. |
+| `init()` | — | `self` | Load the account for the current token. |
+| `me()` | — | `?Status` | The account status loaded by init(), or null if it has not run. |
+| `permissionAlerts()` | `GET /permission-alerts` | `?PermissionAlerts` |  |
+| `settings()` | `GET /settings` | `?Settings` | What the account can be sold, and where to buy it. |
+| `usersSettings()` | `GET /users/{userId}/settings` | `?UserSettings` | A user's playback settings. |
+
+## Albums
+
+| Method | Request | Returns | Notes |
+|---|---|---|---|
+| `album()` | `GET /albums/{albumId}` | `?Album` | One album, without its tracks. |
+| `albums()` | `POST /albums` | `array` | Fetch albums by id. |
+| `albumsDisclaimer()` | `GET /albums/{albumId}/disclaimer` | `array` | Notices that must accompany an album. |
+| `albumsSimilarEntities()` | `GET /albums/{albumId}/similar-entities` | `?AlbumSimilarEntities` | What to listen to next when the album runs out. |
+| `albumsTrailer()` | `GET /albums/{albumId}/trailer` | `?AlbumTrailer` | An album's trailer and the tracks it plays. |
+| `albumsWithTracks()` | `GET /albums/{albumId}/with-tracks` | `?Album` | One album with everything on it. |
+
+## Artists
+
+| Method | Request | Returns | Notes |
+|---|---|---|---|
+| `artists()` | `POST /artists` | `array` | Fetch artists by id. |
+| `artistsAbout()` | `GET /artists/{artistId}/about-artist` | `?AboutArtist` | The artist's page: their description, covers and links. |
+| `artistsAlsoAlbums()` | — | `?ArtistAlbums` | A page of the albums an artist appears on without being their author — compilations, guest spots. |
+| `artistsBriefInfo()` | `GET /artists/{artistId}/brief-info` | `?BriefInfo` | Everything the service will say about an artist at once — albums, popular tracks, similar artists, covers, chart positions. |
+| `artistsClips()` | `GET /artists/{artistId}/blocks/artist-clips` | `?ArtistClips` | A page of the artist's clips. |
+| `artistsConcerts()` | `GET /artists/{artistId}/concerts` | `?ArtistConcerts` | Where the artist is playing next. |
+| `artistsDirectAlbums()` | — | `?ArtistAlbums` | A page of the albums an artist made. |
+| `artistsDisclaimer()` | `GET /artists/{artistId}/disclaimer` | `array` | Notices that must accompany an artist. |
+| `artistsDiscographyAlbums()` | — | `?ArtistAlbums` | Albums the artist made, in the discography arrangement. |
+| `artistsDonation()` | `GET /artists/{artistId}/blocks/artist-donation` | `?ArtistDonations` | How the artist can be supported, when they accept support at all. |
+| `artistsInfo()` | `GET /artists/{artistId}/info` | `?ArtistInfo` | An artist with the numbers around them, without the albums and tracks that make artistsBriefInfo() heavy. |
+| `artistsLinks()` | `GET /artists/{artistId}/artist-links` | `?ArtistLinks` | Everywhere else the artist can be found. |
+| `artistsSafeDirectAlbums()` | — | `?ArtistAlbums` | The artist's own albums, with whatever the service considers unsafe left out. |
+| `artistsSimilar()` | `GET /artists/{artistId}/similar` | `?SimilarArtists` | Who else sounds like this artist. |
+| `artistsSkeleton()` | `GET /artists/{artistId}/skeletons/{skeletonId}` | `?ArtistSkeleton` | How the artist's page is laid out — which blocks to draw, and where each one's contents come from. |
+| `artistsTrackIds()` | `GET /artists/{artistId}/track-ids` | `array` | Every track id of the artist, unordered. |
+| `artistsTrackIdsByRating()` | `GET /artists/{artistId}/track-ids-by-rating` | `array` | The artist's tracks as bare ids, ordered by rating. |
+| `artistsTracks()` | `GET /artists/{artistId}/tracks` | `?ArtistTracks` | A page of an artist's tracks, most popular first. |
+| `artistsTrailer()` | `GET /artists/{artistId}/trailer` | `?ArtistTrailer` | The artist's trailer and the tracks it plays. |
+
+## Clips
+
+| Method | Request | Returns | Notes |
+|---|---|---|---|
+| `clips()` | `GET /clips` | `array` | Fetch clips by id. |
+| `clipsCredits()` | `GET /clips/{clipId}/credits` | `?Credits` | Who made a clip. |
+| `clipsDisclaimer()` | `GET /clips/{clipId}/disclaimer` | `array` | Notices that must accompany a clip. |
+| `clipsWillLike()` | `GET /clips/will/like` | `?ClipsWillLike` | A page of clips the service thinks the account will like. |
+
+## Concerts
+
+| Method | Request | Returns | Notes |
+|---|---|---|---|
+| `concertInfo()` | `GET /concerts/{concertId}/info` | `?ConcertInfo` | One concert's page. |
+| `concertSkeleton()` | `GET /concerts/{concertId}/skeletons/{skeletonId}` | `?ConcertSkeleton` | How a concert's page is laid out — the same skeleton models an artist's page uses. |
+| `concertsFeed()` | `GET /concerts/feed` | `?ConcertFeed` | What is on. |
+| `concertsLocations()` | `GET /concerts/locations` | `?ConcertLocations` | Everywhere concerts are listed for. |
+| `concertsTabConfig()` | `GET /concerts/tab-config` | `?ConcertTabConfig` | How much of the concerts tab to show at once. |
+
+## DeviceAuth
+
+| Method | Request | Returns | Notes |
+|---|---|---|---|
+| `deviceAuth()` | — | `OAuthToken` | The whole flow: request a code, hand it to the caller to display, then poll until the user confirms. |
+| `pollDeviceToken()` | `POST /token` | `?OAuthToken` | Step two, asked repeatedly: has the user confirmed yet? Returns null while the user has not answered — that is the normal state for most of the flow, not a failure. |
+| `requestDeviceCode()` | `POST /device/code` | `DeviceCode` | Step one: ask for a code for the user to confirm. |
+| `revokeToken()` | `POST /revoke_token` | `void` | Revoke a token, so that it stops working immediately. |
+
+## Labels
+
+| Method | Request | Returns | Notes |
+|---|---|---|---|
+| `label()` | `GET /labels/{labelId}` | `?Label` | A label's page. |
+| `labelAlbums()` | `GET /labels/{labelId}/albums` | `?LabelAlbums` | A page of a label's releases. |
+| `labelArtists()` | `GET /labels/{labelId}/artists` | `?LabelArtists` | A page of the artists signed to a label. |
+
+## Landing
+
+| Method | Request | Returns | Notes |
+|---|---|---|---|
+| `chart()` | `GET {url}` | `?ChartInfo` | A chart. |
+| `feed()` | `GET /feed` | `?Feed` | The account's feed. |
+| `feedWizardIsPassed()` | `GET /feed/wizard/is-passed` | `bool` | Whether the account has answered the taste wizard, which is what makes its personal playlists worth anything. |
+| `genres()` | `GET /genres` | `array` | Every genre, each carrying its own sub-genres. |
+| `landing()` | `GET /landing3` | `?Landing` | The front page, one block at a time or several at once. |
+| `newPlaylists()` | `GET /landing3/new-playlists` | `?LandingList` | Newly published playlists, as owner-and-kind pairs. |
+| `newReleases()` | `GET /landing3/new-releases` | `?LandingList` | Newly released albums, as ids. |
+| `podcasts()` | `GET /landing3/podcasts` | `?LandingList` | Podcasts, as album ids — a podcast is an album and its episodes are tracks. |
+| `tags()` | `GET /tags/{tagId}/playlist-ids` | `?TagResult` | The playlists filed under a tag. |
+
+## Likes
+
+| Method | Request | Returns | Notes |
+|---|---|---|---|
+| `usersDislikesArtists()` | `GET /users/{userId}/dislikes/artists` | `array` | The account's disliked artists. |
+| `usersDislikesArtistsAdd()` | — | `bool` |  |
+| `usersDislikesArtistsRemove()` | — | `bool` |  |
+| `usersDislikesTracks()` | `GET /users/{userId}/dislikes/tracks` | `?TracksList` | The account's disliked tracks. |
+| `usersDislikesTracksAdd()` | — | `bool` |  |
+| `usersDislikesTracksRemove()` | — | `bool` |  |
+| `usersLikesAlbums()` | — | `array` | The account's liked albums. |
+| `usersLikesAlbumsAdd()` | — | `bool` |  |
+| `usersLikesAlbumsRemove()` | — | `bool` |  |
+| `usersLikesArtists()` | — | `array` | The account's liked artists. |
+| `usersLikesArtistsAdd()` | — | `bool` |  |
+| `usersLikesArtistsRemove()` | — | `bool` |  |
+| `usersLikesClips()` | `GET /users/{userId}/likes/clips` | `?ClipsWillLike` | A page of the account's liked clips. |
+| `usersLikesClipsAdd()` | — | `bool` |  |
+| `usersLikesClipsRemove()` | — | `bool` |  |
+| `usersLikesPlaylists()` | — | `array` | The account's liked playlists. |
+| `usersLikesPlaylistsAdd()` | — | `bool` | Like playlists, identified as `{uid}:{kind}`. |
+| `usersLikesPlaylistsRemove()` | — | `bool` |  |
+| `usersLikesTracks()` | `GET /users/{userId}/likes/tracks` | `?TracksList` | The account's liked tracks. |
+| `usersLikesTracksAdd()` | — | `bool` |  |
+| `usersLikesTracksRemove()` | — | `bool` |  |
+
+## Metatags
+
+| Method | Request | Returns | Notes |
+|---|---|---|---|
+| `metatag()` | `GET /metatags/{value}` | `?Metatag` | A tag's page: a bit of everything filed under it. |
+| `metatagAlbums()` | `GET /metatags/{value}/albums` | `?MetatagAlbums` | A page of the albums under a tag. |
+| `metatagArtists()` | `GET /metatags/{value}/artists` | `?MetatagArtists` | A page of the artists under a tag, each with a few of their tracks. |
+| `metatagPlaylists()` | `GET /metatags/{value}/playlists` | `?MetatagPlaylists` | A page of the playlists under a tag. |
+| `metatags()` | `GET /landing3/metatags` | `?Metatags` | Every way the catalogue is tagged, as trees to navigate. |
+
+## MusicHistory
+
+| Method | Request | Returns | Notes |
+|---|---|---|---|
+| `musicHistory()` | `GET /music-history` | `?MusicHistory` | What the account has been listening to, a day at a time. |
+| `musicHistoryItems()` | — | `?MusicHistoryItems` | Fill in particular entries of the history. |
+
+## Pins
+
+| Method | Request | Returns | Notes |
+|---|---|---|---|
+| `pinAlbum()` | — | `?Pin` |  |
+| `pinArtist()` | — | `?Pin` |  |
+| `pinPlaylist()` | — | `?Pin` |  |
+| `pinWave()` | — | `?Pin` | Pin a station. |
+| `pins()` | `GET /pins` | `?PinsList` | Everything pinned, in the order it is shown. |
+| `unpinAlbum()` | — | `bool` |  |
+| `unpinArtist()` | — | `bool` |  |
+| `unpinPlaylist()` | — | `bool` |  |
+| `unpinWave()` | — | `bool` |  |
+
+## Playlists
+
+| Method | Request | Returns | Notes |
+|---|---|---|---|
+| `playlist()` | `GET /playlist/{playlistUuid}` | `?Playlist` | A playlist by its uuid rather than by owner and kind. |
+| `playlistSimilarEntities()` | `GET /playlist/{playlistUuid}/similar-entities` | `?PlaylistSimilarEntities` | What to listen to next when a playlist runs out. |
+| `playlists()` | `GET /playlists` | `?PlaylistsList` | Fetch playlists by owner-and-kind pairs, as `{uid}:{kind}`. |
+| `playlistsCollectiveJoin()` | `POST {url}` | `bool` | Join a collective playlist with an invitation token. |
+| `playlistsList()` | `POST /playlists/list` | `array` | Fetch playlists by owner-and-kind pairs, as `{uid}:{kind}`. |
+| `playlistsPersonal()` | `GET /playlists/personal/{playlistId}` | `?GeneratedPlaylist` | One of the playlists the service generates for the account, such as the daily playlist. |
+| `usersPlaylists()` | `GET /users/{userId}/playlists/{kind}` | `?Playlist` | One playlist of a user's. |
+| `usersPlaylistsChange()` | `POST /users/{userId}/playlists/{kind}/change` | `?Playlist` | Apply a set of changes to a playlist's contents. |
+| `usersPlaylistsCreate()` | `POST /users/{userId}/playlists/create` | `?Playlist` | Create a playlist. |
+| `usersPlaylistsDelete()` | `POST /users/{userId}/playlists/{kind}/delete` | `bool` | Delete a playlist. |
+| `usersPlaylistsDeleteTrack()` | — | `?Playlist` | Remove the tracks in a range of positions: from $from up to but not including $to. |
+| `usersPlaylistsDescription()` | — | `?Playlist` | Set a playlist's description. |
+| `usersPlaylistsInsertTrack()` | — | `?Playlist` | Insert tracks at a position in a playlist. |
+| `usersPlaylistsKinds()` | `GET /users/{userId}/playlists/list/kinds` | `array` | The kinds of a user's playlists and nothing else. |
+| `usersPlaylistsList()` | `GET /users/{userId}/playlists/list` | `array` | Every playlist a user has. |
+| `usersPlaylistsMany()` | `POST /users/{userId}/playlists` | `array` | Several playlists of one user's, in one request. |
+| `usersPlaylistsName()` | — | `?Playlist` | Rename a playlist. |
+| `usersPlaylistsRecommendations()` | `GET /users/{userId}/playlists/{kind}/recommendations` | `?PlaylistRecommendations` | Tracks the service suggests adding to a playlist. |
+| `usersPlaylistsTrailer()` | `GET /users/{userId}/playlists/{kind}/trailer` | `?PlaylistTrailer` | A playlist's trailer, and the tracks it is built from. |
+| `usersPlaylistsVisibility()` | — | `?Playlist` | Make a playlist public or private. |
+
+## Presaves
+
+| Method | Request | Returns | Notes |
+|---|---|---|---|
+| `usersPresaves()` | `GET /users/{userId}/presaves` | `?Presaves` | What the account has presaved. |
+| `usersPresavesAdd()` | `POST /users/{userId}/presaves/add` | `bool` | Ask to be told about an album when it comes out. |
+| `usersPresavesRemove()` | `POST /users/{userId}/presaves/remove` | `bool` |  |
+
+## Queues
+
+| Method | Request | Returns | Notes |
+|---|---|---|---|
+| `queue()` | `GET /queues/{queueId}` | `?Queue` | One queue, with its tracks. |
+| `queueCreate()` | — | `?string` | Hand a queue to the service, and get back the id it filed it under. |
+| `queueUpdatePosition()` | `POST {url}` | `bool` | Say which track of a queue is playing now. |
+| `queuesList()` | `GET /queues` | `array` | The queues this account has, newest first. |
+
+## Radio
+
+| Method | Request | Returns | Notes |
+|---|---|---|---|
+| `rotorAccountStatus()` | `GET /rotor/account/status` | `?Status` | The account as radio sees it — the same model as accountStatus(), with a few extra fields filled in such as how many skips are left this hour. |
+| `rotorStationFeedback()` | — | `bool` | Tell a station what happened. |
+| `rotorStationFeedbackRadioStarted()` | — | `bool` | Playback of the station has begun. |
+| `rotorStationFeedbackSkip()` | — | `bool` | A track was skipped. |
+| `rotorStationFeedbackTrackFinished()` | — | `bool` | A track has played to the end — or as far as it got. |
+| `rotorStationFeedbackTrackStarted()` | — | `bool` | A track has started playing. |
+| `rotorStationInfo()` | `GET /rotor/station/{value}/info` | `array` | One station, with how it is tuned. |
+| `rotorStationSettings()` | — | `bool` | Tune a station. |
+| `rotorStationTracks()` | `GET /rotor/station/{value}/tracks` | `?StationTracksResult` | What the station will play next. |
+| `rotorStationsDashboard()` | `GET /rotor/stations/dashboard` | `?Dashboard` | The stations offered to this account. |
+| `rotorStationsList()` | `GET /rotor/stations/list` | `array` | Every station there is. |
+
+## Search
+
+| Method | Request | Returns | Notes |
+|---|---|---|---|
+| `search()` | `GET /search` | `?Search` | Search for something. |
+| `searchSuggest()` | `GET /search/suggest` | `?Suggestions` | What to offer for a partly typed query. |
+
+## Tracks
+
+| Method | Request | Returns | Notes |
+|---|---|---|---|
+| `afterTrack()` | `GET /after-track` | `?ShotEvent` | What the service wants played between two tracks — one of Alice's spoken interjections, typically. |
+| `playAudio()` | `POST /play-audio` | `bool` | Report that a track was played. |
+| `trackSupplement()` | `GET /tracks/{trackId}/supplement` | `?Supplement` | Videos and, for podcasts, the full description. |
+| `tracks()` | `POST /tracks` | `array` | Fetch tracks by id. |
+| `tracksCredits()` | `GET /tracks/{trackId}/credits` | `?Credits` |  |
+| `tracksDisclaimer()` | `GET /tracks/{trackId}/disclaimer` | `array` | Notices that must accompany a track. |
+| `tracksDownloadInfo()` | `GET /tracks/{trackId}/download-info` | `array` | The ways a track can be downloaded. |
+| `tracksFullInfo()` | `GET /tracks/{trackId}/full-info` | `?TrackFullInfo` |  |
+| `tracksLyrics()` | `GET /tracks/{trackId}/lyrics` | `?TrackLyrics` | Where to fetch a track's lyrics. |
+| `tracksSimilar()` | `GET /tracks/{trackId}/similar` | `?SimilarTracks` |  |
+| `tracksTrailer()` | `GET /tracks/{trackId}/trailer` | `?TrackTrailer` |  |
+

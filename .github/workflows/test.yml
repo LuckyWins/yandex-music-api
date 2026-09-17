@@ -1,0 +1,75 @@
+name: Tests
+
+# The composer.json promises PHP 8.3 and newer. Nothing but this verifies that
+# promise, since development happens on one version.
+on:
+  pull_request:
+    branches: [develop, main]
+  push:
+    branches: [develop]
+  # So the workflow can be exercised without waiting for a merge.
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: PHP ${{ matrix.php }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      # Report every version that breaks, not just the first one.
+      fail-fast: false
+      matrix:
+        php: ['8.3', '8.4', '8.5']
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: curl, json, mbstring
+          coverage: none
+
+      - name: Install dependencies
+        run: composer install --no-interaction --no-progress --prefer-dist
+
+      - name: Run tests
+        run: vendor/bin/phpunit
+
+  static:
+    name: Static analysis and code style
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+
+      # Only the lowest supported version: neither tool's verdict depends on the
+      # runtime, and the style rules target 8.3 explicitly.
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: curl, json, mbstring
+          coverage: none
+
+      - name: Install dependencies
+        run: composer install --no-interaction --no-progress --prefer-dist
+
+      - name: Validate composer.json
+        run: composer validate --strict
+
+      - name: PHPStan
+        run: vendor/bin/phpstan analyse --no-progress
+
+      - name: Code style
+        run: vendor/bin/php-cs-fixer fix --dry-run --diff
+
+      # The reference under docs/ is generated from the source. If it no longer
+      # matches, someone changed a model and left the documentation behind.
+      - name: Documentation is current
+        run: |
+          php tools/generate-docs.php
+          git diff --exit-code -- docs/models.md docs/endpoints.md \
+            || { echo '::error::docs/ is out of date — run `make docs` and commit the result'; exit 1; }

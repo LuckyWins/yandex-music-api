@@ -1,0 +1,102 @@
+name: Release
+
+# A tag is what Composer resolves a version from, so a tag that does not build
+# is a broken release nobody can withdraw. Everything runs before the release is
+# created; if any of it fails, there is a tag and no release, which is a state
+# `git tag -d` and a re-push can fix.
+on:
+  push:
+    # Strict semver with a v in front, which is what Composer strips back off.
+    # A pre-release suffix would need its own pattern; there is no use for one
+    # yet, and a pattern that fires on tags nobody meant as releases is worse.
+    tags: ['v[0-9]+.[0-9]+.[0-9]+']
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: PHP ${{ matrix.php }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['8.3', '8.4', '8.5']
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: curl, json, mbstring
+          coverage: none
+
+      - name: Install dependencies
+        run: composer install --no-interaction --no-progress --prefer-dist
+
+      - name: Validate composer.json
+        run: composer validate --strict
+
+      - name: Run tests
+        run: vendor/bin/phpunit
+
+  package:
+    name: What the tarball holds
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+
+      # Composer installs a tagged version from this archive, so what it holds
+      # is what consumers get. Anything beyond the library itself means an
+      # export-ignore rule is missing.
+      - name: Only the library is exported
+        run: |
+          git archive --format=tar HEAD | tar t | sort > /tmp/exported.txt
+          echo 'Exported:'
+          sed 's/^/  /' /tmp/exported.txt
+          if grep -qE '^(tests|examples|tools|docs|\.github|\.claude)/' /tmp/exported.txt; then
+            echo '::error::the release tarball carries more than the library — check .gitattributes'
+            exit 1
+          fi
+
+      - name: The library itself is there
+        run: |
+          for path in composer.json LICENSE README.md CHANGELOG.md src/Client.php; do
+            grep -qx "$path" /tmp/exported.txt \
+              || { echo "::error::$path is missing from the release tarball"; exit 1; }
+          done
+
+  release:
+    name: Publish the release
+    needs: [verify, package]
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v6
+
+      # The notes come from the CHANGELOG rather than being written twice: the
+      # section for this tag, from its heading to the next one.
+      - name: Take the notes from the changelog
+        id: notes
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          awk -v v="$version" '
+            $0 ~ "^## \\[" v "\\]" { found = 1; next }
+            found && /^## / { exit }
+            found { print }
+          ' CHANGELOG.md > /tmp/notes.md
+          if [ ! -s /tmp/notes.md ]; then
+            echo "::error::CHANGELOG.md has no section for $version"
+            exit 1
+          fi
+
+      - name: Create it
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" --title "$GITHUB_REF_NAME" --notes-file /tmp/notes.md
