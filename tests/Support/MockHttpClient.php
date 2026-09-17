@@ -91,4 +91,21 @@ final class MockHttpClient implements ClientInterface
         /** @var array<string, string> $parsed */
         return $parsed;
     }
+
+    /**
+     * The decoded body of a JSON request, for the endpoints that refuse forms.
+     *
+     * @return array<string, mixed>
+     */
+    public function jsonBodyAt(int $index): array
+    {
+        $decoded = json_decode((string) $this->requestAt($index)->getBody(), true);
+
+        if (!is_array($decoded)) {
+            throw new RuntimeException(sprintf('Request %d did not carry a JSON object.', $index));
+        }
+
+        /** @var array<string, mixed> $decoded */
+        return $decoded;
+    }
 }

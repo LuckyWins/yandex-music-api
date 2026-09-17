@@ -131,6 +131,7 @@ Whether the account has Yandex Plus, the subscription the music service sits und
 |---|---|---|---|
 | `hasPlus` | `bool` | **yes** |  |
 | `isTutorialCompleted` | `bool` | **yes** |  |
+| `migrated` | `?bool` | no | Only ever seen null, so its type is a reading of the name. |
 
 ### Price
 
@@ -218,7 +219,7 @@ Everything about what the account is currently paying for.
 
 | Field | Type | Required | Notes |
 |---|---|---|---|
-| `hadAnySubscription` | `bool` | **yes** |  |
+| `hadAnySubscription` | `?bool` | no | Optional despite the reference declaring it required: the radio's own view of the account omits it, and a subscription that cannot be deserialized takes the whole status with it. |
 | `nonAutoRenewableRemainder` | `?RenewableRemainder` | no | [RenewableRemainder](#renewableremainder) |
 | `autoRenewable` | `list<AutoRenewable>` | no | list of [AutoRenewable](#autorenewable) |
 | `familyAutoRenewable` | `list<AutoRenewable>` | no | list of [AutoRenewable](#autorenewable) |
@@ -865,6 +866,114 @@ A Yandex.Music user.
 
 ## Rotor
 
+### AdParams
+
+What an advertisement inserted into a station needs in order to be requested and reported.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `partnerId` | `mixed` | no |  |
+| `categoryId` | `mixed` | no |  |
+| `pageRef` | `?string` | no |  |
+| `targetRef` | `?string` | no |  |
+| `otherParams` | `?string` | no |  |
+| `adVolume` | `?int` | no |  |
+| `genreId` | `?string` | no |  |
+| `genreName` | `?string` | no |  |
+
+### Dashboard
+
+The stations offered to this account, in the order they should be shown.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `dashboardId` | `?string` | no |  |
+| `stations` | `list<StationResult>` | no | list of [StationResult](#stationresult) |
+| `pumpkin` | `?bool` | no |  |
+
+### DiscreteScale
+
+A setting that slides between two ends rather than picking from a list.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `type` | `string` | **yes** |  |
+| `name` | `string` | **yes** |  |
+| `min` | `?Value` | no | [Value](#value) |
+| `max` | `?Value` | no | [Value](#value) |
+
+### Enum
+
+A setting that takes one of a listed set of values.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `type` | `string` | **yes** |  |
+| `name` | `string` | **yes** |  |
+| `possibleValues` | `list<Value>` | no | list of [Value](#value) |
+
+### Id
+
+What identifies a station: a kind and a tag, such as `genre` and `allrock`.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `type` | `string` | **yes** |  |
+| `tag` | `string` | **yes** |  |
+
+### Restrictions
+
+What a station can be tuned to.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `language` | `?Enum` | no | [Enum](#enum) |
+| `diversity` | `?Enum` | no | [Enum](#enum) |
+| `mood` | `?DiscreteScale` | no | [DiscreteScale](#discretescale) |
+| `energy` | `?DiscreteScale` | no | [DiscreteScale](#discretescale) |
+| `moodEnergy` | `?Enum` | no | [Enum](#enum) |
+
+### RotorSettings
+
+How a station is currently tuned.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `language` | `?string` | no |  |
+| `diversity` | `?string` | no |  |
+| `mood` | `?int` | no |  |
+| `energy` | `?int` | no |  |
+| `moodEnergy` | `?string` | no |  |
+
+### Sequence
+
+One item in what a station is about to play.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `type` | `?string` | no |  |
+| `track` | `?Track` | no | [Track](#track) |
+| `liked` | `?bool` | no |  |
+| `trackParameters` | `?TrackParameters` | no | [TrackParameters](#trackparameters) |
+
+### Station
+
+A radio station: what it is called, how it looks, and what it can be tuned to.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `id` | `?Id` | no | [Id](#id) |
+| `name` | `?string` | no |  |
+| `icon` | `?Icon` | no | [Icon](#icon) |
+| `mtsIcon` | `?Icon` | no | [Icon](#icon) |
+| `geocellIcon` | `?Icon` | no | [Icon](#icon) |
+| `idForFrom` | `?string` | no |  |
+| `restrictions` | `?Restrictions` | no | [Restrictions](#restrictions) |
+| `restrictions2` | `?Restrictions` | no | [Restrictions](#restrictions). The same restrictions in a newer arrangement, without the scales. |
+| `fullImageUrl` | `?string` | no |  |
+| `mtsFullImageUrl` | `?string` | no |  |
+| `parentId` | `?Id` | no | [Id](#id) |
+
 ### StationData
 
 The personal radio station attached to an account.
@@ -872,6 +981,56 @@ The personal radio station attached to an account.
 | Field | Type | Required | Notes |
 |---|---|---|---|
 | `name` | `string` | **yes** |  |
+
+### StationResult
+
+A station together with how it is tuned right now.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `station` | `?Station` | no | [Station](#station) |
+| `settings` | `?RotorSettings` | no | [RotorSettings](#rotorsettings) |
+| `settings2` | `?RotorSettings` | no | [RotorSettings](#rotorsettings) |
+| `adParams` | `?AdParams` | no | [AdParams](#adparams) |
+| `explanation` | `?string` | no |  |
+| `prerolls` | `list<mixed>` | no |  |
+| `rupTitle` | `?string` | no |  |
+| `rupDescription` | `?string` | no |  |
+| `customName` | `?string` | no |  |
+
+### StationTracksResult
+
+What a station will play next.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `id` | `?Id` | no | [Id](#id) |
+| `sequence` | `list<Sequence>` | no | list of [Sequence](#sequence) |
+| `batchId` | `?string` | no |  |
+| `pumpkin` | `?bool` | no |  |
+| `radioSessionId` | `?string` | no | Identifies the listening session the feedback belongs to. |
+
+### TrackParameters
+
+How a track sounds, as the station's own analysis measures it: tempo, a hue to paint it with, and how energetic it is.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `bpm` | `?int` | no |  |
+| `hue` | `?int` | no |  |
+| `energy` | `?float` | no |  |
+
+### Value
+
+One allowed setting: what to send, and what to call it in an interface.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `value` | `string` | **yes** |  |
+| `name` | `string` | **yes** |  |
+| `imageUrl` | `?string` | no | The three below arrive only in `restrictions2`, the newer arrangement: artwork for the value, whether it stands for "not chosen", and the seed that selects it elsewhere in the service. |
+| `unspecified` | `?bool` | no |  |
+| `serializedSeed` | `?string` | no |  |
 
 ## Search
 
@@ -1117,6 +1276,15 @@ The notice Russian law requires be shown for material by someone designated a fo
 |---|---|---|---|
 | `reason` | `?string` | no |  |
 | `title` | `?string` | no |  |
+
+### Icon
+
+A station's artwork: a picture and the color to show behind it.
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `backgroundColor` | `?string` | no |  |
+| `imageUrl` | `?string` | no |  |
 
 ### Like
 

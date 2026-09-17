@@ -114,6 +114,21 @@ final class Request
     }
 
     /**
+     * Post a JSON body rather than a form.
+     *
+     * Most of the API takes form-encoded bodies, but not all of it: the radio
+     * feedback endpoints answer 400 to a form and accept the same fields as
+     * JSON. Checked against the live API — the reference library still sends
+     * forms there, and is refused.
+     *
+     * @param array<string, mixed> $data
+     */
+    public function postJson(string $url, array $data = []): mixed
+    {
+        return $this->send('POST', $url, $data, json: true);
+    }
+
+    /**
      * @param array<string, mixed> $data form-encoded body
      */
     public function put(string $url, array $data = []): mixed
@@ -243,7 +258,7 @@ final class Request
     /**
      * @param array<string, mixed>|null $data
      */
-    private function send(string $method, string $url, ?array $data = null): mixed
+    private function send(string $method, string $url, ?array $data = null, bool $json = false): mixed
     {
         $request = $this->requestFactory->createRequest($method, $url);
 
@@ -252,9 +267,13 @@ final class Request
         }
 
         if (null !== $data) {
+            [$contentType, $body] = $json
+                ? ['application/json', json_encode($data, JSON_THROW_ON_ERROR)]
+                : ['application/x-www-form-urlencoded', http_build_query($data)];
+
             $request = $request
-                ->withHeader('Content-Type', 'application/x-www-form-urlencoded')
-                ->withBody($this->streamFactory->createStream(http_build_query($data)));
+                ->withHeader('Content-Type', $contentType)
+                ->withBody($this->streamFactory->createStream($body));
         }
 
         try {

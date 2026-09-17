@@ -15,12 +15,12 @@ Python library is right and this one has a bug.
 
 The library is being modernized in stages. Right now:
 
-- **Authorization**, **account**, **tracks**, **albums**, **artists**,
-  **playlists**, **likes**, **clips** and **search** are ported: typed models,
+- Everything except the landing is ported: authorization, account, tracks,
+  albums, artists, playlists, likes, clips, search and radio — typed models,
   tested, working against the current API
-- **The landing and radio** still return raw decoded arrays rather than typed
-  models. They live in `Client\Legacy`, which empties out as the port
-  finishes.
+- **The landing** — the feed, the genres and the front page — still returns raw
+  decoded arrays. It is the last thing in `Client\Legacy`, and the port is done
+  when that trait is empty.
 
 Downloading works, including direct links: the old signing scheme was never
 replaced, and what looked like its death was our own HTTP layer declining to
@@ -140,9 +140,12 @@ echo count($client->usersLikesTracks()?->tracks ?? []), " liked tracks\n";
 $found = $client->search('nirvana', type: SearchType::Track);
 echo $found?->tracks?->results[0]->title;
 
-// Raw arrays, because the landing and radio are not ported yet.
+foreach ($client->rotorStationsDashboard()?->stations ?? [] as $offered) {
+    echo $offered->station?->name, "\n";
+}
+
+// Raw arrays, because the landing is not ported yet.
 $feed = $client->feed();
-$stations = $client->rotorStationsList();
 ```
 
 `init()` is a separate step on purpose: constructing a client performs no
